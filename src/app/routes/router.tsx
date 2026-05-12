@@ -1,32 +1,23 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from "react-router";
 import { App } from "@/app/app";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />, // необходим для того чтобы использовать providers для всех страниц
+    element: <App />, // layout со всеми providers и sidebar
     children: [
-      {
-        element: <App />, // тут размещается sidebar
-        children: [
-          /*
-           * Пример навигации по страницам:
-           * - Страницы находятся в папке src/pages/[name_page]/[name_page]-page.tsx
-           * - Имя страницы должно совпадать с именем папки
-           * - Имя страницы должно быть в kebab-case
-           *
-           *
-           * { path: '/[name_page]', lazy: () => import('@/pages/[name_page]/[name_page]-page') }
-           */
-        ],
-      },
       /*
        * Пример навигации по страницам:
-       * - те же правила что и в примере выше
-       * - нет sidebar
+       * - Страницы находятся в папке src/pages/[name_page]/[name_page]-page.tsx
+       * - Имя страницы должно совпадать с именем папки
+       * - Имя страницы должно быть в kebab-case
        *
-       * { path: '/login', lazy: () => import('@/pages/login/login-page') },
-       * { path: '*', lazy: () => import('@/pages/404/404-page') },
+       * { path: "projects", lazy: () => import("@/pages/projects/projects-page") }
+       * { path: "users", lazy: () => import("@/pages/users/users-page") }
+       * { path: "articles", lazy: () => import("@/pages/articles/articles-page") }
+       *
+       * { path: "login", lazy: () => import("@/pages/login/login-page") }
+       * { path: "*", lazy: () => import("@/pages/404/404-page") }
        */
     ],
   },
