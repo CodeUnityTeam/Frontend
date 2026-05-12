@@ -32,6 +32,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -50,23 +51,23 @@
 */
 
 :root {
-  --color-white: hsl(0, 0, 99); /* background */
-  --color-black: hsl(200, 4, 15); /* TextPrimary/CTAbutton */
-  --color-gray: hsl(236, 8, 63); /* TextSecondary */
-  --color-light-gray-100: hsl(210, 14, 97);
+  --color-white: hsl(0, 0%, 99%); /* background */
+  --color-black: hsl(200, 4%, 15%); /* TextPrimary/CTAbutton */
+  --color-gray: hsl(236, 8%, 63%); /* TextSecondary */
+  --color-light-gray-100: hsl(210, 14%, 97%);
   /* HoverButton/FiltersCard/SearchBox */
-  --color-light-gray-200: hsl(0, 0, 85); /* DisabledState */
-  --color-blue: hsl(203, 69, 90); /* bgCardsHover/SecondaryButton */
-  --color-light-blue: hsl(217, 40, 96); /* bgCardsDisabled/footer */
+  --color-light-gray-200: hsl(0, 0%, 85%); /* DisabledState */
+  --color-blue: hsl(203, 69%, 90%); /* bgCardsHover/SecondaryButton */
+  --color-light-blue: hsl(217, 40%, 96%); /* bgCardsDisabled/footer */
 
-  --color-red: hsl(10, 100, 59); /* textError/Stroke */
+  --color-red: hsl(10, 100%, 59%); /* textError/Stroke */
 
-  --color-glowing-blue: hsl(230, 100, 50); /* EnabledMenuText */
-  --color-lighted: hsl(216, 24, 92); /* pressed secondary background */
-  --color-dark-blue: hsl(230, 95, 31); /* buttons focused state */
-  --color-blue-primary: hsl(230, 100, 40); /* pressed primary */
-  --color-light-glowing-blue: hsl(230, 88, 45); /* pressed secondary */
-  --color-dark-glowing-blue: hsl(230, 95, 31); /* buttons focused state */
+  --color-glowing-blue: hsl(230, 100%, 50%); /* EnabledMenuText */
+  --color-lighted: hsl(216, 24%, 92%); /* pressed secondary background */
+  --color-dark-blue: hsl(230, 95%, 31%); /* buttons focused state */
+  --color-blue-primary: hsl(230, 100%, 40%); /* pressed primary */
+  --color-light-glowing-blue: hsl(230, 88%, 45%); /* pressed secondary */
+  --color-dark-glowing-blue: hsl(230, 95%, 31%); /* buttons focused state */
 }
 
 :root {
