@@ -1,0 +1,14 @@
+@font-face {
+  font-family: "Raleway";
+  src: url("../../shared/assets/fonts/Raleway-VariableFont_wght.woff2")
+    format("woff2-variations");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Roboto";
+  src: url("../../shared/assets/fonts/Roboto-VariableFont_wdth_wght.woff2")
+    format("woff2-variations");
+  font-weight: 100 900;
+  font-display: swap;
+}
