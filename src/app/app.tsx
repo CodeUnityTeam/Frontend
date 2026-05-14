@@ -1,4 +1,4 @@
-import { Header } from "@/components/header/header";
+import { Header } from "@/widgets/header";
 import { Outlet } from "react-router";
 
 export function App() {
