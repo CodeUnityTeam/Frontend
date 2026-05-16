@@ -89,7 +89,7 @@
   /* #d3e9f7 - bgCardsHover/SecondaryButton */
   --color-blue: hsl(203, 69%, 90%);
   /* #f1f4f9 - bgCardsDisabled/footer */
-  --color-light-blue: hsl(217, 40%, 96%);
+  --color-light-blue: hsl(218, 40%, 96%);
 
   /* #ff5330 - textError/Stroke */
   --color-red: hsl(10, 100%, 59%);
@@ -116,6 +116,8 @@
   --card-foreground: var(--color-black);
   --popover: var(--color-white);
   --popover-foreground: var(--color-black);
+  --popover-shadow: 0px 4px 12px hsla(236, 8%, 63%, 0.15);
+  /* TODO - shadow --color-gray. Refactor to raw color values  */
 
   --primary: var(--color-glowing-blue);
   --primary-foreground: var(--color-white);
@@ -129,7 +131,7 @@
 
   --muted: var(--color-light-gray-100);
   --muted-foreground: var(--color-gray);
-  --accent: var(--color-light-gray-100);
+  --accent: var(--color-light-blue);
   --accent-foreground: var(--color-black);
   --destructive: var(--color-red);
   --destructive-foreground: var(--color-white);
