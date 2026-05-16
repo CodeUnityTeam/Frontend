@@ -19,31 +19,56 @@
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-pressed: var(--primary-pressed);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-pressed: var(--secondary-pressed);
+  --color-secondary-pressed-border: var(--secondary-pressed-border);
+
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-pressed: var(--destructive-pressed);
+
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
+  --radius-xs: calc(var(--radius) * 0.375);
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-xl: calc(var(--radius) * 1.25);
+  --radius-2xl: calc(var(--radius) * 1.5);
+  --radius-3xl: calc(var(--radius) * 2);
+
+  --color-focused: var(--focused);
+
+  --color-disabled: var(--disabled);
+  --color-disabled-foreground: var(--disabled-foreground);
+  --color-disabled-muted: var(--disabled-muted);
 }
+/*
+--radius-xs = 0.375 - 6px - checkbox
+--radius-sm = 0.5 - 8px - small buttons
+--radius-md = 0.75 - 12px - medium/lists buttons
+--radius-lg = --radius - 16px - base/large components
+--radius-xl = 1.25 - 20px - cards/footer
+--radius-2xl = 1.5 - 24px -
+--radius-3xl = 2 - 32px - sections
+*/
 
 /*
   Свои значения — меняй oklch(...) / hex здесь.
@@ -51,23 +76,36 @@
 */
 
 :root {
-  --color-white: hsl(0, 0%, 99%); /* background */
-  --color-black: hsl(200, 4%, 15%); /* TextPrimary/CTAbutton */
-  --color-gray: hsl(236, 8%, 63%); /* TextSecondary */
+  /* #fdfdfd - background */
+  --color-white: hsl(0, 0%, 99%);
+  /* #252728 - TextPrimary/CTAbutton */
+  --color-black: hsl(200, 4%, 15%);
+  /* #9a9ba9 - TextSecondary */
+  --color-gray: hsl(236, 8%, 63%);
+  /* #f7f8f9 - HoverButton/FiltersCard/SearchBox */
   --color-light-gray-100: hsl(210, 14%, 97%);
-  /* HoverButton/FiltersCard/SearchBox */
-  --color-light-gray-200: hsl(0, 0%, 85%); /* DisabledState */
-  --color-blue: hsl(203, 69%, 90%); /* bgCardsHover/SecondaryButton */
-  --color-light-blue: hsl(217, 40%, 96%); /* bgCardsDisabled/footer */
+  /* #dadada - DisabledState */
+  --color-light-gray-200: hsl(0, 0%, 85%);
+  /* #d3e9f7 - bgCardsHover/SecondaryButton */
+  --color-blue: hsl(203, 69%, 90%);
+  /* #f1f4f9 - bgCardsDisabled/footer */
+  --color-light-blue: hsl(217, 40%, 96%);
 
-  --color-red: hsl(10, 100%, 59%); /* textError/Stroke */
+  /* #ff5330 - textError/Stroke */
+  --color-red: hsl(10, 100%, 59%);
+  /* #ffedea - BgError ? */
+  --color-light-red: hsl(10, 100%, 96%);
 
-  --color-glowing-blue: hsl(230, 100%, 50%); /* EnabledMenuText */
-  --color-lighted: hsl(216, 24%, 92%); /* pressed secondary background */
-  --color-dark-blue: hsl(230, 95%, 31%); /* buttons focused state */
-  --color-blue-primary: hsl(230, 100%, 40%); /* pressed primary */
-  --color-light-glowing-blue: hsl(230, 88%, 45%); /* pressed secondary */
-  --color-dark-glowing-blue: hsl(230, 95%, 31%); /* buttons focused state */
+  /* #002bff - Primary Brand/ButtonBg/EnabledMenuText */
+  --color-glowing-blue: hsl(230, 100%, 50%);
+  /* #0e2fd6 - hover primary / pressed secondary  */
+  --color-light-glowing-blue: hsl(230, 88%, 45%);
+  /* #0021cc - pressed primary  */
+  --color-blue-primary: hsl(230, 100%, 40%);
+  /* #e5e9ef - pressed secondary background */
+  --color-lighted: hsl(216, 24%, 92%);
+  /* #041e9a - buttons focused state */
+  --color-dark-blue: hsl(230, 95%, 31%);
 }
 
 :root {
@@ -78,19 +116,35 @@
   --card-foreground: var(--color-black);
   --popover: var(--color-white);
   --popover-foreground: var(--color-black);
+
   --primary: var(--color-glowing-blue);
   --primary-foreground: var(--color-white);
+  --primary-hover: var(--color-light-glowing-blue);
+  --primary-pressed: var(--color-blue-primary);
   --secondary: var(--color-white);
   --secondary-foreground: var(--color-black);
+  --secondary-hover: var(--color-light-blue);
+  --secondary-pressed: var(--color-lighted);
+  --secondary-pressed-border: var(--color-light-glowing-blue);
+
   --muted: var(--color-light-gray-100);
   --muted-foreground: var(--color-gray);
   --accent: var(--color-light-gray-100);
   --accent-foreground: var(--color-black);
   --destructive: var(--color-red);
   --destructive-foreground: var(--color-white);
-  --border: var(--muted-foreground);
-  --input: var(--muted-foreground);
+  --destructive-pressed: hsl(10, 100%, 49%); /* color not from figma */
+  /* made lightness 10% less than --color-red for darker btn tone */
+
+  --border: var(--color-gray);
+  --input: var(--color-gray);
   --ring: var(--color-dark-blue);
+
+  --focused: var(--color-dark-blue);
+
+  --disabled: var(--color-light-gray-200);
+  --disabled-foreground: var(--color-gray);
+  --disabled-muted: var(--color-light-gray-100);
 }
 
 @layer base {
@@ -99,6 +153,6 @@
   }
 
   body {
-    @apply bg-background text-foreground font-raleway;
+    @apply bg-background font-raleway text-foreground;
   }
 }
