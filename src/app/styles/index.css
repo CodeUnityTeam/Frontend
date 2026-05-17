@@ -131,7 +131,7 @@
 
   --muted: var(--color-light-gray-100);
   --muted-foreground: var(--color-gray);
-  --accent: var(--color-light-blue);
+  --accent: var(--color-light-gray-100);
   --accent-foreground: var(--color-black);
   --destructive: var(--color-red);
   --destructive-foreground: var(--color-white);
