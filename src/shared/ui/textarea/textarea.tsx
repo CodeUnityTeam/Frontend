@@ -1,22 +1,33 @@
 import * as React from "react";
 
 import { cn } from "@/shared/lib/utils";
+import { Field, FieldError, FieldLabel } from "../field";
+import { InputGroup, InputGroupTextarea } from "../input/input-group";
+import type { TextareaBasic } from "./textarea-basic";
 
-const Textarea = React.forwardRef<
-  HTMLTextAreaElement,
-  React.ComponentProps<"textarea">
->(({ className, ...props }, ref) => {
-  return (
-    <textarea
-      className={cn(
-        "flex min-h-[86px] w-full rounded-lg border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-disabled md:text-sm",
-        className,
-      )}
-      ref={ref}
-      {...props}
-    />
-  );
-});
+interface TextareaProps extends React.ComponentPropsWithoutRef<
+  typeof TextareaBasic
+> {
+  label?: string;
+  error?: string;
+}
+
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ label, className, error, ...props }, ref) => {
+    const generatedId = React.useId();
+
+    return (
+      <Field>
+        {label && <FieldLabel htmlFor={generatedId}>{label}</FieldLabel>}
+        <InputGroup className={cn(className)}>
+          <InputGroupTextarea {...props} id={generatedId} ref={ref} />
+        </InputGroup>
+        {error && <FieldError>{error}</FieldError>}
+      </Field>
+    );
+  },
+);
+
 Textarea.displayName = "Textarea";
 
 export { Textarea };
