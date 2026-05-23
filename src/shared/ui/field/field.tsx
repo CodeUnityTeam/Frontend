@@ -118,7 +118,7 @@ function FieldLabel({
         "has-data-[state=checked]:border-primary has-data-[state=checked]:bg-primary/5 dark:has-data-[state=checked]:bg-primary/10",
 
         // custom styles
-        "font-raleway text-[20px] font-semibold text-foreground",
+        "text-[20px] font-semibold text-foreground",
         className,
       )}
       {...props}
@@ -133,6 +133,8 @@ function FieldTitle({ className, ...props }: React.ComponentProps<"div">) {
       className={cn(
         "flex w-fit items-center gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50",
         className,
+        // custom styles
+        "text-[20px] font-semibold text-foreground",
       )}
       {...props}
     />
@@ -224,7 +226,7 @@ function FieldError({
       role="alert"
       data-slot="field-error"
       className={cn(
-        "font-roboto text-[14px] leading-snug font-normal text-destructive",
+        "text-[14px] leading-snug font-normal text-destructive",
         className,
       )}
       {...props}

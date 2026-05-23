@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import { Field, FieldError, FieldLabel } from "../field";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "./input-group";

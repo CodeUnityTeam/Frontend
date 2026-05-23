@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/shared/lib/utils";
@@ -159,7 +159,7 @@ function InputGroupTextarea({
         className,
 
         // our custom
-        "p-4 font-raleway text-[18px] leading-normal",
+        "p-4 text-[18px] leading-normal",
       )}
       {...props}
     />

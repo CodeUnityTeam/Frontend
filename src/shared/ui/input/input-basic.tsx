@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { cn } from "@/shared/lib/utils";
 
 const InputBasic = React.forwardRef<
@@ -14,7 +14,7 @@ const InputBasic = React.forwardRef<
         className,
 
         // custom styles
-        "font-raleway text-[18px] leading-normal",
+        "text-[18px] leading-normal",
       )}
       ref={ref}
       {...props}
