@@ -6,18 +6,19 @@ import Avatar from "@/shared/assets/images/avatar.png";
 const isAuth = false;
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
-  `transition-opacity hover:opacity-70 ${isActive ? "text-primary font-semibold" : ""
+  `transition-opacity hover:opacity-70 ${
+    isActive ? "text-primary font-semibold" : ""
   }`;
 
 export function Header() {
   return (
-    <header className="flex items-center justify-between px-20 py-4 bg-background font-['Raleway'] max-md:px-5">
+    <header className="flex items-center justify-between bg-background px-20 py-4 font-['Raleway'] max-md:px-5">
       <Link to="/" className="flex items-center">
         <img src={Logo} alt="logo" />
       </Link>
 
       {/* Nav */}
-      <nav className="flex gap-9 font-semibold text-lg leading-none max-md:hidden">
+      <nav className="flex gap-9 text-lg leading-none font-semibold max-md:hidden">
         <NavLink to="/projects" className={linkClass}>
           Проекты
         </NavLink>
@@ -31,29 +32,26 @@ export function Header() {
         </NavLink>
       </nav>
 
-      <div className="flex justify-end items-center gap-10 max-md:gap-10">
-        <button className="hidden max-md:block text-2xl">
+      <div className="flex items-center justify-end gap-10 max-md:gap-10">
+        <button className="hidden text-2xl max-md:block">
           <Icon icon="mdi:menu" />
         </button>
 
         {isAuth ? (
-          <div className="flex items-center gap-2 cursor-pointer">
+          <div className="flex cursor-pointer items-center gap-2">
             <img
               src={Avatar}
               alt="avatar"
-              className="w-10 h-10 rounded-full object-cover"
+              className="h-10 w-10 rounded-full object-cover"
             />
-            <span className="font-semibold text-lg max-md:hidden">Профиль</span>
+            <span className="text-lg font-semibold max-md:hidden">Профиль</span>
           </div>
         ) : (
           <Link
             to="/login"
-            className="flex items-center gap-2 font-semibold text-lg"
+            className="flex items-center gap-2 text-lg font-semibold"
           >
-            <Icon
-              icon="mdi:login"
-              className="w-4 h-4 max-md:hidden"
-            />
+            <Icon icon="mdi:login" className="h-4 w-4 max-md:hidden" />
             Войти
           </Link>
         )}
