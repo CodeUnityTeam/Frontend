@@ -1,11 +1,13 @@
 import { createBrowserRouter } from "react-router";
 import { App } from "@/app/app";
+import AboutPage from "@/pages/about/about-page";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <App />, // layout со всеми providers и sidebar
     children: [
+      { path: "about", element: <AboutPage /> }
       /*
        * Пример навигации по страницам:
        * - Страницы находятся в папке src/pages/[name_page]/[name_page]-page.tsx

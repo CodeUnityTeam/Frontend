@@ -1,6 +1,4 @@
-import Dialog from "@/shared/assets/icons/dialog.svg";
-import Lightning from "@/shared/assets/icons/lightning.svg";
-import Drop from "@/shared/assets/icons/drop.svg"; 
+import { Icon } from "@iconify/react";
 
 function Header3({ text }: { text: string }) {
   return (
@@ -13,7 +11,7 @@ function Header3({ text }: { text: string }) {
 function SectionWhy({ image, text }: { image: string, text: string }) {
   return (
     <div className="flex gap-2 md:gap-4 mbe-2">
-      <img src={image} alt="logo"/>
+      <Icon icon={image} height="24" />
       <p>
         {text}
       </p>
@@ -33,9 +31,9 @@ export function Description() {
         </div>
         <div>
           <Header3 text="Почему именно CodeUnity?" />
-          <SectionWhy image={Lightning} text="Быстрый старт с телефона." />
-          <SectionWhy image={Dialog} text="Обмен контактами через Telegram и GitHub." />
-          <SectionWhy image={Drop} text="Минимум функций - максимум пользы" />
+          <SectionWhy image={"mdi:lightning-bolt-outline"} text="Быстрый старт с телефона." />
+          <SectionWhy image={"mdi:dialogue-outline"} text="Обмен контактами через Telegram и GitHub." />
+          <SectionWhy image={"mdi:drop-check-outline"} text="Минимум функций - максимум пользы" />
         </div>
       </div>
     </section>

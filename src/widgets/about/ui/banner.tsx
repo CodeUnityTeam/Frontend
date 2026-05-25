@@ -32,7 +32,7 @@ export function Banner() {
             </ul>
           </div>
         </div>
-        {isAuth ? (
+        {!isAuth ? (
           <Button size="lg" className="mbs-10 w-full px-10 md:mbs-16 md:w-auto">
             <Link to="/login">Зарегистрироваться</Link>
           </Button>
