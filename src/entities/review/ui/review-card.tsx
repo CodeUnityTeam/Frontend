@@ -1,4 +1,3 @@
-import React from "react";
 import { Icon } from "@iconify/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import {
@@ -8,19 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/ui/card";
+import type { Review } from "../model/types";
 
-interface ReviewCardProps {
-  author: {
-    name: string;
-    profession: string;
-    avatarUrl: string;
-  };
-  text: string;
-}
+type ReviewCardProps = Omit<Review, "id">;
 
-function ReviewCard({ author, text }: ReviewCardProps) {
+export function ReviewCard({ author, text }: ReviewCardProps) {
   return (
-    <Card className="rounded-2xl bg-muted">
+    <Card className="h-full rounded-2xl bg-muted">
       <CardHeader className="flex-row items-center gap-4 space-y-0 p-4 pt-5 md:p-6">
         <Avatar className="size-14 shrink-0 md:size-16">
           <AvatarImage src={author.avatarUrl} alt={`${author.name} avatar`} />
@@ -29,19 +22,19 @@ function ReviewCard({ author, text }: ReviewCardProps) {
           </AvatarFallback>
         </Avatar>
         <div>
-          <CardTitle className="text-base leading-8 md:text-[26px] md:font-bold">
+          <CardTitle className="text-base leading-[1.3] md:text-[26px] md:font-bold">
             {author.name}
           </CardTitle>
-          <CardDescription className="text-[13px] leading-snug text-foreground md:text-lg md:leading-normal">
-            {author.profession}{" "}
+          <CardDescription className="text-[13px] leading-[1.3] text-foreground md:text-lg md:leading-normal">
+            {author.profession}
           </CardDescription>
         </div>
       </CardHeader>
-      <CardContent>
-        <p className="text-sm md:text-lg">{text}</p>
+      <CardContent className="space-y-2">
+        <p className="text-sm leading-none md:text-lg md:leading-normal">
+          {text}
+        </p>
       </CardContent>
     </Card>
   );
 }
-
-export default ReviewCard;
