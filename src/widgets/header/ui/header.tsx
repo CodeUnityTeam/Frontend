@@ -2,6 +2,7 @@ import { Link, NavLink } from "react-router";
 import { Icon } from "@iconify/react";
 import Logo from "@/shared/assets/icons/logo.svg";
 import Avatar from "@/shared/assets/images/avatar.png";
+import { Button } from "@/shared/ui/button";
 
 const isAuth = false;
 
@@ -46,8 +47,10 @@ export function Header() {
             <span className="font-semibold text-lg max-md:hidden">Профиль</span>
           </div>
         ) : (
-          <Link
-            to="/login"
+          <Button
+            onClick={() => alert("В разработке")}
+            variant="ghost"
+            size="sm"
             className="flex items-center gap-2 font-semibold text-lg"
           >
             <Icon
@@ -55,9 +58,9 @@ export function Header() {
               className="w-4 h-4 max-md:hidden"
             />
             Войти
-          </Link>
+          </Button>
         )}
       </div>
-    </header>
+    </header >
   );
 }
