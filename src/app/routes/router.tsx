@@ -8,7 +8,7 @@ export const router = createBrowserRouter([
     path: "/",
     element: <App />, // layout со всеми providers и sidebar
     children: [
-      { path: "about", element: <AboutPage /> }
+      { path: "about", element: <AboutPage /> },
       {
         index: true,
         element: <HomePage />,
