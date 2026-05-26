@@ -26,7 +26,7 @@ export function Header() {
           Q&A
         </NavLink>
 
-        <NavLink to="/articles" className={linkClass}>
+        <NavLink to="/about" className={linkClass}>
           О нас
         </NavLink>
       </nav>

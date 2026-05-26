@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router";
 import { App } from "@/app/app";
+import AboutPage from "@/pages/about/about-page";
 import { HomePage } from "@/pages/home/ui/home-page";
 
 export const router = createBrowserRouter([
@@ -7,6 +8,7 @@ export const router = createBrowserRouter([
     path: "/",
     element: <App />, // layout со всеми providers и sidebar
     children: [
+      { path: "about", element: <AboutPage /> },
       {
         index: true,
         element: <HomePage />,
