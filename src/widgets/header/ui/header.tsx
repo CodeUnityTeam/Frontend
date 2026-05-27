@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router";
 import { Icon } from "@iconify/react";
 import Logo from "@/shared/assets/icons/logo.svg";
 import Avatar from "@/shared/assets/images/avatar.png";
-import { navItems } from "../config/navItems";
+import { navItems } from "../config/nav-items";
 
 const isAuth = true;
 
@@ -121,6 +121,6 @@ export function Header() {
           </div>
         </div>
       </div>
-    </header>
+    </header >
   );
 }
