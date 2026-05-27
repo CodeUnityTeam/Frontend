@@ -1,12 +1,11 @@
 import { Link } from "react-router";
-import ListIcon from '@iconify-react/ph/list';
-import SignInIcon from '@iconify-react/ph/sign-in';
+import { Icon } from "@iconify/react";
 import Logo from "@/shared/assets/icons/logo.svg";
 import Avatar from "@/shared/assets/images/avatar.png";
 import { Navigation } from "@/shared/ui/navigation";
 import { navigationConfigs } from "@/shared/config/navigation/navigation-config";
 
-const isAuth = true;
+const isAuth = false;
 
 export function Header() {
   return (
@@ -45,7 +44,7 @@ export function Header() {
                 to="/login"
                 className="flex items-center"
               >
-                <SignInIcon height="24" />
+                <Icon icon="ph:sign-in" height="24" />
                 <span className="py-4 pl-2 pr-4">Войти</span>
               </Link>
             )}
@@ -54,7 +53,7 @@ export function Header() {
 
         {/* Mobile burger */}
         <button className="hidden max-md:block text-2xl p-2.5">
-          <ListIcon height="24" />
+          <Icon icon="ph:list" height="24" />
         </button>
       </div>
     </header>

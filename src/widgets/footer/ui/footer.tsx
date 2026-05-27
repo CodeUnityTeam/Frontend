@@ -1,6 +1,6 @@
 import { Navigation } from "@/shared/ui/navigation";
 import { navigationConfigs } from "@/shared/config/navigation/navigation-config";
-import TelegramIcon from "@iconify-react/fontisto/telegram";
+import { Icon } from "@iconify/react";
 
 export function Footer() {
   return (
@@ -20,7 +20,7 @@ export function Footer() {
             rel="noopener noreferrer"
             aria-label="Telegram"
           >
-            <TelegramIcon height="48" />
+            <Icon icon="fontisto:telegram" height="48" />
           </a>
         </div>
         {/* Copyright */}
