@@ -10,4 +10,4 @@ function AboutPage() {
   );
 } 
 
-export default AboutPage;
+export const Component = AboutPage;
