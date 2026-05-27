@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router";
 import { App } from "@/app/app";
-import AboutPage from "@/pages/about/about-page";
 import { HomePage } from "@/pages/home/ui/home-page";
 
 export const router = createBrowserRouter([
@@ -8,7 +7,6 @@ export const router = createBrowserRouter([
     path: "/",
     element: <App />, // layout со всеми providers и sidebar
     children: [
-      { path: "about", element: <AboutPage /> },
       {
         index: true,
         element: <HomePage />,
@@ -26,6 +24,11 @@ export const router = createBrowserRouter([
        * { path: "login", lazy: () => import("@/pages/login/login-page") }
        * { path: "*", lazy: () => import("@/pages/404/404-page") }
        */
+      { path: "projects", lazy: () => import("@/pages/projects/projects-page") },
+      { path: "qa", lazy: () => import("@/pages/qa/qa-page") },
+      { path: "about", lazy: () => import("@/pages/about/about-page") },
+      { path: "help", lazy: () => import("@/pages/help/help-page") },
+      { path: "documents", lazy: () => import("@/pages/documents/documents-page") },
     ],
   },
 ]);

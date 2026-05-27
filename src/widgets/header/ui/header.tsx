@@ -1,65 +1,60 @@
-import { Link, NavLink } from "react-router";
+import { Link } from "react-router";
 import { Icon } from "@iconify/react";
 import Logo from "@/shared/assets/icons/logo.svg";
 import Avatar from "@/shared/assets/images/avatar.png";
-import { Button } from "@/shared/ui/button";
+import { Navigation } from "@/shared/ui/navigation";
+import { navigationConfigs } from "@/shared/config/navigation/navigation-config";
 
 const isAuth = false;
 
-const linkClass = ({ isActive }: { isActive: boolean }) =>
-  `transition-opacity hover:opacity-70 ${isActive ? "text-primary font-semibold" : ""
-  }`;
-
 export function Header() {
   return (
-    <header className="flex items-center justify-between px-20 py-4 bg-background font-['Raleway'] max-md:px-5">
-      <Link to="/" className="flex items-center">
-        <img src={Logo} alt="logo" />
-      </Link>
+    <header className=" font-raleway font-semibold text-lg leading-5.25 bg-background">
+      <div className="flex justify-between items-center py-[20.5px] px-4 md:px-20 md:py-4">
+        {/* Logo */}
+        <Link to="/" className="flex items-center">
+          <img src={Logo} alt="logo" />
+        </Link>
 
-      {/* Nav */}
-      <nav className="flex gap-9 font-semibold text-lg leading-none max-md:hidden">
-        <NavLink to="/projects" className={linkClass}>
-          Проекты
-        </NavLink>
+        {/* Desktop */}
+        <div className="flex items-center gap-31 max-md:hidden">
+          {/* Navigation */}
+          <Navigation 
+            items={ navigationConfigs.header }
+            listClassName="flex gap-4"
+            itemClassName="py-4 md:px-5"
+          />
 
-        <NavLink to="/users" className={linkClass}>
-          Q&A
-        </NavLink>
-
-        <NavLink to="/about" className={linkClass}>
-          О нас
-        </NavLink>
-      </nav>
-
-      <div className="flex justify-end items-center gap-10 max-md:gap-10">
-        <button className="hidden max-md:block text-2xl">
-          <Icon icon="mdi:menu" />
-        </button>
-
-        {isAuth ? (
-          <div className="flex items-center gap-2 cursor-pointer">
-            <img
-              src={Avatar}
-              alt="avatar"
-              className="w-10 h-10 rounded-full object-cover"
-            />
-            <span className="font-semibold text-lg max-md:hidden">Профиль</span>
+          {/* Auth controls */}
+          <div className="flex items-center gap-10 max-md:gap-10">
+            {isAuth ? (
+              <button 
+                type="button"
+                className="flex items-center cursor-pointer"
+              >
+                <img
+                  src={Avatar}
+                  alt="avatar"
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <span className="py-4 pl-2 pr-4">Профиль</span>
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className="flex items-center"
+              >
+                <Icon icon="ph:sign-in" height="24" />
+                <span className="py-4 pl-2 pr-4">Войти</span>
+              </Link>
+            )}
           </div>
-        ) : (
-          <Button
-            onClick={() => alert("В разработке")}
-            variant="ghost"
-            size="sm"
-            className="flex items-center gap-2 font-semibold text-lg"
-          >
-            <Icon
-              icon="mdi:login"
-              className="w-4 h-4 max-md:hidden"
-            />
-            Войти
-          </Button>
-        )}
+        </div>
+
+        {/* Mobile burger */}
+        <button className="hidden max-md:block text-2xl p-2.5">
+          <Icon icon="ph:list" height="24" />
+        </button>
       </div>
     </header >
   );

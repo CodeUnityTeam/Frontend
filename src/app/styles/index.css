@@ -59,6 +59,16 @@
   --color-disabled: var(--disabled);
   --color-disabled-foreground: var(--disabled-foreground);
   --color-disabled-muted: var(--disabled-muted);
+
+  --color-light-blue: hsl(217, 40%, 96%);
+
+  /*Navigation*/
+  --color-navigation-link: var(--navigation-link);
+  --color-navigation-link-hover: var(--navigation-link-hover);
+  --color-navigation-link-pressed: var(--navigation-link-pressed);
+  --color-navigation-link-disabled: var(--navigation-link-disabled);
+  --color-navigation-link-focused: var(--navigation-link-focused);
+  --color-navigation-link-active: var(--navigation-link-active);
 }
 /*
 --radius-xs = 0.375 - 6px - checkbox
@@ -147,6 +157,14 @@
   --disabled: var(--color-light-gray-200);
   --disabled-foreground: var(--color-gray);
   --disabled-muted: var(--color-light-gray-100);
+
+  /* Navigation */
+  --navigation-link: var(--color-black);
+  --navigation-link-hover: var(--color-glowing-blue);
+  --navigation-link-pressed: var(--color-light-glowing-blue);
+  --navigation-link-disabled: var(--color-light-gray-200);
+  --navigation-link-focused: var(--color-dark-blue);
+  --navigation-link-active: var(--color-glowing-blue);
 }
 
 @layer base {
