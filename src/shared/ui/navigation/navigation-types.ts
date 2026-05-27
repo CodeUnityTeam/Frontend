@@ -11,4 +11,5 @@ export interface NavigationProps {
   itemClassName?: string;
   linkClassName?: string;
   activeLinkClassName?: string;
+  onItemClick?: () => void;
 }

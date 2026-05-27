@@ -8,6 +8,6 @@ function AboutPage() {
       <Description />
     </>
   );
-} 
+}
 
 export const Component = AboutPage;

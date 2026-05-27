@@ -7,6 +7,7 @@ interface Props {
   linkClassName?: string;
   activeLinkClassName?: string;
   disabled?: boolean;
+  onClick?: () => void;
 }
 
 export function NavigationItem({
@@ -14,12 +15,14 @@ export function NavigationItem({
   linkClassName,
   activeLinkClassName,
   disabled,
+  onClick
 }: Props) {
   return (
     <NavLink
       to={item.id}
+      onClick={onClick}
       aria-label={`Перейти на страницу ${item.label}`}
-      className={({ isActive }) => 
+      className={({ isActive }) =>
         clsx(
           linkClassName,
           disabled && "pointer-events-none text-navigation-link-disabled",

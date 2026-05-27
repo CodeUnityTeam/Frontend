@@ -1,3 +1,5 @@
-export function Component() {
+const QAPage = () => {
   return <div>QA page</div>;
 }
+
+export const Component = QAPage;
