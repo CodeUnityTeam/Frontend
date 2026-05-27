@@ -5,7 +5,6 @@ import { Footer } from "@/widgets/footer";
 export function App() {
   return (
     <div className="app-layout">
-      {/* тут размещается sidebar */}
       <Header />
       <Outlet />
       <Footer />

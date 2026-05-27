@@ -17,6 +17,7 @@ export function Navigation({
     disabled:text-navigation-link-disabled
   `,
   activeLinkClassName = "text-navigation-link-active",
+  onItemClick,
 }: NavigationProps) {
   return (
     <nav className={className}>
@@ -27,6 +28,7 @@ export function Navigation({
               item={item}
               linkClassName={linkClassName}
               activeLinkClassName={activeLinkClassName}
+              onClick={onItemClick}
             />
           </li>
         ))}
