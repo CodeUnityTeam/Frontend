@@ -26,16 +26,7 @@ export const router = createBrowserRouter([
        */
       { path: "projects", lazy: () => import("@/pages/projects/projects-page") },
       { path: "qa", lazy: () => import("@/pages/qa/qa-page") },
-      {
-        path: "about",
-        lazy: async () => {
-          const module = await import("@/pages/about/about-page");
-
-          return {
-            Component: module.default,
-          };
-        },
-      },
+      { path: "about", lazy: () => import("@/pages/about/about-page") },
       { path: "help", lazy: () => import("@/pages/help/help-page") },
       { path: "documents", lazy: () => import("@/pages/documents/documents-page") },
     ],
