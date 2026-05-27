@@ -56,6 +56,6 @@ export function Header() {
           <Icon icon="ph:list" height="24" />
         </button>
       </div>
-    </header>
+    </header >
   );
 }
