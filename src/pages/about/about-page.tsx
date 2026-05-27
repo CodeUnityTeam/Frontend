@@ -8,6 +8,6 @@ function AboutPage() {
       <Description />
     </>
   );
-} 
+}
 
-export default AboutPage;
+export const Component = AboutPage;

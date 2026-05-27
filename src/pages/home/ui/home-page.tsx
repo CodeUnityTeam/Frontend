@@ -1,9 +1,11 @@
 import { ValueProps } from "@/widgets/value-props";
 
-export const HomePage = () => {
+const HomePage = () => {
   return (
     <>
       <ValueProps />
     </>
   );
 };
+
+export const Component = HomePage;
