@@ -13,9 +13,6 @@
   --font-raleway:
     "Raleway", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji";
-  --font-roboto:
-    "Roboto", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji";
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -62,7 +59,6 @@
 
   --color-light-blue: hsl(217, 40%, 96%);
 
-  /*Navigation*/
   --color-navigation-link: var(--navigation-link);
   --color-navigation-link-hover: var(--navigation-link-hover);
   --color-navigation-link-pressed: var(--navigation-link-pressed);
@@ -70,6 +66,7 @@
   --color-navigation-link-focused: var(--navigation-link-focused);
   --color-navigation-link-active: var(--navigation-link-active);
 }
+
 /*
 --radius-xs = 0.375 - 6px - checkbox
 --radius-sm = 0.5 - 8px - small buttons
