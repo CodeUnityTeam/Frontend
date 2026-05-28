@@ -11,8 +11,8 @@ export function TagsDesktop() {
 
       <div className="flex flex-col gap-3">
         {tags.map((tag) => (
-          <label key={tag.id} className="flex cursor-pointer items-center gap-3">
-            <Checkbox className="size-5 [&_svg]:size-3.5" checked={isTagChecked(tag.id)} onCheckedChange={() => toggleTag(tag.id)} />
+          <label key={tag.value} className="flex cursor-pointer items-center gap-3">
+            <Checkbox className="size-5 [&_svg]:size-3.5" checked={isTagChecked(tag.value)} onCheckedChange={() => toggleTag(tag.value)} />
             <span className="text-base text-neutral-700">{tag.label}</span>
           </label>
         ))}

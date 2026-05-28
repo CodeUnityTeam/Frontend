@@ -3,21 +3,21 @@ import { useState } from "react";
 export function useTags() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const toggleTag = (id: string) => {
-    if (id === "all") {
+  const toggleTag = (value: string) => {
+    if (value === "all") {
       setSelectedTags([]);
       return;
     }
 
     setSelectedTags((prev) =>
-      prev.includes(id)
-        ? prev.filter((itemId) => itemId !== id)
-        : [...prev, id],
+      prev.includes(value)
+        ? prev.filter((itemId) => itemId !== value)
+        : [...prev, value],
     );
   };
 
-  const isTagChecked = (id: string) => {
-    return id === "all" ? selectedTags.length === 0 : selectedTags.includes(id);
+  const isTagChecked = (value: string) => {
+    return value === "all" ? selectedTags.length === 0 : selectedTags.includes(value);
   };
 
   return {
