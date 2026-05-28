@@ -16,12 +16,12 @@ export function ReviewsSection() {
   }
 
   return (
-    <section className="py-10 md:py-20">
-      <div className="container mx-auto px-4">
+    <section className="py-5">
+      <div className="container mx-auto max-w-[1120px] px-4 lg:px-0">
         <h2 className="mb-7 text-[32px] leading-[1.3] font-semibold md:mb-6 md:text-4xl">
           Что о нас говорят?
         </h2>
-        <Carousel className="mx-auto max-w-[77%] md:max-w-full">
+        <Carousel className="mx-auto max-w-[77%] md:max-w-[90%] xl:max-w-full">
           <CarouselContent className="-ml-4 md:-ml-9">
             {REVIEWS_MOCKS.map((review) => (
               <CarouselItem
