@@ -6,8 +6,7 @@ import Avatar from "@/shared/assets/images/avatar.png";
 import { navigationConfigs } from "@/shared/config";
 import { Button } from "@/shared/ui/button";
 import { Navigation } from "@/shared/ui/navigation";
-
-const isAuth = false;
+import { isAuth } from "@/shared/config/mock-config";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
