@@ -8,9 +8,9 @@ import {
 import { REVIEWS_MOCKS } from "@/entities/review/model/mocks";
 import { ReviewCard } from "@/entities/review";
 
-export function ReviewsSection() {
-  const isAuth = false;
+const isAuth = false;
 
+export function ReviewsSection() {
   if (isAuth) {
     return null;
   }
