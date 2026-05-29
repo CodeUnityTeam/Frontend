@@ -31,7 +31,10 @@ function ThanksNotification({ t }: ThanksNotificationProps) {
 
 export const showThanksNotification = () => {
   toast.custom((t) => <ThanksNotification t={t} />, {
-    unstyled: true,
     duration: 5000,
+    style: {
+      borderRadius: "24px",
+      overflow: "hidden",
+    },
   });
 };
