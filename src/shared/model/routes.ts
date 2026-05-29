@@ -12,12 +12,12 @@ export const ROUTES = {
   NOT_FOUND: "/404",
 
   /*
-  * пример: путь с параметром 
-  * ROUTES.NAME_PAGE_1: "/name_page_1/:id"
-  * 
-  * в PathParams ниже добавь 
-  * [ROUTES.NAME_PAGE_1]: { id: string } 
-  * */
+   * пример: путь с параметром
+   * ROUTES.NAME_PAGE_1: "/name_page_1/:id"
+   *
+   * в PathParams ниже добавь
+   * [ROUTES.NAME_PAGE_1]: { id: string }
+   * */
   NAME_PAGE_1: "/name_page_1/:id",
 } as const;
 

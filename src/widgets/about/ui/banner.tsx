@@ -1,7 +1,5 @@
-import { Link } from "react-router";
+import { isAuth } from "@/shared/config/mock-config";
 import { Button } from "@/shared/ui/button";
-
-const isAuth = true;
 
 export function Banner() {
   return (
