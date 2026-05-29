@@ -50,7 +50,7 @@ export interface ButtonProps
  *
  * @example
  *    <Button size="icon_lg" variant="outline" className="">
- *        <Icon icon="ph:telegram-logo"></Icon>
+ *        <Icon icon="ph:telegram-logo" />
  *    </Button>
  */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
