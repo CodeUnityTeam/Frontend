@@ -8,7 +8,7 @@ interface ThanksNotificationProps {
 
 function ThanksNotification({ t }: ThanksNotificationProps) {
   return (
-    <div className="relative flex w-[361px] justify-start rounded-2xl border border-border bg-background px-4 py-6 shadow-lg md:w-[696px] md:px-15 md:py-14">
+    <div className="relative flex justify-start rounded-2xl border border-border bg-background px-4 py-6 shadow-lg md:w-[696px] md:px-15 md:py-14">
       <Button
         variant="ghost"
         onClick={() => toast.dismiss(t)}
