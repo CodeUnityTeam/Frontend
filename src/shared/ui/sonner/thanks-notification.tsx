@@ -8,20 +8,20 @@ interface ThanksNotificationProps {
 
 function ThanksNotification({ t }: ThanksNotificationProps) {
   return (
-    <div className="relative flex justify-center rounded-2xl border border-border bg-background px-15 py-14 shadow-lg">
+    <div className="relative flex w-[361px] justify-start rounded-2xl border border-border bg-background px-4 py-6 shadow-lg md:w-[696px] md:px-15 md:py-14">
       <Button
         variant="ghost"
         onClick={() => toast.dismiss(t)}
-        className="absolute top-14 right-8 size-8"
+        className="absolute top-6 right-4 size-8 md:top-14 md:right-8"
       >
         <Icon icon="ph:x" />
       </Button>
 
-      <div className="flex flex-col gap-6">
-        <h2 className="text-lg leading-[1.23] font-bold md:text-[26px]">
+      <div className="flex w-[92%] flex-col gap-6">
+        <h2 className="text-lg leading-[1.3] font-bold md:text-[26px]">
           Спасибо! Ваше обращение успешно отправлено команде CodeUnity.
         </h2>
-        <p className="text-base leading-[1.5] md:text-[18px]">
+        <p className="text-lg leading-[1.5] md:text-[18px]">
           Мы рассмотрим его в ближайшее время и свяжемся с вами.
         </p>
       </div>
@@ -35,7 +35,6 @@ export const showThanksNotification = () => {
     style: {
       borderRadius: "24px",
       overflow: "hidden",
-      width: "min(696px, calc(100vw - 2rem))",
     },
   });
 };
