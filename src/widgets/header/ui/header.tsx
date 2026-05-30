@@ -7,9 +7,12 @@ import { navigationConfigs } from "@/shared/config";
 import { Button } from "@/shared/ui/button";
 import { Navigation } from "@/shared/ui/navigation";
 import { isAuth } from "@/shared/config/mock-config";
+import { AuthModal } from "@/shared/ui/modal/auth-modal";
+import { useModal } from "@/shared/lib/hooks";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const { open, onOpenChange, openModal } = useModal(false);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -49,7 +52,7 @@ export function Header() {
               <span className="hidden text-lg font-semibold md:inline">Профиль</span>            </>
           ) : (
             <Button
-              onClick={() => alert("В разработке")}
+              onClick={openModal}
               variant="ghost"
               size="sm"
               className="flex items-center gap-1.5 px-2 py-1 text-sm font-semibold"
@@ -98,6 +101,10 @@ export function Header() {
           </div>
         </div>
       </div >
+      <AuthModal 
+        open={open} 
+        onOpenChange={onOpenChange} 
+      />
     </header >
   );
 }
