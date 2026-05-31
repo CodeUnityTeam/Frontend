@@ -9,8 +9,8 @@ import { Navigation } from "@/shared/ui/navigation";
 import { isAuth } from "@/shared/config/mock-config";
 import { useModal } from "@/shared/lib/hooks";
 
-import { AuthModal } from "@/shared/ui/modal/auth-modal"; // тестовая модалка
-
+// import { AuthModal } from "@/shared/ui/modal/auth-modal"; // тестовая модалка
+import { CloseModal } from "@/features/close-modal/ui/close-modal"; // тестовая модалка удаления
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -103,10 +103,12 @@ export function Header() {
           </div>
         </div>
       </div >
-      <AuthModal //тестовая модалка
+      <CloseModal open={open} 
+        onOpenChange={onOpenChange} />
+      {/* <AuthModal //тестовая модалка
         open={open} 
         onOpenChange={onOpenChange} 
-      />
+      /> */}
     </header >
   );
 }
