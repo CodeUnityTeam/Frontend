@@ -7,8 +7,9 @@ import { navigationConfigs } from "@/shared/config";
 import { Button } from "@/shared/ui/button";
 import { Navigation } from "@/shared/ui/navigation";
 import { isAuth } from "@/shared/config/mock-config";
-import { AuthModal } from "@/shared/ui/modal/auth-modal";
 import { useModal } from "@/shared/lib/hooks";
+
+import { AuthModal } from "@/shared/ui/modal/auth-modal"; // тестовая модалка
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +39,7 @@ export function Header() {
           className="relative z-50 hidden text-2xl max-md:block"
           aria-label="Открыть меню"
         >
-          <Icon icon="mdi:menu" />
+          <Icon icon="ph:list" height={24} />
         </Button>
 
         <div className="flex cursor-pointer items-center gap-2">
@@ -52,13 +53,13 @@ export function Header() {
               <span className="hidden text-lg font-semibold md:inline">Профиль</span>            </>
           ) : (
             <Button
-              onClick={openModal}
+              onClick={openModal} // для тестовой модалки
               variant="ghost"
               size="sm"
               className="flex items-center gap-1.5 px-2 py-1 text-sm font-semibold"
             >
               <Icon
-                icon="mdi:login"
+                icon="ph:sign-in" height={24}
                 className="h-3.5 w-3.5"
               />
               Войти
@@ -101,7 +102,7 @@ export function Header() {
           </div>
         </div>
       </div >
-      <AuthModal 
+      <AuthModal //тестовая модалка
         open={open} 
         onOpenChange={onOpenChange} 
       />
