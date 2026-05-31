@@ -1,5 +1,4 @@
-import { Banner } from "@/widgets/about/ui/banner";
-import { Description } from "@/widgets/about/ui/description";
+import { Banner, Description, JoinUs } from "@/widgets/about";
 import { ReviewsSection } from "@/widgets/reviews-section";
 
 function AboutPage() {
@@ -8,6 +7,7 @@ function AboutPage() {
       <Banner />
       <Description />
       <ReviewsSection />
+      <JoinUs />
     </>
   );
 }
