@@ -80,7 +80,7 @@ export const ModalDescription = ({
 
 export const ModalBody = ({ children, className }: ModalSlotProps) => {
   return (
-    <div className={cn("min-h-0 flex-1 overflow-y-auto", className)}>
+    <div className={cn("min-h-0 flex-1 overflow-y-auto no-scrollbar max-h-[744px]", className)}>
       {children}
     </div>
   );

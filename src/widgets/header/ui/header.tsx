@@ -11,6 +11,7 @@ import { useModal } from "@/shared/lib/hooks";
 
 import { AuthModal } from "@/shared/ui/modal/auth-modal"; // тестовая модалка
 
+
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const { open, onOpenChange, openModal } = useModal(false);

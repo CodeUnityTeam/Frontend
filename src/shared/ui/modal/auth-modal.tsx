@@ -69,8 +69,8 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
       </ModalBody>
       
       <ModalFooter>
-        <Button type="submit">Save changes</Button>
-        <Button type="submit">Save changes</Button>
+        <Button>Отмена</Button>
+        <Button type="submit">Создать</Button>
       </ModalFooter>
     </Modal>
   );
