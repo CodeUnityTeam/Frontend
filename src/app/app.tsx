@@ -1,5 +1,4 @@
 import { Header } from "@/widgets/header";
-import { ChatBotCard } from "@/widgets/header/ui/project-card";
 import { Outlet } from "react-router";
 import { Footer } from "@/widgets/footer";
 
