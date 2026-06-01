@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router";
 import { App } from "@/app/app";
 import AboutPage from "@/pages/about/about-page";
 import { HomePage } from "@/pages/home/ui/home-page";
+import FaqPage from "@/pages/faq/faq-page";
 
 export const router = createBrowserRouter([
   {
@@ -9,6 +10,7 @@ export const router = createBrowserRouter([
     element: <App />, // layout со всеми providers и sidebar
     children: [
       { path: "about", element: <AboutPage /> },
+      { path: "faq", element: <FaqPage />},
       {
         index: true,
         element: <HomePage />,
