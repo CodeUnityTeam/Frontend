@@ -1,0 +1,1 @@
+export { navigationConfigs } from "./navigation/navigation-config"
