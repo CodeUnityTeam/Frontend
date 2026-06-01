@@ -1,0 +1,23 @@
+// Predetermined skills list for autocomplete suggestions — mirrors tags.ts pattern.
+export const SKILLS_SUGGESTIONS = [
+  "React",
+  "TypeScript",
+  "JavaScript",
+  "Node.js",
+  "Python",
+  "Vue.js",
+  "Angular",
+  "CSS",
+  "HTML",
+  "GraphQL",
+  "REST API",
+  "Docker",
+  "Git",
+  "PostgreSQL",
+  "MongoDB",
+  "Figma",
+  "UI/UX Design",
+  "Product Management",
+  "Scrum",
+  "Testing",
+];
