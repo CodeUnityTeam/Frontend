@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { useState, useCallback } from "react";
 import { Button } from "@/shared/ui/button";
 
-type IChatBotCard = {
+type TChatBotCard = {
   title: string;
   description: string;
   tags: string[];
@@ -18,7 +18,7 @@ export function ChatBotCard({
   tags,
   date,
   location,
-}: IChatBotCard) {
+}: TChatBotCard) {
   const [isLike, setIsLike] = useState(false);
 
   const handleLike = useCallback(() => {
@@ -55,18 +55,19 @@ export function ChatBotCard({
           {tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-2xl bg-[#D3E9F7] px-3 py-1 text-[13px] font-normal"
+              className="rounded-2xl px-3 py-1 text-[13px] font-normal"
+              style={{ backgroundColor: 'var(--secondary-button)' }}
             >
               {tag}
             </span>
           ))}
         </div>
 
-        <div className="mt-4 flex flex-col flex-row gap-6">
+        <div className="mt-4 flex flex-row gap-6">
           <div className="flex items-center justify-center gap-1">
             <Icon
               icon="ph:calendar-dots"
-              className="gap-1 text-xl text-[#9A9BA9]"
+              className="text-xl text-[#9A9BA9]"
             />
             <span className="font-raleway text-[14px]">{date}</span>
           </div>
