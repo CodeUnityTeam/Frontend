@@ -1,9 +1,13 @@
+import { HomeBanner } from "@/widgets/home-banner";
 import { ValueProps } from "@/widgets/value-props";
 
-export const HomePage = () => {
+const HomePage = () => {
   return (
     <>
+      <HomeBanner />
       <ValueProps />
     </>
   );
 };
+
+export const Component = HomePage;
