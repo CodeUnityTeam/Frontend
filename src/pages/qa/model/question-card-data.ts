@@ -15,6 +15,6 @@ export const testQuestion: QuestionData = {
   skills: ["Дизайн", "Figma"],
   createdAt: new Date(2026, 4, 25),
   likes: 10,
-  comments: 4, 
+  comments: 3, 
   reposts: 2
 }
