@@ -8,11 +8,11 @@ type Props = {
 
 export const EmptyState = ({ title, description, icon }: Props) => {
   const defaultIcon = (
-    <Icon icon="tabler:rocket" className="h-30 w-30 text-muted-foreground" />
+    <Icon icon="ph:rocket-launch" className="h-30 w-30 text-muted-foreground" />
   );
 
   return (
-    <div className="flex flex-col items-center justify-center gap-12 py-10 text-center font-raleway">
+    <div className="flex flex-col items-center justify-center gap-12 py-10 text-center">
       <div className="flex h-32 w-32 items-center justify-center">
         {icon ?? defaultIcon}
       </div>

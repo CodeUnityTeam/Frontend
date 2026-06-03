@@ -21,7 +21,7 @@ export const Tag = ({
 
   const variants: Record<TagVariant, string> = {
     default: "bg-muted text-foreground",
-    accent: "bg-primary text-primary-foreground",
+    accent: "bg-(--color-blue) text-foreground",
     muted: "bg-muted text-muted-foreground",
   };
 
