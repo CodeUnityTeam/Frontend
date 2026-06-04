@@ -3,15 +3,15 @@ import { Icon } from "@iconify/react";
 import { Button } from "../button";
 
 interface ThanksNotificationProps {
-  t: string | number; // id уведомления для закрытия
+  id: string | number; // id уведомления для закрытия. Нужен чтобы закрись не все toast, а конкретный, его айди.
 }
 
-function ThanksNotification({ t }: ThanksNotificationProps) {
+function ThanksNotification({ id }: ThanksNotificationProps) {
   return (
     <div className="relative flex justify-start rounded-2xl border border-border bg-background px-4 py-6 shadow-lg md:w-[696px] md:px-15 md:py-14">
       <Button
         variant="ghost"
-        onClick={() => toast.dismiss(t)}
+        onClick={() => toast.dismiss(id)}
         className="absolute top-6 right-4 size-8 md:top-14 md:right-8"
       >
         <Icon icon="ph:x" />
@@ -30,7 +30,7 @@ function ThanksNotification({ t }: ThanksNotificationProps) {
 }
 
 export const showThanksNotification = () => {
-  toast.custom((t) => <ThanksNotification t={t} />, {
+  toast.custom((id) => <ThanksNotification id={id} />, {
     duration: 5000,
     style: {
       borderRadius: "24px",
