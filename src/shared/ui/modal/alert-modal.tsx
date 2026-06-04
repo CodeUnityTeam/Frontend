@@ -6,14 +6,19 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogAction,
-  AlertDialogCancel
-} from '@/shared/ui/alert-dialog'
+  AlertDialogCancel,
+} from "@/shared/ui/alert-dialog";
 import { cn } from "@/shared/lib/utils";
 import type { ReactNode } from "react";
+
+import { buttonVariants } from "@/shared/ui/button/button";
 
 type AlertModalSlotProps = {
   children?: ReactNode;
   className?: string;
+  asChild?: boolean;
+  onClick?: () => void;
+  variant?: "default" | "destructive" | "outline" | "ghost";
 };
 
 type AlertModalProps = {
@@ -23,72 +28,111 @@ type AlertModalProps = {
   className?: string;
 };
 
-export function AlertModal({ open, onOpenChange, children, className }: AlertModalProps) {
+export function AlertModal({
+  open,
+  onOpenChange,
+  children,
+  className,
+}: AlertModalProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className={cn(
-        "max-w-[360px] overflow-hidden gap-5 pt-6 pb-5 px-8 rounded-[16px]",
-        className,
-      )}>
+      <AlertDialogContent
+        className={cn(
+          "max-w-[360px] gap-5 overflow-hidden px-8 pt-6 pb-5",
+          className,
+        )}
+      >
         {children}
       </AlertDialogContent>
     </AlertDialog>
   );
 }
 
-export const AlertModalHeader = ({ children, className }: AlertModalSlotProps) => {
+export const AlertModalHeader = ({
+  children,
+  className,
+}: AlertModalSlotProps) => {
   return (
-    <AlertDialogHeader className={cn(
-      "items-center text-center sm:text-center gap-1",
-      className
-    )}>
+    <AlertDialogHeader
+      className={cn("items-center gap-1 text-center sm:text-center", className)}
+    >
       {children}
     </AlertDialogHeader>
   );
 };
 
-export const AlertModalTitle = ({ children, className }: AlertModalSlotProps) => {
+export const AlertModalTitle = ({
+  children,
+  className,
+}: AlertModalSlotProps) => {
   return (
-    <AlertDialogTitle className={cn(
-      "text-[26px] leading-[32px] font-bold m-0",
-      className
-    )}>
+    <AlertDialogTitle
+      className={cn("m-0 text-[26px] leading-[32px] font-bold", className)}
+    >
       {children}
     </AlertDialogTitle>
   );
 };
 
-export const AlertModalDescription = ({ children, className }: AlertModalSlotProps) => (
-  <AlertDialogDescription className={cn("text-[18px] text-foreground ", className)}>
+export const AlertModalDescription = ({
+  children,
+  className,
+}: AlertModalSlotProps) => (
+  <AlertDialogDescription
+    className={cn("text-[18px] text-foreground", className)}
+  >
     {children}
   </AlertDialogDescription>
 );
 
-export const AlertModalFooter = ({ children, className }: AlertModalSlotProps) => {
+export const AlertModalFooter = ({
+  children,
+  className,
+}: AlertModalSlotProps) => {
   return (
-    <AlertDialogFooter className={cn(
-      "flex-row justify-center gap-2 sm:justify-center sm:space-x-0",
-      className
-    )}>
+    <AlertDialogFooter
+      className={cn(
+        "flex-row justify-center gap-2 sm:justify-center sm:space-x-0",
+        className,
+      )}
+    >
       {children}
     </AlertDialogFooter>
   );
 };
 
-export const AlertModalAction = ({ children, className }: AlertModalSlotProps) => (
-  <AlertDialogAction className={cn(
-    "rounded-[16px] text-[16px] leading-[21px] font-semibold py-4 px-9 h-auto bg-alert-modal-button-bg hover:bg-alert-modal-button-bg/90", 
-    className
-  )}>
+export const AlertModalAction = ({
+  children,
+  className,
+  ...props
+}: AlertModalSlotProps) => (
+  <AlertDialogAction
+    className={cn(
+      buttonVariants({
+        variant: "destructive",
+        size: "alertModal",
+      }),
+      className,
+      { ...props },
+    )}
+  >
     {children}
   </AlertDialogAction>
 );
 
-export const AlertModalCancel = ({ children, className }: AlertModalSlotProps) => (
-  <AlertDialogCancel className={cn(
-    "rounded-[16px] text-[16px] leading-[21px] font-semibold py-4 px-[29px] m-0 h-auto border-alert-modal-button-border focus-visible:border-focused]", 
-    className
-  )}>
+export const AlertModalCancel = ({
+  children,
+  className,
+}: AlertModalSlotProps) => (
+  <AlertDialogCancel
+    className={cn(
+      buttonVariants({
+        variant: "outline",
+        size: "alertModal",
+      }),
+      className,
+    )}
+  >
     {children}
   </AlertDialogCancel>
 );

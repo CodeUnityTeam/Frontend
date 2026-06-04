@@ -9,7 +9,7 @@ export function useModal(initialOpen = false) {
   
   return {
     open,
-    onOpenChange: setOpen,
+    setOpen,
     openModal,
     closeModal,
     toggleModal,

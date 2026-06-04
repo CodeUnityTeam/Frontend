@@ -7,14 +7,9 @@ import { navigationConfigs } from "@/shared/config";
 import { Button } from "@/shared/ui/button";
 import { Navigation } from "@/shared/ui/navigation";
 import { isAuth } from "@/shared/config/mock-config";
-import { useModal } from "@/shared/lib/hooks";
-
-// import { AuthModal } from "@/shared/ui/modal/auth-modal"; // тестовая модалка
-import { CloseModal } from "@/features/close-modal/ui/close-modal"; // тестовая модалка удаления
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const { open, onOpenChange, openModal } = useModal(false);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -54,7 +49,7 @@ export function Header() {
               <span className="hidden text-lg font-semibold md:inline">Профиль</span>            </>
           ) : (
             <Button
-              onClick={openModal} // для тестовой модалки
+              onClick={() => alert("В разработке")}
               variant="ghost"
               size="sm"
               className="flex items-center gap-1.5 px-2 py-1 text-sm font-semibold"
@@ -103,12 +98,6 @@ export function Header() {
           </div>
         </div>
       </div >
-      <CloseModal open={open} 
-        onOpenChange={onOpenChange} />
-      {/* <AuthModal //тестовая модалка
-        open={open} 
-        onOpenChange={onOpenChange} 
-      /> */}
     </header >
   );
 }
