@@ -5,9 +5,12 @@ import {
   FiltersSidebar,
   FiltersMobile,
 } from "@/widgets/filters";
+import { Search } from "@/widgets/search";
 
 function ProjectsPage() {
   return (
+    <>
+    <Search/>
     <FiltersProvider>
       <PageContainer className="py-8">
         <FiltersMobile className="mb-6 md:hidden" />
@@ -20,6 +23,7 @@ function ProjectsPage() {
         </div>
       </PageContainer>
     </FiltersProvider>
+    </>
   );
 }
 
