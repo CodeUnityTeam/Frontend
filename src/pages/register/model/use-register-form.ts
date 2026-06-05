@@ -8,8 +8,12 @@ export interface RegisterFormData {
   // Step 1 – Meet me
   name: string;
   surname: string;
-  patronym: string;
+  position: string;
   photo: File | null;
+  // Step 1 additions
+  remote?: boolean;
+  country?: string;
+  city?: string;
   // Step 2 – Your skills
   skills: string[];
   // Step 3 – Experience and projects
@@ -22,6 +26,7 @@ export interface RegisterFormData {
 export type Step = 1 | 2 | 3 | 4;
 
 export const TOTAL_STEPS = 4;
+
 
 // ---------------------------------------------------------------------------
 // Reducer
@@ -40,8 +45,11 @@ type Action =
 const initialData: RegisterFormData = {
   name: "",
   surname: "",
-  patronym: "",
+  position: "",
   photo: null,
+  remote: false,
+  country: "",
+  city: "",
   skills: [],
   experience: "",
   projects: "",
