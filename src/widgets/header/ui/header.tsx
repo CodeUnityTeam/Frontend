@@ -35,7 +35,7 @@ export function Header() {
           className="relative z-50 hidden text-2xl max-md:block"
           aria-label="Открыть меню"
         >
-          <Icon icon="mdi:menu" />
+          <Icon icon="ph:list" height={24} />
         </Button>
 
         <div className="flex cursor-pointer items-center gap-2">
@@ -55,7 +55,7 @@ export function Header() {
               className="flex items-center gap-1.5 px-2 py-1 text-sm font-semibold"
             >
               <Icon
-                icon="mdi:login"
+                icon="ph:sign-in" height={24}
                 className="h-3.5 w-3.5"
               />
               Войти
