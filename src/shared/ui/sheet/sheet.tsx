@@ -1,9 +1,9 @@
 import React from "react";
 import {
-  Root,
-  Trigger,
-  Close,
-  Portal,
+  Root as Sheet,
+  Trigger as SheetTrigger,
+  Close as SheetClose,
+  Portal as SheetPortal,
   Overlay,
   Content,
   Title,
@@ -13,11 +13,6 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { Icon } from "@iconify/react";
 
 import { cn } from "@/shared/lib/utils";
-
-const Sheet = Root;
-const SheetTrigger = Trigger;
-const SheetClose = Close;
-const SheetPortal = Portal;
 
 const SheetOverlay = React.forwardRef<
   React.ElementRef<typeof Overlay>,
@@ -35,16 +30,16 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = Overlay.displayName;
 
 const sheetVariants = cva(
-  "fixed z-50 flex flex-col bg-background shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+  "data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col bg-background shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
   {
     variants: {
       side: {
-        top: "inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
+        top: "data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top inset-x-0 top-0 border-b",
         bottom:
-          "inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
-        left: "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
+          "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom inset-x-0 bottom-0 border-t",
+        left: "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
         right:
-          "inset-y-0 right-0 h-full w-3/4 border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
+          "data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm",
       },
     },
     defaultVariants: {
@@ -54,7 +49,8 @@ const sheetVariants = cva(
 );
 
 interface SheetContentProps
-  extends React.ComponentPropsWithoutRef<typeof Content>,
+  extends
+    React.ComponentPropsWithoutRef<typeof Content>,
     VariantProps<typeof sheetVariants> {
   showClose?: boolean;
 }
@@ -62,32 +58,45 @@ interface SheetContentProps
 const SheetContent = React.forwardRef<
   React.ElementRef<typeof Content>,
   SheetContentProps
->(({ side = "right", showClose = false, className, children, ...props }, ref) => (
-  <SheetPortal>
-    <SheetOverlay />
-    <Content
-      ref={ref}
-      className={cn(sheetVariants({ side }), className)}
-      {...props}
-    >
-      {children}
-      {showClose && (
-        <Close className="absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
-          <Icon icon="lucide:x" className="size-6" />
-          <span className="sr-only">Закрыть</span>
-        </Close>
-      )}
-    </Content>
-  </SheetPortal>
-));
+>(
+  (
+    { side = "right", showClose = false, className, children, ...props },
+    ref,
+  ) => (
+    <SheetPortal>
+      <SheetOverlay />
+      <Content
+        ref={ref}
+        className={cn(sheetVariants({ side }), className)}
+        {...props}
+      >
+        {children}
+        {showClose && (
+          <Close className="absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
+            <Icon icon="lucide:x" className="size-6" />
+            <span className="sr-only">Закрыть</span>
+          </Close>
+        )}
+      </Content>
+    </SheetPortal>
+  ),
+);
 SheetContent.displayName = Content.displayName;
 
-function SheetHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+function SheetHeader({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   return <div className={cn("flex flex-col gap-1.5", className)} {...props} />;
 }
 
-function SheetFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("mt-auto flex flex-col gap-2", className)} {...props} />;
+function SheetFooter({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div className={cn("mt-auto flex flex-col gap-2", className)} {...props} />
+  );
 }
 
 const SheetTitle = React.forwardRef<
@@ -96,7 +105,7 @@ const SheetTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <Title
     ref={ref}
-    className={cn("text-foreground text-lg font-semibold", className)}
+    className={cn("text-lg font-semibold text-foreground", className)}
     {...props}
   />
 ));
@@ -108,7 +117,7 @@ const SheetDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <Description
     ref={ref}
-    className={cn("text-muted-foreground text-sm", className)}
+    className={cn("text-sm text-muted-foreground", className)}
     {...props}
   />
 ));
