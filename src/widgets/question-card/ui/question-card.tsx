@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import { formatDate } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/shared/ui/card";
 
 export interface UserData {
   firstName: string;
@@ -28,37 +29,49 @@ export function QuestionCard({
   question,
   }: QuestionCardProps) {
   return (
-    <section className="flex flex-col justify-between h-fit px-3 md:px-8 py-8 md:py-9 border border-muted-foreground rounded-xl gap-y-5 md:gap-y-7">
-      <div className="w-full flex flex-col gap-y-3">
-        <div className="w-full flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Avatar>
-              <AvatarImage src={question.user.avatarUrl} alt="avatar" />
-              <AvatarFallback></AvatarFallback>
-            </Avatar>
-            <span className="text-xl font-semibold">{question.user.firstName}</span>
-            <div className="flex flex-row items-center gap-1">
-              <Button variant="ghost" className="p-0" onClick={() => alert("В разработке")}>
-                <Icon icon={"ph:star"} />
-              </Button>
-              <span className="text-lg align-middle">{question.user.rating}</span>
+    <Card className="h-fit border-muted-foreground">
+      <CardHeader className="flex flex-row justify-between items-start gap-4 p-6 pb-3">
+        <div className="flex flex-col gap-y-3 flex-1">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Avatar>
+                <AvatarImage src={question.user.avatarUrl} alt="avatar" />
+                <AvatarFallback>
+                  <Icon icon="ph:user" className="size-6" />
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-xl font-semibold">{question.user.firstName}</span>
+              <div className="flex flex-row items-center gap-1">
+                <Button variant="ghost" className="p-0" onClick={() => alert("В разработке")}>
+                  <Icon icon={"ph:star"} />
+                </Button>
+                <span className="text-lg align-middle">{question.user.rating}</span>
+              </div>
+            </div>
+            <div className="text-sm text-muted-foreground whitespace-nowrap">
+              {formatDate(question.createdAt)}
             </div>
           </div>
-          <div className="text-sm">{formatDate(question.createdAt)}</div>
+          <CardTitle className="text-xl md:text-2xl font-bold leading-8">
+            {question.title}
+          </CardTitle>
+          <div className="flex flex-wrap gap-2">
+            {question.skills.map((skill, index) => (
+              <div className="inline-flex items-center border rounded-full px-3 py-1 text-lg text-foreground" key={index}>
+                {skill}
+              </div>
+            ))}
+          </div>
         </div>
-        <h4 className="text-xl md:text-2xl font-bold leading-8">
-          {question.title}
-        </h4>
-        <div className="flex flex-wrap gap-2">
-          {question.skills.map((skill, index) => (
-            <div className="inline-flex items-center border rounded-full px-3 py-1 text-lg text-foreground" key={index}>{skill}</div> // TODO: replace with Tags
-          ))}
-        </div>
-      </div>
-      <p className="w-full h-13 line-clamp-2">
-        {question.description}
-      </p>
-      <div className="w-full h-13 flex justify-between items-center">
+      </CardHeader>
+      
+      <CardContent className="p-6 pt-0">
+        <CardDescription className="text-base text-foreground line-clamp-2">
+          {question.description}
+        </CardDescription>
+      </CardContent>
+      
+      <CardFooter className="flex justify-between items-center p-6 pt-0">
         <div className="flex gap-x-3 md:gap-x-5">
           <div className="flex gap-x-1 md:gap-x-3 items-center">
             <Button variant="ghost" className="p-0" onClick={() => alert("В разработке")}>
@@ -82,7 +95,7 @@ export function QuestionCard({
         <Button variant="ghost" className="font-semibold" onClick={() => alert("В разработке")}>
           Подробнее
         </Button>
-      </div>
-    </section>
+      </CardFooter>
+    </Card>
   )
 };
