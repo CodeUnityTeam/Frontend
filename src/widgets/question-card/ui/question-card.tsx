@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { formatDate } from "@/shared/lib/utils";
+import { formatRelativeDate } from "@/shared/lib/pluralize";
 import { Button } from "@/shared/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/shared/ui/card";
@@ -49,7 +49,7 @@ export function QuestionCard({
               </div>
             </div>
             <div className="text-sm text-muted-foreground whitespace-nowrap">
-              {formatDate(question.createdAt)}
+              {formatRelativeDate(question.createdAt)}
             </div>
           </div>
           <CardTitle className="text-xl md:text-2xl font-bold leading-8">
