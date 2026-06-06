@@ -6,7 +6,7 @@ import { OnboardingStep3 } from "./step-experience";
 import { OnboardingStep4 } from "./step-about";
 
 function RegisterPage() {
-  const { state, next, back } = useRegisterForm();
+  const { state, next, back, patch } = useRegisterForm();
 
   const handleFinish = (patch: Parameters<typeof next>[0]) => {
     // TODO: submit assembled state.data + patch to API
@@ -16,16 +16,16 @@ function RegisterPage() {
   return (
     <OnboardingLayout step={state.step}>
       {state.step === 1 && (
-        <OnboardingStep1 data={state.data} onNext={next} />
+        <OnboardingStep1 data={state.data} onNext={next} onPatch={patch} />
       )}
       {state.step === 2 && (
-        <OnboardingStep2 data={state.data} onNext={next} onBack={back} />
+        <OnboardingStep2 data={state.data} onNext={next} onBack={back} onPatch={patch} />
       )}
       {state.step === 3 && (
-        <OnboardingStep3 data={state.data} onNext={next} onBack={back} />
+        <OnboardingStep3 data={state.data} onNext={next} onBack={back} onPatch={patch} />
       )}
       {state.step === 4 && (
-        <OnboardingStep4 data={state.data} onNext={handleFinish} onBack={back} />
+        <OnboardingStep4 data={state.data} onNext={handleFinish} onBack={back} onPatch={patch} />
       )}
     </OnboardingLayout>
   );

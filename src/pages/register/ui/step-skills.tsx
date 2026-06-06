@@ -8,17 +8,19 @@ interface StepSkillsProps {
   data: RegisterFormData;
   onNext: (patch: Partial<RegisterFormData>) => void;
   onBack: () => void;
+  onPatch: (patch: Partial<RegisterFormData>) => void;
 }
 
-export function OnboardingStep2({ data, onNext, onBack }: StepSkillsProps) {
+export function OnboardingStep2({ data, onNext, onBack, onPatch }: StepSkillsProps) {
   const [skills, setSkills] = useState<string[]>(data.skills);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState<string>(data.skillsDraft ?? "");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
+    onPatch?.({ skillsDraft: value });
 
     if (value.trim()) {
       const filtered = SKILLS_SUGGESTIONS.filter(
@@ -35,14 +37,18 @@ export function OnboardingStep2({ data, onNext, onBack }: StepSkillsProps) {
   const addSkill = (skill: string) => {
     const trimmed = skill.trim();
     if (!trimmed || skills.includes(trimmed)) return;
-    setSkills((prev) => [...prev, trimmed]);
+    const next = [...skills, trimmed];
+    setSkills(next);
     setInputValue("");
     setSuggestions([]);
     inputRef.current?.focus();
+    onPatch?.({ skills: next, skillsDraft: "" });
   };
 
   const removeSkill = (skill: string) => {
-    setSkills((prev) => prev.filter((s) => s !== skill));
+    const next = skills.filter((s) => s !== skill);
+    setSkills(next);
+    onPatch?.({ skills: next });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -55,7 +61,9 @@ export function OnboardingStep2({ data, onNext, onBack }: StepSkillsProps) {
       }
     }
     if (e.key === "Backspace" && !inputValue && skills.length > 0) {
-      setSkills((prev) => prev.slice(0, -1));
+      const next = skills.slice(0, -1);
+      setSkills(next);
+      onPatch?.({ skills: next });
     }
     if (e.key === "Escape") {
       setSuggestions([]);
@@ -63,90 +71,93 @@ export function OnboardingStep2({ data, onNext, onBack }: StepSkillsProps) {
   };
 
   return (
-    <div className="flex flex-col gap-8">
-      <div>
+    <div className="max-w-3xl mx-auto w-full py-8">
+      {/* Hero / Info card */}
+      <div className="mx-auto bg-card/50 p-6 rounded-lg border border-border">
         <h1 className="text-2xl font-semibold">Ваши навыки</h1>
-        <p className="mt-1 text-muted-foreground">
-          Добавьте навыки и инструменты, с которыми вы работаете.
+        <p className="mt-2 text-muted-foreground leading-snug">
+          Чем больше навыков, тем выше шанс найти интересные предложения
         </p>
       </div>
 
-      {/* Tag input */}
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium">Навыки и инструменты</label>
-
-        {/* Input box with tags inside */}
-        <div
-          className="flex min-h-12 cursor-text flex-wrap items-center gap-2 rounded-md border border-input bg-background px-3 py-2 focus-within:ring-2 focus-within:ring-ring"
-          onClick={() => inputRef.current?.focus()}
-        >
-          {/* Existing tags */}
-          {skills.map((skill) => (
-            <span
-              key={skill}
-              className="flex items-center gap-1 rounded-sm bg-secondary px-2 py-0.5 text-sm"
-            >
-              {skill}
-              <button
-                type="button"
-                aria-label={`Remove ${skill}`}
-                className="text-muted-foreground hover:text-foreground"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeSkill(skill);
-                }}
-              >
-                ×
-              </button>
-            </span>
-          ))}
-
-          {/* Text input */}
-          <input
-            ref={inputRef}
-            value={inputValue}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            placeholder={skills.length === 0 ? "Type a skill…" : ""}
-            className="min-w-24 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
-          />
+      {/* Skills block (spacing ~80px below hero) */}
+      <div className="mt-20">
+        <div>
+          <label className="text-lg font-medium">Навыки и инструменты</label>
+          <p className="mt-1 text-sm text-muted-foreground">Выберите программы, которыми вы владеете</p>
         </div>
 
-        {/* Autocomplete dropdown */}
-        {suggestions.length > 0 && (
-          <ul className="rounded-md border bg-popover shadow-sm">
-            {suggestions.map((s) => (
-              <li key={s}>
+        <div className="mt-6">
+          <div
+            className="flex min-h-[56px] cursor-text flex-wrap items-center gap-2 rounded-lg border border-input bg-background px-4 py-3 focus-within:ring-2 focus-within:ring-ring"
+            onClick={() => inputRef.current?.focus()}
+          >
+            {/* Existing tags */}
+            {skills.map((skill) => (
+              <span
+                key={skill}
+                className="flex items-center gap-1 rounded-sm bg-secondary px-2 py-0.5 text-sm"
+              >
+                {skill}
                 <button
                   type="button"
-                  className="w-full px-3 py-2 text-left text-sm hover:bg-accent"
-                  onMouseDown={(e) => {
-                    // prevent input blur before click registers
-                    e.preventDefault();
-                    addSkill(s);
+                  aria-label={`Remove ${skill}`}
+                  className="text-muted-foreground hover:text-foreground"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeSkill(skill);
                   }}
                 >
-                  {s}
+                  ×
                 </button>
-              </li>
+              </span>
             ))}
-          </ul>
-        )}
 
-        <p className="text-xs text-muted-foreground">
-          Нажмите Enter, чтобы добавить · Backspace, чтобы удалить последний навык · Escape, чтобы закрыть подсказки
-        </p>
-      </div>
+            {/* Text input */}
+            <input
+              ref={inputRef}
+              value={inputValue}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              placeholder={skills.length === 0 ? "Начните вводить здесь" : ""}
+              className="min-w-24 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
+            />
+          </div>
 
-      {/* TODO: replace with shared/ui Tag component once it is ready */}
+          {/* Autocomplete dropdown */}
+          {suggestions.length > 0 && (
+            <ul className="mt-2 rounded-md border border-border bg-popover shadow-sm">
+              {suggestions.map((s) => (
+                <li key={s}>
+                  <button
+                    type="button"
+                    className="w-full px-4 py-3 text-left text-sm hover:bg-accent"
+                    onMouseDown={(e) => {
+                      // prevent input blur before click registers
+                      e.preventDefault();
+                      addSkill(s);
+                    }}
+                  >
+                    {s}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
 
-      <div className="flex justify-between">
-        <Button type="button" variant="outline" size="lg" onClick={onBack}>
-          Назад
-        </Button>
-        <Button type="button" size="lg" onClick={() => onNext({ skills })}>
-          Далее
-        </Button>
+          <p className="text-xs text-muted-foreground mt-3">
+            Нажмите Enter, чтобы добавить · Backspace, чтобы удалить последний навык · Escape, чтобы закрыть подсказки
+          </p>
+        </div>
+
+        <div className="flex justify-between mt-12">
+          <Button type="button" variant="outline" size="lg" onClick={onBack}>
+            Предыдущий шаг
+          </Button>
+          <Button type="button" size="lg" onClick={() => onNext({ skills })}>
+            Следующий шаг
+          </Button>
+        </div>
       </div>
     </div>
   );

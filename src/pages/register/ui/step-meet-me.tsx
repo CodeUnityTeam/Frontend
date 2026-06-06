@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-import { Checkbox } from "@/shared/ui/checkbox";
+// Checkbox removed: replaced by radio group
 import type { RegisterFormData } from "../model/use-register-form";
 import { COUNTRY_MAP } from "../model/country-map";
 import pictureSvg from "@/shared/assets/icons/picture.svg";
@@ -11,6 +11,7 @@ import pictureSvg from "@/shared/assets/icons/picture.svg";
 interface StepMeetMeProps {
   data: RegisterFormData;
   onNext: (patch: Partial<RegisterFormData>) => void;
+  onPatch: (patch: Partial<RegisterFormData>) => void;
 }
 
 interface FormErrors {
@@ -18,7 +19,7 @@ interface FormErrors {
   surname?: string;
 }
 
-export function OnboardingStep1({ data, onNext }: StepMeetMeProps) {
+export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
   const [name, setName] = useState(data.name);
   const [surname, setSurname] = useState(data.surname);
   const [position, setposition] = useState(data.position);
@@ -26,7 +27,7 @@ export function OnboardingStep1({ data, onNext }: StepMeetMeProps) {
   const [photoPreview, setPhotoPreview] = useState<string | null>(
     data.photo ? URL.createObjectURL(data.photo) : null,
   );
-  const [remote, setRemote] = useState<boolean>(!!data.remote);
+  const [format, setFormat] = useState<string>(data.format ?? "");
   const [country, setCountry] = useState<string>(data.country ?? "");
   const [city, setCity] = useState<string>(data.city ?? "");
   const [errors, setErrors] = useState<FormErrors>({});
@@ -47,6 +48,8 @@ export function OnboardingStep1({ data, onNext }: StepMeetMeProps) {
       if (prev) URL.revokeObjectURL(prev);
       return next;
     });
+    // persist photo immediately
+    onPatch?.({ photo: file });
   };
 
   const validate = (): boolean => {
@@ -65,7 +68,7 @@ export function OnboardingStep1({ data, onNext }: StepMeetMeProps) {
       surname: surname.trim(),
       position: position.trim(),
       photo,
-      remote,
+      format,
       country,
       city,
     });
@@ -73,19 +76,18 @@ export function OnboardingStep1({ data, onNext }: StepMeetMeProps) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>
-      <div className="">
-        <h1 className="text-2xl font-semibold">Познакомимся</h1>
-        <p className="mt-1 text-muted-foreground">
-          Это ваш первый шаг к новым проектам и возможностям.
-        </p>
-      </div>
+      <div className="max-w-3xl mx-auto w-full">
+        <div className="mb-2">
+          <h1 className="text-2xl font-semibold">Познакомимся</h1>
+          <p className="mt-1 text-muted-foreground">Это ваш первый шаг к новым проектам и возможностям.</p>
+        </div>
 
-      <div className="bg-card/50 p-6  ">
+        <div className="bg-card/50 p-8 rounded-lg">
         <div className="flex flex-col sm:flex-row gap-6 items-start">
-          <div className="flex-shrink-0 flex flex-col items-center sm:items-start gap-3 w-full sm:w-44">
-            <div className="relative">
+          <div className="shrink-0 flex flex-col items-center sm:items-start gap-3 w-full sm:w-44">
+              <div className="relative">
               <Avatar
-                className="w-[134px] h-[134px] text-2xl rounded-[8px] cursor-pointer"
+                className="text-2xl cursor-pointer hover:shadow-sm transition-shadow w-[134px] h-[134px]"
                 role="button"
                 tabIndex={0}
                 onClick={() => fileInputRef.current?.click()}
@@ -97,7 +99,7 @@ export function OnboardingStep1({ data, onNext }: StepMeetMeProps) {
                 {photoPreview ? (
                   <AvatarImage src={photoPreview} alt="Аватар" />
                 ) : (
-                  <AvatarFallback className="rounded-[8px] bg-[#DDE1E6]">
+                  <AvatarFallback className="bg-[#DDE1E6]">
                     {(() => {
                       const a = name?.[0] ?? "";
                       const b = surname?.[0] ?? "";
@@ -105,9 +107,9 @@ export function OnboardingStep1({ data, onNext }: StepMeetMeProps) {
                       if (initials) return initials;
                       return (
                         <img
-                          src={pictureSvg}  
+                          src={pictureSvg}
                           alt="placeholder"
-                          className="w-[100%] h-[100%] object-contain"
+                          className="w-full h-full object-contain"
                           aria-hidden
                         />
                       );
@@ -116,8 +118,8 @@ export function OnboardingStep1({ data, onNext }: StepMeetMeProps) {
                 )}
               </Avatar>
             </div>
-
-            <div className="flex flex-col items-center sm:items-start gap-1">
+            <div className="flex flex-col items-center sm:items-start gap-2">
+              <div className="text-sm text-muted-foreground">Размер: 134×134 • JPG, PNG, WEBP</div>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -138,6 +140,7 @@ export function OnboardingStep1({ data, onNext }: StepMeetMeProps) {
                   onChange={(e) => {
                     setName(e.target.value);
                     if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }));
+                    onPatch?.({ name: e.target.value });
                   }}
                   error={errors.name}
                   autoFocus
@@ -153,6 +156,7 @@ export function OnboardingStep1({ data, onNext }: StepMeetMeProps) {
                     setSurname(e.target.value);
                     if (errors.surname)
                       setErrors((prev) => ({ ...prev, surname: undefined }));
+                    onPatch?.({ surname: e.target.value });
                   }}
                   error={errors.surname}
                 />
@@ -163,18 +167,64 @@ export function OnboardingStep1({ data, onNext }: StepMeetMeProps) {
                   label="Должность"
                   placeholder="Занимаемая должность"
                   value={position}
-                  onChange={(e) => setposition(e.target.value)}
+                  onChange={(e) => {
+                    setposition(e.target.value);
+                    onPatch?.({ position: e.target.value });
+                  }}
                 />
               </div>
 
               <div className="sm:col-span-2">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <Checkbox checked={remote} onCheckedChange={(v) => setRemote(!!v)} />
-                  <span className="select-none text-base">Работаю удаленно</span>
-                </label>
+                <div className="mb-2 text-sm font-medium">Формат</div>
+                <div className="flex items-center gap-6">
+                  <label className="inline-flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="format"
+                      value="remote"
+                      checked={format === "remote"}
+                      onChange={() => {
+                        setFormat("remote");
+                        onPatch?.({ format: "remote" });
+                      }}
+                      className="h-4 w-4"
+                    />
+                    <span className="text-base">Удалённо</span>
+                  </label>
+
+                  <label className="inline-flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="format"
+                      value="hybrid"
+                      checked={format === "hybrid"}
+                      onChange={() => {
+                        setFormat("hybrid");
+                        onPatch?.({ format: "hybrid" });
+                      }}
+                      className="h-4 w-4"
+                    />
+                    <span className="text-base">Гибрид</span>
+                  </label>
+
+                  <label className="inline-flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="format"
+                      value="office"
+                      checked={format === "office"}
+                      onChange={() => {
+                        setFormat("office");
+                        onPatch?.({ format: "office" });
+                      }}
+                      className="h-4 w-4"
+                    />
+                    <span className="text-base">В офисе</span>
+                  </label>
+                </div>
               </div>
 
-              <div>
+              <div className="sm:col-span-2">
                 <label className="text-sm font-medium mb-1 block">Страна</label>
                 <select
                   value={country}
@@ -183,9 +233,10 @@ export function OnboardingStep1({ data, onNext }: StepMeetMeProps) {
                     setCountry(val);
                     // reset city when country changes
                     const nextCities = COUNTRY_MAP[val] ?? [];
-                    setCity(nextCities[0] ?? "");
+                    const nextCity = nextCities[0] ?? "";
+                    setCity(nextCity);
+                    onPatch?.({ country: val, city: nextCity });
                   }}
-                  
                   className="w-full rounded-md border border-border px-3 py-2 bg-background text-foreground"
                 >
                   <option value="">Выберите страну</option>
@@ -197,11 +248,14 @@ export function OnboardingStep1({ data, onNext }: StepMeetMeProps) {
                 </select>
               </div>
 
-              <div>
+              <div className="sm:col-span-2">
                 <label className="text-sm font-medium mb-1 block">Город</label>
                 <select
                   value={city}
-                  onChange={(e) => setCity(e.target.value)}
+                  onChange={(e) => {
+                    setCity(e.target.value);
+                    onPatch?.({ city: e.target.value });
+                  }}
                   disabled={!country}
                   className="w-full rounded-md border border-border px-3 py-2 bg-background text-foreground"
                 >
@@ -221,6 +275,7 @@ export function OnboardingStep1({ data, onNext }: StepMeetMeProps) {
           <Button type="submit" size="lg">
             Следующий шаг
           </Button>
+        </div>
         </div>
       </div>
     </form>

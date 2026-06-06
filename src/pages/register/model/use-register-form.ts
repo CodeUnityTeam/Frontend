@@ -4,19 +4,36 @@ import { useReducer } from "react";
 // Types
 // ---------------------------------------------------------------------------
 
+export interface ExperienceEntry {
+  company: string;
+  position: string;
+  responsibilities: string;
+  startDate?: string;
+  endDate?: string;
+}
+
 export interface RegisterFormData {
   // Step 1 – Meet me
   name: string;
   surname: string;
   position: string;
   photo: File | null;
-  // Step 1 additions
-  remote?: boolean;
+  // Step 1 other additions
+  format?: string;
+  qualities?: string[];
+  qualitiesDraft?: string;
   country?: string;
   city?: string;
   // Step 2 – Your skills
   skills: string[];
+  skillsDraft?: string;
   // Step 3 – Experience and projects
+  // Structured list supporting multiple experience entries
+  experiences?: ExperienceEntry[];
+  // Backwards-compatible single-entry fields for first experience
+  company?: string;
+  startDate?: string;
+  endDate?: string;
   experience: string;
   projects: string;
   // Step 4 – About you
@@ -47,10 +64,17 @@ const initialData: RegisterFormData = {
   surname: "",
   position: "",
   photo: null,
-  remote: false,
+  format: "",
+  qualities: [],
+  qualitiesDraft: "",
+  experiences: [],
+  company: "",
+  startDate: "",
+  endDate: "",
   country: "",
   city: "",
   skills: [],
+  skillsDraft: "",
   experience: "",
   projects: "",
   about: "",
