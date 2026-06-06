@@ -1,4 +1,4 @@
-import type { UserData, QuestionData } from "@/widgets/question-card";
+import type { UserData, QuestionData } from "@/widgets/question-card/model/types";
 import Avatar from "@/shared/assets/images/avatar.png";
 
 const testUser: UserData = {
@@ -8,6 +8,7 @@ const testUser: UserData = {
 }
 
 export const testQuestion: QuestionData = {
+  id: "1",
   user: testUser,
   title: "Как собрать портфолио, если нет коммерческого опыта, но хочется попасть в реальные проекты?",
   description: `Я начинающий разработчик и пока не работал в коммерческих командах. Учебные проекты есть, но они выглядят слишком “учебными”, и я не уверен, что их стоит показывать.

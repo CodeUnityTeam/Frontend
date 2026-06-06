@@ -3,27 +3,7 @@ import { formatRelativeDate } from "@/shared/lib/pluralize";
 import { Button } from "@/shared/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/shared/ui/card";
-
-export interface UserData {
-  firstName: string;
-  avatarUrl: string;
-  rating: number;
-}
-
-export interface QuestionData {
-  user: UserData,
-  title: string;
-  description: string;
-  skills: string[];   // question tags
-  createdAt: Date;
-  likes: number;
-  comments: number;
-  reposts: number;
-}
-
-export interface QuestionCardProps {
-  question: QuestionData;
-}
+import type { QuestionCardProps } from "../model/types";
 
 export function QuestionCard({
   question,

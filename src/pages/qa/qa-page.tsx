@@ -1,7 +1,7 @@
 import { cn } from "@/shared/lib/utils";
 import { TagsList } from "@/widgets/tags";
 import { QuestionCard } from "@/widgets/question-card";
-import { testQuestion } from "@/pages/qa/model/question-card-data";
+import { testQuestion } from "@/pages/qa/model/mocks";
 
 const QAPage = () => {
   return (
@@ -9,7 +9,7 @@ const QAPage = () => {
       "px-[clamp(1rem,calc(1rem+(100vw-20rem)*64/1120),5rem)]",
     )}>
       <TagsList />
-      {[testQuestion].map((question, index) => <QuestionCard question={question} key={index}/>)}
+      {[testQuestion].map((question) => <QuestionCard question={question} key={question.id}/>)}
     </div>
   )
 }
