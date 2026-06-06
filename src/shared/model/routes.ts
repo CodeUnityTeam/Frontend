@@ -11,6 +11,9 @@ export const ROUTES = {
   HOME: "/",
   NOT_FOUND: "/404",
 
+  QA: "/qa",
+  QA_CREATE: "/qa/create",
+
   /*
    * пример: путь с параметром
    * ROUTES.NAME_PAGE_1: "/name_page_1/:id"
