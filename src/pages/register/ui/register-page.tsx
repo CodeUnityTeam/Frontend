@@ -1,4 +1,5 @@
 import { useRegisterForm } from "../model/use-register-form";
+import { tags } from "@/widgets/tags/model/tags";
 import { OnboardingLayout } from "./register-layout";
 import { OnboardingStep1 } from "./step-meet-me";
 import { OnboardingStep2 } from "./step-skills";
@@ -9,8 +10,22 @@ function RegisterPage() {
   const { state, next, back, patch } = useRegisterForm();
 
   const handleFinish = (patch: Parameters<typeof next>[0]) => {
-    // TODO: submit assembled state.data + patch to API
-    console.log("Registration complete", { ...state.data, ...patch });
+    // Assemble final data
+    const finalData = { ...state.data, ...patch };
+
+    // Map visible labels back to tag values for backend consumption
+    const labelToValue = new Map(tags.map((t) => [t.label, t.value]));
+    const skillsValues = (finalData.skills || []).map((s) => labelToValue.get(s) ?? s);
+
+    const payload = {
+      ...finalData,
+      // send values as `skills` and keep original labels for readability
+      skills: skillsValues,
+      skillsLabels: finalData.skills,
+    };
+
+    // TODO: replace with real API call
+    console.log("Registration complete", payload);
   };
 
   return (

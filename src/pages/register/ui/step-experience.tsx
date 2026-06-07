@@ -75,7 +75,7 @@ export function OnboardingStep3({ data, onNext, onBack, onPatch }: StepExperienc
       <div className="mx-auto bg-card/50 p-6 rounded-lg border border-border">
         <h1 className="text-2xl font-semibold">Опыт и проекты</h1>
         <p className="mt-2 text-muted-foreground leading-snug">
-          Расскажите, над чем вы уже работали. Это поможет оценить ваш уровень и пригласить в подходящие проекты
+          Расскажите, над чем вы уже работали. Это поможет оценить ваш уровень и пригласить в подходящие проекты. Укажите ваш лучший опыт, позже вы сможете добавить проекты в вашем профиле.
         </p>
       </div>
 

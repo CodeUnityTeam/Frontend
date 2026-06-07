@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 
 import { Button } from "@/shared/ui/button";
+import { registerTag as RegisterTag } from "@/shared/ui/tag";
 import { SKILLS_SUGGESTIONS } from "../model/skills";
 import type { RegisterFormData } from "../model/use-register-form";
 
@@ -94,23 +95,14 @@ export function OnboardingStep2({ data, onNext, onBack, onPatch }: StepSkillsPro
           >
             {/* Existing tags */}
             {skills.map((skill) => (
-              <span
+              <RegisterTag
                 key={skill}
-                className="flex items-center gap-1 rounded-sm bg-secondary px-2 py-0.5 text-sm"
-              >
-                {skill}
-                <button
-                  type="button"
-                  aria-label={`Remove ${skill}`}
-                  className="text-muted-foreground hover:text-foreground"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeSkill(skill);
-                  }}
-                >
-                  ×
-                </button>
-              </span>
+                label={skill}
+                onRemove={(e) => {
+                  e.stopPropagation();
+                  removeSkill(skill);
+                }}
+              />
             ))}
 
             {/* Text input */}

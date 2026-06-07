@@ -119,7 +119,7 @@ export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
               </Avatar>
             </div>
             <div className="flex flex-col items-center sm:items-start gap-2">
-              <div className="text-sm text-muted-foreground">Размер: 134×134 • JPG, PNG, WEBP</div>
+              <div className="text-sm text-muted-foreground">Загрузите фото (JPG, PNG, WEBP)</div>
               <input
                 ref={fileInputRef}
                 type="file"
