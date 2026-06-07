@@ -71,16 +71,16 @@ export function OnboardingStep3({ data, onNext, onBack, onPatch }: StepExperienc
 
   return (
     <div className="max-w-3xl mx-auto w-full py-8">
-      {/* Intro card */}
-      <div className="mx-auto bg-card/50 p-6 rounded-lg border border-border">
-        <h1 className="text-2xl font-semibold">Опыт и проекты</h1>
-        <p className="mt-2 text-muted-foreground leading-snug">
+      {/* Intro card (outlined white) */}
+      <div className="mx-auto border border-border bg-background rounded-[18px] px-6 py-5 sm:px-8 sm:py-6">
+        <h1 className="text-3xl sm:text-2xl font-semibold pl-12 sm:pl-16">Опыт и проекты</h1>
+        <p className="mt-2 text-muted-foreground leading-snug pl-12 sm:pl-16">
           Расскажите, над чем вы уже работали. Это поможет оценить ваш уровень и пригласить в подходящие проекты. Укажите ваш лучший опыт, позже вы сможете добавить проекты в вашем профиле.
         </p>
       </div>
 
-      {/* Form area (~64-80px below card) */}
-      <div className="mt-16">
+      {/* Form area (reduced mobile spacing) */}
+      <div className="mt-8 sm:mt-16">
         <div className="flex flex-col gap-6">
           <Input
             label="Название компании"
@@ -101,7 +101,7 @@ export function OnboardingStep3({ data, onNext, onBack, onPatch }: StepExperienc
             placeholder="Распишите подробно свои обязанности"
             value={first.responsibilities}
             onChange={(e) => updateEntry(0, { responsibilities: e.target.value })}
-            className="min-h-36"
+            className="min-h-32 sm:min-h-36"
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -112,6 +112,7 @@ export function OnboardingStep3({ data, onNext, onBack, onPatch }: StepExperienc
               value={first.startDate}
               onChange={(e) => updateEntry(0, { startDate: e.target.value })}
               rightElement={<Icon icon="lucide:calendar" />}
+              className="h-14 text-base"
             />
 
             <Input
@@ -121,15 +122,16 @@ export function OnboardingStep3({ data, onNext, onBack, onPatch }: StepExperienc
               value={first.endDate}
               onChange={(e) => updateEntry(0, { endDate: e.target.value })}
               rightElement={<Icon icon="lucide:calendar" />}
+              className="h-14 text-base"
             />
           </div>
         </div>
 
-        <div className="flex justify-between mt-12">
-          <Button type="button" variant="outline" size="lg" onClick={onBack}>
+        <div className="mt-8 flex flex-col gap-3 sm:mt-12 sm:flex-row sm:justify-between">
+          <Button type="button" variant="outline" size="lg" onClick={onBack} className="w-full sm:w-auto">
             Предыдущий шаг
           </Button>
-          <Button type="button" size="lg" onClick={handleNext}>
+          <Button type="button" size="lg" onClick={handleNext} className="w-full sm:w-auto">
             Следующий шаг
           </Button>
         </div>

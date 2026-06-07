@@ -57,19 +57,19 @@ export function OnboardingStep4({ data, onNext, onBack, onPatch }: StepAboutProp
 
   return (
     <form onSubmit={handleSubmit} className="max-w-3xl mx-auto w-full py-8">
-      {/* Intro card */}
-      <div className="mx-auto bg-card/50 p-6 rounded-lg border border-border">
-        <h1 className="text-2xl font-semibold">О вас</h1>
-        <p className="mt-2 text-muted-foreground leading-snug">Добавьте немного личности. Так проще найти своих людей</p>
+      {/* Intro card (outlined white) */}
+      <div className="mx-auto border border-border bg-background rounded-[18px] px-6 py-5 sm:px-8 sm:py-6">
+        <h1 className="text-3xl sm:text-2xl font-semibold pl-12 sm:pl-16">О вас</h1>
+        <p className="mt-2 text-muted-foreground leading-snug pl-12 sm:pl-16">Добавьте немного личности. Так проще найти своих людей</p>
       </div>
 
-      {/* Form area (~72px below card) */}
-      <div className="mt-[72px] flex flex-col gap-6">
+      {/* Form area (reduced mobile spacing) */}
+      <div className="mt-8 sm:mt-18 flex flex-col gap-6">
         <div>
           <label className="text-sm font-medium">Личные качества</label>
 
           <div
-            className="mt-2 flex min-h-[56px] cursor-text flex-wrap items-center gap-2 rounded-lg border border-input bg-background px-4 py-3"
+            className="mt-2 flex min-h-14 cursor-text flex-wrap items-center gap-2 rounded-lg border border-input bg-background px-4 py-3"
             onClick={() => inputRef.current?.focus()}
           >
             {qualities.map((q) => (
@@ -98,7 +98,7 @@ export function OnboardingStep4({ data, onNext, onBack, onPatch }: StepAboutProp
               }}
               onKeyDown={handleQualityKeyDown}
               placeholder={qualities.length === 0 ? "Ваши преимущества" : ""}
-              className="min-w-24 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
+              className="min-w-35 basis-32 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
             />
           </div>
         </div>
@@ -112,15 +112,15 @@ export function OnboardingStep4({ data, onNext, onBack, onPatch }: StepAboutProp
               setAbout(e.target.value);
               onPatch?.({ about: e.target.value });
             }}
-            className="min-h-44"
+            className="min-h-32 sm:min-h-44"
           />
         </div>
 
-        <div className="flex justify-between mt-12">
-          <Button type="button" variant="outline" size="lg" onClick={onBack}>
+        <div className="mt-8 flex flex-col gap-3 sm:mt-12 sm:flex-row sm:justify-between">
+          <Button type="button" variant="outline" size="lg" onClick={onBack} className="w-full sm:w-auto">
             Предыдущий шаг
           </Button>
-          <Button type="submit" size="lg">
+          <Button type="submit" size="lg" className="w-full sm:w-auto">
             Завершить заполнение
           </Button>
         </div>

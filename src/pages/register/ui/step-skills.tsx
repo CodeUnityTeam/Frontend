@@ -73,16 +73,16 @@ export function OnboardingStep2({ data, onNext, onBack, onPatch }: StepSkillsPro
 
   return (
     <div className="max-w-3xl mx-auto w-full py-8">
-      {/* Hero / Info card */}
-      <div className="mx-auto bg-card/50 p-6 rounded-lg border border-border">
-        <h1 className="text-2xl font-semibold">Ваши навыки</h1>
-        <p className="mt-2 text-muted-foreground leading-snug">
+      {/* Hero / Info card (outlined white) */}
+      <div className="mx-auto border border-border bg-background rounded-[18px] px-6 py-5 sm:px-8 sm:py-6">
+        <h1 className="text-3xl sm:text-2xl font-semibold pl-12 sm:pl-16">Ваши навыки</h1>
+        <p className="mt-2 text-muted-foreground leading-snug pl-12 sm:pl-16">
           Чем больше навыков, тем выше шанс найти интересные предложения
         </p>
       </div>
 
-      {/* Skills block (spacing ~80px below hero) */}
-      <div className="mt-20">
+      {/* Skills block (reduced mobile spacing) */}
+      <div className="mt-12 sm:mt-20">
         <div>
           <label className="text-lg font-medium">Навыки и инструменты</label>
           <p className="mt-1 text-sm text-muted-foreground">Выберите программы, которыми вы владеете</p>
@@ -90,7 +90,7 @@ export function OnboardingStep2({ data, onNext, onBack, onPatch }: StepSkillsPro
 
         <div className="mt-6">
           <div
-            className="flex min-h-[56px] cursor-text flex-wrap items-center gap-2 rounded-lg border border-input bg-background px-4 py-3 focus-within:ring-2 focus-within:ring-ring"
+            className="flex min-h-14 cursor-text flex-wrap items-center gap-2 rounded-lg border border-input bg-background px-4 py-3 focus-within:ring-2 focus-within:ring-ring"
             onClick={() => inputRef.current?.focus()}
           >
             {/* Existing tags */}
@@ -112,13 +112,13 @@ export function OnboardingStep2({ data, onNext, onBack, onPatch }: StepSkillsPro
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               placeholder={skills.length === 0 ? "Начните вводить здесь" : ""}
-              className="min-w-24 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
+              className="min-w-35 basis-32 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
             />
           </div>
 
           {/* Autocomplete dropdown */}
           {suggestions.length > 0 && (
-            <ul className="mt-2 rounded-md border border-border bg-popover shadow-sm">
+            <ul className="mt-2 rounded-md border border-border bg-popover shadow-sm max-h-64 overflow-y-auto">
               {suggestions.map((s) => (
                 <li key={s}>
                   <button
@@ -137,16 +137,16 @@ export function OnboardingStep2({ data, onNext, onBack, onPatch }: StepSkillsPro
             </ul>
           )}
 
-          <p className="text-xs text-muted-foreground mt-3">
+          <p className="hidden sm:block text-xs text-muted-foreground mt-3">
             Нажмите Enter, чтобы добавить · Backspace, чтобы удалить последний навык · Escape, чтобы закрыть подсказки
           </p>
         </div>
 
-        <div className="flex justify-between mt-12">
-          <Button type="button" variant="outline" size="lg" onClick={onBack}>
+        <div className="mt-8 flex flex-col gap-3 sm:mt-12 sm:flex-row sm:justify-between">
+          <Button type="button" variant="outline" size="lg" onClick={onBack} className="w-full sm:w-auto">
             Предыдущий шаг
           </Button>
-          <Button type="button" size="lg" onClick={() => onNext({ skills })}>
+          <Button type="button" size="lg" onClick={() => onNext({ skills })} className="w-full sm:w-auto">
             Следующий шаг
           </Button>
         </div>
