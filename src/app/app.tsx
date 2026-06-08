@@ -6,9 +6,11 @@ import { Providers } from "./providers";
 export function App() {
   return (
     <Providers>
-      <div className="app-layout">
+      <div className="flex min-h-svh flex-col">
         <Header />
-        <Outlet />
+        <main className="flex flex-1 flex-col">
+          <Outlet />
+        </main>
         <Footer />
       </div>
     </Providers>
