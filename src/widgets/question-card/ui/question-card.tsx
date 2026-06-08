@@ -3,6 +3,7 @@ import { formatRelativeDate } from "@/shared/lib/pluralize";
 import { Button } from "@/shared/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/shared/ui/card";
+import { Tag } from "@/shared/ui/tag";
 import type { QuestionCardProps } from "../model/types";
 
 export function QuestionCard({
@@ -32,21 +33,21 @@ export function QuestionCard({
               {formatRelativeDate(question.createdAt)}
             </div>
           </div>
-          <CardTitle className="text-xl md:text-2xl font-bold leading-8">
+          <CardTitle className="text-2xl font-bold leading-8">
             {question.title}
           </CardTitle>
           <div className="flex flex-wrap gap-2">
             {question.skills.map((skill, index) => (
-              <div className="inline-flex items-center border rounded-full px-3 py-1 text-lg text-foreground" key={index}>
+              <Tag variant="outline" key={index}>
                 {skill}
-              </div>
+              </Tag>
             ))}
           </div>
         </div>
       </CardHeader>
       
       <CardContent className="p-6 pt-0">
-        <CardDescription className="text-base text-foreground line-clamp-2">
+        <CardDescription className="text-lg text-foreground line-clamp-2">
           {question.description}
         </CardDescription>
       </CardContent>

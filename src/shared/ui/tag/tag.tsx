@@ -1,7 +1,7 @@
 import { cn } from "@/shared/lib/utils";
 import React from "react";
 
-type TagVariant = "default" | "accent" | "muted";
+type TagVariant = "default" | "accent" | "muted" | "outline";
 
 type TagProps = {
   children?: React.ReactNode;
@@ -23,6 +23,7 @@ export const Tag = ({
     default: "bg-muted text-foreground",
     accent: "bg-primary text-primary-foreground",
     muted: "bg-muted text-muted-foreground",
+    outline: "border text-foreground text-lg"
   };
 
   return (
