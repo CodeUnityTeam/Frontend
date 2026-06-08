@@ -1,21 +1,10 @@
 import React from "react";
 import { Button } from "@/shared/ui/button";
 import { Icon } from "@iconify/react";
-import { Tag } from "@/shared/ui/tag";
 import { EmptyState } from "@/widgets/account/ui/empty-state";
 import avatarImg from "@/shared/assets/images/account-avatar.jpg";
 import { accountData } from "@/widgets/account/model/account-data";
 import type { AccountProfileProps } from "@/widgets/account/model/types";
-
-export const formatDate = (date: string) => {
-  const d = new Date(date);
-  if (Number.isNaN(d.getTime())) return date;
-
-  const month = d.toLocaleString("ru-RU", { month: "long" });
-  const year = d.getFullYear();
-
-  return `${month} ${year}`;
-};
 
 export const AccountProfile = ({
   profile,
@@ -49,7 +38,7 @@ export const AccountProfile = ({
       <aside className="w-full rounded-[20px] border border-border bg-card px-5 py-6 sm:px-8 sm:pt-10 sm:pb-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1 text-muted-foreground">
-            <Icon icon="ph:star" className="h-6 w-6" />
+            <Icon icon="mdi:star-outline" className="h-7 w-7" />
             <span className="text-[14px] leading-[140%] font-normal text-foreground">
               {profileData.rating?.toFixed(1)}
             </span>
@@ -97,14 +86,14 @@ export const AccountProfile = ({
 
           {profileData.location && (
             <div className="mt-4 flex items-center gap-1 text-[16px] leading-[150%] text-muted-foreground">
-              <Icon icon="ph:map-pin" className="h-6 w-6" />
+              <Icon icon="mdi:map-marker" className="h-6 w-6" />
               <span>{profileData.location}</span>
             </div>
           )}
         </div>
       </aside>
 
-      <main className="flex flex-col rounded-xl border border-border bg-card px-5 py-6 sm:px-8 sm:pt-10 sm:pb-5">
+      <main className="flex flex-col rounded-xl border border-border bg-card px-5 py-6 font-raleway sm:px-8 sm:pt-10 sm:pb-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap gap-4">
             <button
@@ -157,7 +146,12 @@ export const AccountProfile = ({
 
                       <div className="flex flex-wrap gap-1">
                         {skillsData.map((item, i) => (
-                          <Tag key={i} label={item} variant="accent" />
+                          <span
+                            key={i}
+                            className="inline-flex items-center rounded-[16px] bg-[#D3E9F7] px-3 py-1 text-[13px] leading-[130%] text-foreground"
+                          >
+                            {item}
+                          </span>
                         ))}
                       </div>
                     </section>
@@ -171,7 +165,12 @@ export const AccountProfile = ({
 
                       <div className="flex flex-wrap gap-x-1 gap-y-2">
                         {qualitiesData.map((item, i) => (
-                          <Tag key={i} label={item} variant="accent" />
+                          <span
+                            key={i}
+                            className="inline-flex items-center rounded-[16px] bg-[#D3E9F7] px-3 py-1 text-[13px] leading-[130%] text-foreground"
+                          >
+                            {item}
+                          </span>
                         ))}
                       </div>
                     </section>
@@ -197,7 +196,7 @@ export const AccountProfile = ({
             <>
               {!experienceData.length ? (
                 <div className="py-10">
-                  <EmptyState title="Информации об опыте работы пока нет" />
+                  <EmptyState title="Информации о опыте работы пока нет" />
                 </div>
               ) : (
                 <>
@@ -208,8 +207,7 @@ export const AccountProfile = ({
                       </h4>
 
                       <div className="mt-4 text-[14px] leading-[100%] text-muted-foreground">
-                        {formatDate(item.from)} —{" "}
-                        {item.to ? formatDate(item.to) : "По настоящее время"}
+                        {item.from} — {item.to ?? "По настоящее время"}
                       </div>
 
                       <div className="mt-2 text-[16px] leading-[150%] text-foreground">

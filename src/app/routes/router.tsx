@@ -27,6 +27,8 @@ export const router = createBrowserRouter([
         path: "account-settings",
         lazy: () => import("@/pages/account-settings/account-settings-page"),
       },
+      { path: "account", lazy: () => import("@/pages/account/account-page") },
+      { path: "register", lazy: () => import("@/pages/register/ui/register-page") },
     ],
   },
 ]);

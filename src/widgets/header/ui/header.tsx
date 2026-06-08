@@ -7,6 +7,7 @@ import { navigationConfigs } from "@/shared/config";
 import { Button } from "@/shared/ui/button";
 import { Navigation } from "@/shared/ui/navigation";
 import { isAuth } from "@/shared/config/mock-config";
+import { ROUTES } from "@/shared/model/routes";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,16 +50,18 @@ export function Header() {
               <span className="hidden text-lg font-semibold md:inline">Профиль</span>            </>
           ) : (
             <Button
-              onClick={() => alert("В разработке")}
+              asChild
               variant="ghost"
               size="sm"
               className="flex items-center gap-1.5 px-2 py-1 text-sm font-semibold"
             >
-              <Icon
+              <Link to={ROUTES.REGISTER}>
+                <Icon
                 icon="ph:sign-in" height={24}
                 className="h-3.5 w-3.5"
-              />
-              Войти
+                />
+                Войти
+              </Link>
             </Button>
           )}
         </div>
