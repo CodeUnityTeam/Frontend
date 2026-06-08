@@ -135,6 +135,9 @@
   --secondary-hover: var(--color-light-blue);
   --secondary-pressed: var(--color-lighted);
   --secondary-pressed-border: var(--color-light-glowing-blue);
+  --secondary-button: var(--color-blue);
+
+  --text-secondary: var(--color-gray);
 
   --muted: var(--color-light-gray-100);
   --muted-foreground: var(--color-gray);
@@ -171,5 +174,6 @@
 
   body {
     @apply bg-background font-raleway text-foreground;
+    font-feature-settings: "lnum" 1, "pnum" 1;
   }
 }

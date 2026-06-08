@@ -16,8 +16,8 @@ export function HomeBanner() {
           в нашем дружелюбном IT-сообществе для новичков.
         </p>
         <div className="mbs-10 flex flex-col gap-5 md:mbs-16 md:flex-row md:gap-6">
-          <Button asChild size="lg" className="w-full px-10">
-            <Link to="/projects">Найти проект</Link>
+          <Button onClick={() => alert("В разработке")} size="lg" className="w-full px-10">
+            Зарегистрироваться
           </Button>
           <Button asChild size="lg" variant="outline" className="w-full px-10">
             <Link to="/about">Узнать о нас</Link>
