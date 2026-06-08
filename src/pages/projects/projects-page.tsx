@@ -1,3 +1,7 @@
+import { Navigate } from "react-router";
+
+import { isAuth } from "@/shared/config/mock-config";
+import { ROUTES } from "@/shared/model/routes";
 import { PageContainer } from "@/shared/ui/page-container";
 import {
   FiltersProvider,
@@ -7,6 +11,10 @@ import {
 } from "@/widgets/filters";
 
 function ProjectsPage() {
+  if (!isAuth) {
+    return <Navigate to={ROUTES.REGISTER} replace />;
+  }
+
   return (
     <FiltersProvider>
       <PageContainer className="py-8">

@@ -23,3 +23,18 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# OXLint local config (ignore local config files and folders)
+.oxlintrc
+.oxlintrc.json
+.oxlintrc.js
+.oxlintrc.cjs
+.oxlintrc.yaml
+.oxlintrc.yml
+.oxlintrc
+.oxlintrc.*
+.oxlint/
+oxlint.config.js
+oxlint.config.cjs
+oxlint.config.mjs
+oxlint.config.ts

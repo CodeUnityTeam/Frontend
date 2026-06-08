@@ -4,9 +4,11 @@ import { Footer } from "@/widgets/footer";
 
 export function App() {
   return (
-    <div className="app-layout">
+    <div className="flex min-h-svh flex-col">
       <Header />
-      <Outlet />
+      <main className="flex flex-1 flex-col">
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );
