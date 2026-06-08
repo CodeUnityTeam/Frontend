@@ -15,10 +15,10 @@ type SortSelectProps = {
   className?: string;
 };
 
-/** Выпадающий список «Сортировать по». */
 export function SortSelect({ className }: SortSelectProps) {
   const { sort, setSort } = useFilters();
-  const current = sortOptions.find((option) => option.value === sort) ?? sortOptions[0];
+  const current =
+    sortOptions.find((option) => option.value === sort) ?? sortOptions[0];
 
   return (
     <div className={cn("flex items-center gap-3", className)}>

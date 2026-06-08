@@ -11,7 +11,6 @@ type FilterSectionProps = {
   section: FilterSectionType;
 };
 
-/** Сворачиваемая секция со списком чекбоксов и счётчиками. */
 export function FilterSection({ section }: FilterSectionProps) {
   const { isChecked, toggle } = useFilters();
   const [open, setOpen] = useState(true);

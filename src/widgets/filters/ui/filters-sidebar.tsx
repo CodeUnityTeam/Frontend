@@ -6,7 +6,6 @@ type FiltersSidebarProps = {
   className?: string;
 };
 
-/** Боковая панель фильтров (desktop). */
 export function FiltersSidebar({ className }: FiltersSidebarProps) {
   return (
     <aside

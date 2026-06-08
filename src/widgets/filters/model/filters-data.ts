@@ -2,15 +2,6 @@ import type { FilterSection, SortOption } from "./types";
 
 export const filterSections: FilterSection[] = [
   {
-    id: "catalog",
-    title: "Каталог",
-    options: [
-      { value: "all", label: "Все", count: 56 },
-      { value: "projects", label: "Проекты", count: 28 },
-      { value: "profiles", label: "Профили", count: 28 },
-    ],
-  },
-  {
     id: "format",
     title: "Формат работы",
     options: [
@@ -61,7 +52,6 @@ export const sortOptions: SortOption[] = [
   { value: "relevance", label: "Релевантности" },
 ];
 
-/** Слайдер «Длительность». */
 export const DURATION_MAX = 100;
 export const DURATION_DEFAULT = 100;
 export const DURATION_TITLE = "Длительность";

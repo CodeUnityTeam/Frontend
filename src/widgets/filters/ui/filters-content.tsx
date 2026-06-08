@@ -10,12 +10,10 @@ type FiltersContentProps = {
   className?: string;
 };
 
-/** Содержимое фильтров: секции с чекбоксами + слайдер «Длительность», разделённые линиями. */
 export function FiltersContent({ className }: FiltersContentProps) {
-  const [catalog, format, position, tags] = filterSections;
+  const [format, position, tags] = filterSections;
 
   const blocks: { id: string; node: ReactNode }[] = [
-    { id: catalog.id, node: <FilterSection section={catalog} /> },
     { id: format.id, node: <FilterSection section={format} /> },
     { id: position.id, node: <FilterSection section={position} /> },
     { id: "duration", node: <DurationSlider /> },

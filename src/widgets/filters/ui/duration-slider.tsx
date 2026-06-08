@@ -12,7 +12,6 @@ import {
   DURATION_TO_LABEL,
 } from "../model/filters-data";
 
-/** Секция «Длительность» со слайдером в карточке. */
 export function DurationSlider() {
   const { duration, setDuration } = useFilters();
   const [open, setOpen] = useState(true);

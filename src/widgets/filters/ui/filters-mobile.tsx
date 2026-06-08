@@ -17,7 +17,6 @@ type FiltersMobileProps = {
   className?: string;
 };
 
-/** Мобильный вариант: кнопка-триггер открывает полноэкранный лист фильтров. */
 export function FiltersMobile({ className }: FiltersMobileProps) {
   const { reset, selectedCount } = useFilters();
 

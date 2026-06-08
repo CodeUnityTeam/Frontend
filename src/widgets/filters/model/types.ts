@@ -15,7 +15,6 @@ export type SortOption = {
   label: string;
 };
 
-/** Выбранные значения по каждой секции: { sectionId: ["value1", "value2"] } */
 export type SelectedFilters = Record<string, string[]>;
 
 export type FiltersController = {

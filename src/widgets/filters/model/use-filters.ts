@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import { DURATION_DEFAULT, sortOptions } from "./filters-data";
 import type { FiltersController, SelectedFilters } from "./types";
 
-/** Состояние фильтров: чекбоксы по секциям, слайдер длительности, сортировка. */
 export function useFiltersController(): FiltersController {
   const [selected, setSelected] = useState<SelectedFilters>({});
   const [duration, setDuration] = useState(DURATION_DEFAULT);
@@ -30,7 +29,10 @@ export function useFiltersController(): FiltersController {
 
   const selectedCount = useMemo(
     () =>
-      Object.values(selected).reduce((total, values) => total + values.length, 0),
+      Object.values(selected).reduce(
+        (total, values) => total + values.length,
+        0,
+      ),
     [selected],
   );
 

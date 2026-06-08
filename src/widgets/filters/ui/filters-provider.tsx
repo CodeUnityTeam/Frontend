@@ -7,7 +7,6 @@ type FiltersProviderProps = {
   children: ReactNode;
 };
 
-/** Хранит общее состояние фильтров для desktop-панели, бара и мобильного листа. */
 export function FiltersProvider({ children }: FiltersProviderProps) {
   const controller = useFiltersController();
 
