@@ -174,5 +174,6 @@
 
   body {
     @apply bg-background font-raleway text-foreground;
+    font-feature-settings: "lnum" 1, "pnum" 1;
   }
 }
