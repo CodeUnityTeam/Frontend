@@ -13,10 +13,6 @@ type CreateQuestionFormProps = {
   className?: string;
 };
 
-/**
- * Карточка-форма создания вопроса (раздел Q&A): заголовок, суть вопроса,
- * выбор тегов, опция анонимной публикации и кнопки действий.
- */
 export function CreateQuestionForm({ className }: CreateQuestionFormProps) {
   const navigate = useNavigate();
   const anonymousId = useId();
@@ -33,7 +29,6 @@ export function CreateQuestionForm({ className }: CreateQuestionFormProps) {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    // TODO: отправка вопроса на бэкенд (axios + TanStack Query)
   };
 
   return (
@@ -50,7 +45,7 @@ export function CreateQuestionForm({ className }: CreateQuestionFormProps) {
           placeholder="Как собрать портфолио, если нет коммерческого опыта, но хочется попасть в реальные проекты?"
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          className="rounded-lg [&>textarea]:min-w-0 [&>textarea]:overflow-hidden [&>textarea]:min-h-[113px] md:[&>textarea]:min-h-[86px]"
+          className="rounded-lg [&>textarea]:min-h-[113px] [&>textarea]:min-w-0 [&>textarea]:overflow-hidden md:[&>textarea]:min-h-[86px]"
         />
 
         <Textarea
@@ -59,7 +54,7 @@ export function CreateQuestionForm({ className }: CreateQuestionFormProps) {
           value={details}
           onChange={(event) => setDetails(event.target.value)}
           rows={1}
-          className="rounded-lg [&>textarea]:min-w-0 [&>textarea]:overflow-hidden [&>textarea]:min-h-[59px]"
+          className="rounded-lg [&>textarea]:min-h-[59px] [&>textarea]:min-w-0 [&>textarea]:overflow-hidden"
         />
 
         <TagsSelect onToggle={toggleTag} isSelected={isTagSelected} />

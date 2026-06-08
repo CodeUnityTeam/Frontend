@@ -5,16 +5,11 @@ import { cn } from "@/shared/lib/utils";
 import { questionTags } from "../model/question-tags";
 
 type TagsSelectProps = {
-  /** Переключить выбор тега по его value. */
   onToggle: (value: string) => void;
-  /** Выбран ли тег. */
+
   isSelected: (value: string) => boolean;
 };
 
-/**
- * Раскрывающийся блок «Подберите теги»: строка-заголовок с шевроном и
- * нижним разделителем (как в макете), при раскрытии — выбираемые теги-чипы.
- */
 export function TagsSelect({ onToggle, isSelected }: TagsSelectProps) {
   const [open, setOpen] = useState(false);
 

@@ -1,9 +1,5 @@
 import { useState } from "react";
 
-/**
- * Локальное состояние формы создания вопроса: заголовок, текст, выбранные теги,
- * флаг анонимной публикации. Бизнес-логики отправки тут нет — только UI-state.
- */
 export function useCreateQuestion() {
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
