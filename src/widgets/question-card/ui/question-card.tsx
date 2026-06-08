@@ -24,7 +24,7 @@ export function QuestionCard({
               <span className="text-xl font-semibold">{question.user.firstName}</span>
               <div className="flex flex-row items-center gap-1">
                 <Button variant="ghost" className="p-0" onClick={() => alert("В разработке")}>
-                  <Icon icon={"ph:star"} />
+                  <Icon icon={"ph:thumbs-up"} />
                 </Button>
                 <span className="text-lg align-middle">{question.user.rating}</span>
               </div>
@@ -65,12 +65,6 @@ export function QuestionCard({
               <Icon icon={"ph:chat-teardrop-dots"} />
             </Button>
             <span>{question.comments}</span>
-          </div>
-          <div className="flex gap-x-1 md:gap-x-3 items-center">
-            <Button variant="ghost" className="p-0" onClick={() => alert("В разработке")}>
-              <Icon icon={"ph:telegram-logo"} />
-            </Button>
-            <span>{question.reposts}</span>
           </div>
         </div>
         <Button variant="ghost" className="font-semibold" onClick={() => alert("В разработке")}>

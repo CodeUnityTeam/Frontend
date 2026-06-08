@@ -13,7 +13,6 @@ export interface QuestionData {
   createdAt: Date;
   likes: number;
   comments: number;
-  reposts: number;
 }
 
 export interface QuestionCardProps {
