@@ -72,10 +72,10 @@ const SheetContent = React.forwardRef<
       >
         {children}
         {showClose && (
-          <Close className="absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
+          <SheetClose className="absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
             <Icon icon="lucide:x" className="size-6" />
             <span className="sr-only">Закрыть</span>
-          </Close>
+          </SheetClose>
         )}
       </Content>
     </SheetPortal>

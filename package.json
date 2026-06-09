@@ -26,6 +26,7 @@
     "@tailwindcss/vite": "^4.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "embla-carousel-react": "^8.6.0",
     "fix": "^0.0.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -54,6 +55,7 @@
     "shadcn": "^4.5.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2",
-    "vite": "^8.0.9"
+    "vite": "^8.0.9",
+    "vite-plugin-svgr": "^5.2.0"
   }
 }

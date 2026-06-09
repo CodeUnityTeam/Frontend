@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Icon } from "@iconify/react";
 import Logo from "@/shared/assets/icons/logo.svg";
-import Avatar from "@/shared/assets/images/avatar.png";
 import { navigationConfigs } from "@/shared/config";
 import { Button } from "@/shared/ui/button";
 import { Navigation } from "@/shared/ui/navigation";
 import { isAuth } from "@/shared/config/mock-config";
 import { ROUTES } from "@/shared/model/routes";
+import { ProfileMenu } from "./profile-menu";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,8 +26,10 @@ export function Header() {
         <img src={Logo} alt="logo" />
       </Link>
 
-      <Navigation items={navigationConfigs['header']}
-        listClassName="flex gap-9 text-lg font-semibold max-md:hidden" />
+      <Navigation
+        items={navigationConfigs["header"]}
+        listClassName="flex gap-9 text-lg font-semibold max-md:hidden"
+      />
 
       <div className="flex items-center gap-10 max-md:gap-4">
         <Button
@@ -39,40 +41,27 @@ export function Header() {
           <Icon icon="ph:list" height={24} />
         </Button>
 
-        <div className="flex cursor-pointer items-center gap-2">
-          {isAuth ? (
-            <>
-              <img
-                src={Avatar}
-                alt="avatar"
-                className="h-8 w-8 rounded-full object-cover md:h-10 md:w-10"
-              />
-              <span className="hidden text-lg font-semibold md:inline">Профиль</span>            </>
-          ) : (
-            <Button
-              asChild
-              variant="ghost"
-              size="sm"
-              className="flex items-center gap-1.5 px-2 py-1 text-sm font-semibold"
-            >
-              <Link to={ROUTES.REGISTER}>
-                <Icon
-                icon="ph:sign-in" height={24}
-                className="h-3.5 w-3.5"
-                />
-                Войти
-              </Link>
-            </Button>
-          )}
-        </div>
+        {isAuth ? (
+          <ProfileMenu />
+        ) : (
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className="flex items-center gap-1.5 px-2 py-1 text-sm font-semibold"
+          >
+            <Link to={ROUTES.REGISTER}>
+              <Icon icon="ph:sign-in" height={24} className="h-3.5 w-3.5" />
+              Войти
+            </Link>
+          </Button>
+        )}
       </div>
 
       <div
-        className={
-          `fixed inset-0 z-50 transition-opacity 
-          duration-300 md:hidden 
-          ${isOpen ? "opacity-100" : "pointer-events-none opacity-0"
-          }`}
+        className={`fixed inset-0 z-50 transition-opacity duration-300 md:hidden ${
+          isOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
       >
         <div
           className="absolute inset-0 bg-background/60 backdrop-blur-md"
@@ -96,11 +85,10 @@ export function Header() {
               items={navigationConfigs.header}
               listClassName="flex flex-col gap-6 text-md font-semibold"
               onItemClick={() => setIsOpen(false)}
-
             />
           </div>
         </div>
-      </div >
-    </header >
+      </div>
+    </header>
   );
 }
