@@ -14,6 +14,8 @@
     "Raleway", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji";
 
+  --breakpoint-2xl: 1280;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
@@ -174,5 +176,6 @@
 
   body {
     @apply bg-background font-raleway text-foreground;
+    font-feature-settings: "lnum" 1, "pnum" 1;
   }
 }

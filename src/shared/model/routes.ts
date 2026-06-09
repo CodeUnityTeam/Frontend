@@ -10,6 +10,13 @@ import "react-router";
 export const ROUTES = {
   HOME: "/",
   NOT_FOUND: "/404",
+  REGISTER: "/register",
+
+  QA: "/qa",
+  QA_CREATE: "/qa/create",
+
+  PROFILE: "/profile",
+  SETTINGS: "/settings",
 
   /*
    * пример: путь с параметром

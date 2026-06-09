@@ -22,6 +22,7 @@ type ConfirmModalProps = {
 
   onConfirm?: () => void;
   variant?: "default" | "destructive";
+  closeOnOutsideClick?: boolean;
 };
 
 export function ConfirmModal({
@@ -33,9 +34,14 @@ export function ConfirmModal({
   cancelText,
   icon,
   onConfirm,
+  closeOnOutsideClick,
 }: ConfirmModalProps) {
   return (
-    <AlertModal open={open} onOpenChange={onOpenChange}>
+    <AlertModal
+      open={open}
+      onOpenChange={onOpenChange}
+      closeOnOutsideClick={closeOnOutsideClick}
+    >
       <AlertModalHeader>
         {icon && <Icon icon={icon} height={64} className="mb-1" />}
 

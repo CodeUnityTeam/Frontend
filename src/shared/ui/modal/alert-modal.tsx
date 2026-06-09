@@ -26,6 +26,7 @@ type AlertModalProps = {
   onOpenChange: (open: boolean) => void;
   children: ReactNode;
   className?: string;
+  closeOnOutsideClick?: boolean;
 };
 
 export function AlertModal({
@@ -33,10 +34,18 @@ export function AlertModal({
   onOpenChange,
   children,
   className,
+  closeOnOutsideClick = false,
 }: AlertModalProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent
+        overlayProps={
+          closeOnOutsideClick
+            ? {
+                onPointerDown: () => onOpenChange(false),
+              }
+            : undefined
+        }
         className={cn(
           "max-w-[360px] gap-5 overflow-hidden px-8 pt-6 pb-5",
           className,
@@ -104,6 +113,8 @@ export const AlertModalFooter = ({
 export const AlertModalAction = ({
   children,
   className,
+  asChild,
+  onClick,
   ...props
 }: AlertModalSlotProps) => (
   <AlertDialogAction
@@ -113,8 +124,10 @@ export const AlertModalAction = ({
         size: "alertModal",
       }),
       className,
-      { ...props },
     )}
+    asChild={asChild}
+    onClick={onClick}
+    {...props}
   >
     {children}
   </AlertDialogAction>
