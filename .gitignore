@@ -38,3 +38,4 @@ oxlint.config.js
 oxlint.config.cjs
 oxlint.config.mjs
 oxlint.config.ts
+.env
