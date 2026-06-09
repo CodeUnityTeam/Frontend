@@ -1,5 +1,12 @@
+import { Search } from "@/widgets/search";
+
 function ProjectsPage() {
-  return <div>Projects page</div>;
+  return (
+    <>
+      <Search />
+      <div>Projects page</div>
+    </>
+  );
 }
 
 export const Component = ProjectsPage;
