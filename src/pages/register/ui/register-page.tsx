@@ -19,6 +19,7 @@ function RegisterPage() {
 
     const payload = {
       ...finalData,
+      role: finalData.employmentRole,
       // send values as `skills` and keep original labels for readability
       skills: skillsValues,
       skillsLabels: finalData.skills,
