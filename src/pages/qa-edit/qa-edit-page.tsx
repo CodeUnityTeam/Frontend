@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Icon } from "@iconify/react";
 
 import { getQuestionById } from "@/entities/question";
 import type { QuestionFormValues } from "@/entities/question";
+import { ConfirmModal } from "@/features/confirm-modal";
 import { ROUTES } from "@/shared/model/routes";
 import { PageContainer } from "@/shared/ui/page-container";
 import { QuestionForm } from "@/widgets/question-form";
@@ -11,15 +13,16 @@ function QaEditPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const goBack = () => navigate(-1);
+  const [isDeleteOpen, setDeleteOpen] = useState(false);
 
   const question = id ? getQuestionById(id) : undefined;
 
   const handleSubmit = (values: QuestionFormValues) => {
     void values;
-    navigate(-1);
+    goBack();
   };
 
-  const handleDelete = () => {
+  const confirmDelete = () => {
     navigate(ROUTES.QA);
   };
 
@@ -51,15 +54,28 @@ function QaEditPage() {
           </div>
 
           {question ? (
-            <QuestionForm
-              initialValues={{
-                title: question.title,
-                details: question.details,
-                tags: question.tags,
-              }}
-              onSubmit={handleSubmit}
-              onDelete={handleDelete}
-            />
+            <>
+              <QuestionForm
+                initialValues={{
+                  title: question.title,
+                  details: question.details,
+                  tags: question.tags,
+                }}
+                onSubmit={handleSubmit}
+                onDelete={() => setDeleteOpen(true)}
+              />
+
+              <ConfirmModal
+                open={isDeleteOpen}
+                onOpenChange={setDeleteOpen}
+                icon="ph:trash"
+                title="Удалить вопрос?"
+                description="Это действие приведёт к безвозвратному удалению вопроса"
+                confirmText="Удалить"
+                cancelText="Отменить"
+                onConfirm={confirmDelete}
+              />
+            </>
           ) : (
             <p className="text-base text-foreground">Вопрос не найден.</p>
           )}
