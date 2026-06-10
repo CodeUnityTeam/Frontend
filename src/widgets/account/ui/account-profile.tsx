@@ -6,6 +6,16 @@ import avatarImg from "@/shared/assets/images/account-avatar.jpg";
 import { accountData } from "@/widgets/account/model/account-data";
 import type { AccountProfileProps } from "@/widgets/account/model/types";
 
+import {
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+} from "@/shared/ui/modal/modal";
+
+import { Input } from "@/shared/ui/input";
+import { Textarea } from "@/shared/ui/textarea";
+
 export const AccountProfile = ({
   profile,
   skills,
@@ -14,6 +24,10 @@ export const AccountProfile = ({
   experience,
 }: AccountProfileProps) => {
   const [tab, setTab] = React.useState<"profile" | "experience">("profile");
+
+  const [isExperienceModalOpen, setIsExperienceModalOpen] =
+    React.useState(false);
+
   const profileData = profile ?? {
     ...accountData.profile,
     avatar: accountData.profile.avatar || avatarImg,
@@ -119,14 +133,27 @@ export const AccountProfile = ({
             </button>
           </div>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => alert("В разработке")}
-            className="text-foreground hover:text-foreground"
-          >
-            <Icon icon="ph:pencil-simple-line" className="h-5 w-5" />
-          </Button>
+          {tab === "experience" && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsExperienceModalOpen(true)}
+              className="text-foreground hover:text-foreground"
+            >
+              <Icon icon="ph:pencil-simple-line" className="h-5 w-5" />
+            </Button>
+          )}
+
+          {tab === "profile" && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => alert("В разработке")}
+              className="text-foreground hover:text-foreground"
+            >
+              <Icon icon="ph:pencil-simple-line" className="h-5 w-5" />
+            </Button>
+          )}
         </div>
 
         <div className="mt-5 flex flex-col divide-y divide-border *:py-6">
@@ -140,7 +167,7 @@ export const AccountProfile = ({
                 <>
                   {skillsData.length > 0 && (
                     <section>
-                      <h3 className="mb-4 text-[18px] leading-[130%] font-semibold text-foreground">
+                      <h3 className="mb-4 text-[18px] font-semibold">
                         Навыки и инструменты
                       </h3>
 
@@ -148,7 +175,7 @@ export const AccountProfile = ({
                         {skillsData.map((item, i) => (
                           <span
                             key={i}
-                            className="inline-flex items-center rounded-[16px] bg-[#D3E9F7] px-3 py-1 text-[13px] leading-[130%] text-foreground"
+                            className="rounded-[16px] bg-[#D3E9F7] px-3 py-1 text-[13px]"
                           >
                             {item}
                           </span>
@@ -159,15 +186,15 @@ export const AccountProfile = ({
 
                   {qualitiesData.length > 0 && (
                     <section>
-                      <h3 className="mb-5 text-[18px] leading-[130%] font-semibold text-foreground">
+                      <h3 className="mb-5 text-[18px] font-semibold">
                         Личные качества
                       </h3>
 
-                      <div className="flex flex-wrap gap-x-1 gap-y-2">
+                      <div className="flex flex-wrap gap-2">
                         {qualitiesData.map((item, i) => (
                           <span
                             key={i}
-                            className="inline-flex items-center rounded-[16px] bg-[#D3E9F7] px-3 py-1 text-[13px] leading-[130%] text-foreground"
+                            className="rounded-[16px] bg-[#D3E9F7] px-3 py-1 text-[13px]"
                           >
                             {item}
                           </span>
@@ -178,13 +205,9 @@ export const AccountProfile = ({
 
                   {aboutData && (
                     <section>
-                      <h3 className="mb-5 text-[18px] leading-[130%] font-semibold text-foreground">
-                        О себе
-                      </h3>
+                      <h3 className="mb-5 text-[18px] font-semibold">О себе</h3>
 
-                      <p className="text-[16px] leading-[150%] text-foreground">
-                        {aboutData}
-                      </p>
+                      <p>{aboutData}</p>
                     </section>
                   )}
                 </>
@@ -199,40 +222,78 @@ export const AccountProfile = ({
                   <EmptyState title="Информации о опыте работы пока нет" />
                 </div>
               ) : (
-                <>
-                  {experienceData.map((item, i) => (
-                    <section key={i}>
-                      <h4 className="text-[20px] leading-[130%] font-semibold text-foreground">
-                        {item.company}
-                      </h4>
+                experienceData.map((item, i) => (
+                  <section key={i}>
+                    <h4 className="text-[20px] font-semibold">
+                      {item.company}
+                    </h4>
 
-                      <div className="mt-4 text-[14px] leading-[100%] text-muted-foreground">
-                        {item.from} — {item.to ?? "По настоящее время"}
-                      </div>
+                    <div className="text-[14px] text-muted-foreground">
+                      {item.from} — {item.to ?? "По настоящее время"}
+                    </div>
 
-                      <div className="mt-2 text-[16px] leading-[150%] text-foreground">
-                        {item.position}
-                      </div>
+                    <div className="text-[16px]">{item.position}</div>
 
-                      {item.responsibilities && (
-                        <>
-                          <div className="mt-6 text-[16px] leading-[150%] font-semibold text-foreground">
-                            Обязанности
-                          </div>
-
-                          <p className="mt-2 text-[16px] leading-[150%] text-foreground">
-                            {item.responsibilities}
-                          </p>
-                        </>
-                      )}
-                    </section>
-                  ))}
-                </>
+                    {item.responsibilities && (
+                      <>
+                        <div className="mt-4 font-semibold">Обязанности</div>
+                        <p>{item.responsibilities}</p>
+                      </>
+                    )}
+                  </section>
+                ))
               )}
             </>
           )}
         </div>
       </main>
+
+      <Modal
+        open={isExperienceModalOpen}
+        onOpenChange={setIsExperienceModalOpen}
+        className="rounded-[20px] sm:max-w-178"
+      >
+        <ModalHeader />
+
+        <ModalBody>
+          <div className="flex flex-col gap-4 sm:gap-7">
+            <Input label="Название компании" placeholder="Например Яндекс" />
+
+            <Input label="Должность" placeholder="Например Дизайнер" />
+
+            <Textarea
+              label="Обязанности"
+              placeholder="Распишите подробно свои обязанности"
+            />
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
+              <Input
+                label="Дата начала проекта"
+                placeholder="дд.мм.гггг"
+                rightElement={<Icon icon="solar:calendar-linear" />}
+              />
+
+              <Input
+                label="Дата окончания проекта"
+                placeholder="дд.мм.гггг"
+                rightElement={<Icon icon="solar:calendar-linear" />}
+              />
+            </div>
+          </div>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button
+            size="lg"
+            onClick={() => {
+              setIsExperienceModalOpen(false);
+              alert("В разработке");
+            }}
+          >
+            Сохранить
+          </Button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 };
