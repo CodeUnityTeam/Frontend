@@ -18,6 +18,8 @@ export interface RegisterFormData {
   surname: string;
   position: string;
   photo: File | null;
+  email: string;
+  employmentRole: "worker" | "employer";
   // Step 1 other additions
   format?: string;
   qualities?: string[];
@@ -64,6 +66,8 @@ const initialData: RegisterFormData = {
   surname: "",
   position: "",
   photo: null,
+  email: "",
+  employmentRole: "worker",
   format: "",
   qualities: [],
   qualitiesDraft: "",

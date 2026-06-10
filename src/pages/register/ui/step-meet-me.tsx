@@ -17,6 +17,7 @@ interface StepMeetMeProps {
 interface FormErrors {
   name?: string;
   surname?: string;
+  email?: string;
 }
 
 export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
@@ -26,6 +27,10 @@ export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
   const [photo, setPhoto] = useState<File | null>(data.photo);
   const [photoPreview, setPhotoPreview] = useState<string | null>(
     data.photo ? URL.createObjectURL(data.photo) : null,
+  );
+  const [email, setEmail] = useState<string>(data.email ?? "");
+  const [employmentRole, setEmploymentRole] = useState<"worker" | "employer">(
+    (data.employmentRole as "worker" | "employer") ?? "worker",
   );
   const [format, setFormat] = useState<string>(data.format ?? "");
   const [country, setCountry] = useState<string>(data.country ?? "");
@@ -56,6 +61,9 @@ export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
     const next: FormErrors = {};
     if (!name.trim()) next.name = "Имя обязательно для заполнения";
     if (!surname.trim()) next.surname = "Фамилия обязательна для заполнения";
+    const emailTrim = email.trim();
+    if (!emailTrim) next.email = "Email обязателен для заполнения";
+    else if (!emailTrim.includes("@")) next.email = "Email должен содержать символ @";
     setErrors(next);
     return Object.keys(next).length === 0;
   };
@@ -68,6 +76,8 @@ export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
       surname: surname.trim(),
       position: position.trim(),
       photo,
+      email: email.trim(),
+      employmentRole,
       format,
       country,
       city,
@@ -177,6 +187,65 @@ export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
                     }}
                     className="h-14 rounded-[14px]"
                   />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <Input
+                    label="Email"
+                    placeholder="your@email.com"
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
+                      onPatch?.({ email: e.target.value });
+                    }}
+                    error={errors.email}
+                    className="h-14 rounded-[14px]"
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <div className="mb-2 text-sm font-medium">Я хочу</div>
+                  <div className="flex items-center gap-4">
+                    <label
+                      className={`inline-flex items-center gap-2 cursor-pointer rounded-md px-2 py-2 flex-1 min-w-0 ${
+                        employmentRole === "worker" ? "ring-2 ring-primary" : ""
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="employmentRole"
+                        value="worker"
+                        checked={employmentRole === "worker"}
+                        onChange={() => {
+                          setEmploymentRole("worker");
+                          onPatch?.({ employmentRole: "worker" });
+                        }}
+                        className="h-4 w-4 align-middle shrink-0"
+                      />
+                      <span className="text-sm sm:text-base font-medium tracking-tight leading-none truncate">Найти работу</span>
+                    </label>
+
+                    <label
+                      className={`inline-flex items-center gap-2 cursor-pointer rounded-md px-2 py-2 flex-1 min-w-0 ${
+                        employmentRole === "employer" ? "ring-2 ring-primary" : ""
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="employmentRole"
+                        value="employer"
+                        checked={employmentRole === "employer"}
+                        onChange={() => {
+                          setEmploymentRole("employer");
+                          onPatch?.({ employmentRole: "employer" });
+                        }}
+                        className="h-4 w-4 align-middle shrink-0"
+                      />
+                      <span className="text-sm sm:text-base font-medium tracking-tight leading-none truncate">Найти сотрудников</span>
+                    </label>
+                  </div>
                 </div>
 
                 <div className="sm:col-span-2">
