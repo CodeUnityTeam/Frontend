@@ -84,10 +84,14 @@ const initialData: RegisterFormData = {
   about: "",
 };
 
-const initialState: State = {
-  step: 1,
-  data: initialData,
-};
+function createInitialState(
+  patch: Partial<RegisterFormData> = {},
+): State {
+  return {
+    step: 1,
+    data: { ...initialData, ...patch },
+  };
+}
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -109,8 +113,12 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-export function useRegisterForm() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+export function useRegisterForm(initialDataPatch: Partial<RegisterFormData> = {}) {
+  const [state, dispatch] = useReducer(
+    reducer,
+    initialDataPatch,
+    createInitialState,
+  );
 
   const next = (patch: Partial<RegisterFormData>) =>
     dispatch({ type: "next", patch });

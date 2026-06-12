@@ -2,29 +2,19 @@ import React, { useEffect } from "react";
 import { useModal } from "@/shared/lib/hooks/use-modal";
 import RegistrationModal from "./registration-modal";
 import LoginModal from "./login-modal";
-
-type AuthAction = "openRegister" | "openLogin" | "closeAll";
-
-const listeners: Array<(action: AuthAction) => void> = [];
-
-export function openAuthRegister() {
-  listeners.forEach((l) => l("openRegister"));
-}
-
-export function openAuthLogin() {
-  listeners.forEach((l) => l("openLogin"));
-}
-
-export function closeAuthModals() {
-  listeners.forEach((l) => l("closeAll"));
-}
+import {
+  type AuthAction,
+  subscribeAuthModalActions,
+} from "../model/auth-modal-actions";
 
 interface AuthModalManagerProps {
   /** If true, open registration modal on mount */
   initialOpen?: boolean;
 }
 
-export function AuthModalManager({ initialOpen = false }: AuthModalManagerProps) {
+export function AuthModalManager({
+  initialOpen = false,
+}: AuthModalManagerProps) {
   const register = useModal(initialOpen);
   const login = useModal(false);
 
@@ -44,11 +34,7 @@ export function AuthModalManager({ initialOpen = false }: AuthModalManagerProps)
       }
     };
 
-    listeners.push(handler);
-    return () => {
-      const idx = listeners.indexOf(handler);
-      if (idx >= 0) listeners.splice(idx, 1);
-    };
+    return subscribeAuthModalActions(handler);
   }, [register, login]);
 
   const openLoginFromRegister = () => {

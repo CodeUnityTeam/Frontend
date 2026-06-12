@@ -6,9 +6,8 @@ import { navigationConfigs } from "@/shared/config";
 import { Button } from "@/shared/ui/button";
 import { Navigation } from "@/shared/ui/navigation";
 import { isAuth } from "@/shared/config/mock-config";
-// ROUTES removed — header opens auth modal instead of navigating to register route
 import { ProfileMenu } from "./profile-menu";
-import AuthModalManager, { openAuthRegister } from "@/widgets/registration/ui/auth-modal-manager";
+import { openAuthRegister } from "@/widgets/registration/model/auth-modal-actions";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,18 +44,15 @@ export function Header() {
         {isAuth ? (
           <ProfileMenu />
         ) : (
-          <>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex items-center gap-1.5 px-2 py-1 text-sm font-semibold"
-              onClick={() => openAuthRegister()}
-            >
-              <Icon icon="ph:sign-in" height={24} className="h-3.5 w-3.5" />
-              Войти
-            </Button>
-            <AuthModalManager />
-          </>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex items-center gap-1.5 px-2 py-1 text-sm font-semibold"
+            onClick={() => openAuthRegister()}
+          >
+            <Icon icon="ph:sign-in" height={24} className="h-3.5 w-3.5" />
+            Войти
+          </Button>
         )}
       </div>
 
