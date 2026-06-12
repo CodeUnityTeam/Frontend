@@ -9,7 +9,6 @@ import { useModal } from "@/shared/lib/hooks";
 import { useIsAuthed } from "@/shared/lib/auth";
 import { LoginModal } from "@/features/login-modal";
 import { ProfileMenu } from "./profile-menu";
-import AuthModalManager, { openAuthRegister } from "@/widgets/registration/ui/auth-modal-manager";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);

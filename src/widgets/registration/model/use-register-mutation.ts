@@ -1,11 +1,15 @@
 import { useMutation } from "@tanstack/react-query";
-import { registerUser, type RegistrationRequest } from "@/shared/api/auth";
+import {
+  registerUser,
+  type ApiRequestError,
+  type RegistrationRequest,
+  type RegistrationResponse,
+} from "@/shared/api/auth";
 
 export const useRegisterMutation = () => {
-  // explicitly type TVariables as RegistrationRequest so mutate accepts payload
-  return useMutation<unknown, unknown, RegistrationRequest>((payload: RegistrationRequest) =>
-    registerUser(payload),
-  );
+  return useMutation<RegistrationResponse, ApiRequestError, RegistrationRequest>({
+    mutationFn: registerUser,
+  });
 };
 
 export default useRegisterMutation;

@@ -1,3 +1,5 @@
+import { apiClient } from "@/shared/api";
+
 export type RegistrationRequest = {
   email: string;
   first_name: string;
@@ -5,59 +7,56 @@ export type RegistrationRequest = {
   password: string;
 };
 
-async function parseJsonSafe(response: Response) {
-  const text = await response.text();
-  try {
-    return text ? JSON.parse(text) : null;
-  } catch {
-    return text;
-  }
-}
+export type RegistrationResponse = {
+  detail?: string;
+};
 
-export async function registerUser(payload: RegistrationRequest) {
-  const base = import.meta.env.VITE_API_URL as string;
-  const url = `${base.replace(/\/$/, "")}/api/v1/user/auth/registration/`;
+export type VerifyEmailRequest = {
+  key: string;
+};
 
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-    credentials: "include",
-  });
+export type ApiRequestError = Error & {
+  status?: number;
+  data?: unknown;
+};
 
-  const data = await parseJsonSafe(res);
-  if (!res.ok) {
-    // Throw a structured error that includes status and parsed body
-    const err: any = new Error("Registration failed");
-    err.status = res.status;
-    err.data = data;
-    throw err;
-  }
+export async function registerUser(
+  payload: RegistrationRequest,
+): Promise<RegistrationResponse> {
+  const { data } = await apiClient.post<RegistrationResponse>(
+    "/user/auth/registration/",
+    payload,
+  );
 
   return data;
 }
 
-export async function getProviderUrl(provider: string) {
-  const base = import.meta.env.VITE_API_URL as string;
-  const url = `${base.replace(/\/$/, "")}/api/v1/user/auth/${provider}/url/`;
+export async function verifyEmail(
+  payload: VerifyEmailRequest,
+): Promise<unknown> {
+  const { data } = await apiClient.post<unknown>(
+    "/user/auth/registration/verify-email/",
+    payload,
+  );
 
-  const res = await fetch(url, { method: "GET", credentials: "include" });
-  if (!res.ok) {
-    const data = await parseJsonSafe(res).catch(() => null);
-    const err: any = new Error("Failed to fetch provider url");
-    err.status = res.status;
-    err.data = data;
-    throw err;
-  }
+  return data;
+}
 
-  const data = await res.json();
+export async function getProviderUrl(provider: string): Promise<string | null> {
+  const { data } = await apiClient.get<{
+    url?: string;
+    authorization_url?: string;
+    auth_url?: string;
+  }>(`/user/auth/${provider}/url/`);
+
   // backend may return different shapes: { url }, { authorization_url }, { auth_url }
-  return (data && (data.url || data.authorization_url || data.auth_url)) || null;
+  return (
+    (data && (data.url || data.authorization_url || data.auth_url)) || null
+  );
 }
 
 export default {
   registerUser,
+  verifyEmail,
   getProviderUrl,
 };
