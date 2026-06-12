@@ -29,7 +29,7 @@ export function Modal({ open, onOpenChange, children, className }: ModalProps) {
       <DialogContent
         showCloseButton={false}
         className={cn(
-          "flex max-h-[90vh] flex-col gap-0 overflow-hidden sm:p-8",
+          "flex max-h-[90vh] max-w-auto flex-col gap-0 overflow-hidden sm:p-8",
           className,
         )}
       >

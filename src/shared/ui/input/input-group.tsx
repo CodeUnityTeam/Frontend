@@ -157,9 +157,6 @@ function InputGroupTextarea({
       className={cn(
         "flex-1 resize-none rounded-none border-0 bg-transparent py-3 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-transparent",
         className,
-
-        // our custom
-        "p-4 text-[18px] leading-normal",
       )}
       {...props}
     />
