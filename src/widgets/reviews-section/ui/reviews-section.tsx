@@ -7,8 +7,9 @@ import {
 } from "@/shared/ui/carousel";
 import { REVIEWS_MOCKS } from "@/entities/review/model/mocks";
 import { ReviewCard } from "@/entities/review";
+import { isAuth } from "@/shared/config/mock-config";
 
-const isAuth = false;
+// const isAuth = true;
 
 export function ReviewsSection() {
   if (isAuth) {

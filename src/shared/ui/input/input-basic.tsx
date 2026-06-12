@@ -12,9 +12,6 @@ const InputBasic = React.forwardRef<
         // removed md:text-sm
         "flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-disabled",
         className,
-
-        // custom styles
-        "text-[18px] leading-normal",
       )}
       ref={ref}
       {...props}
