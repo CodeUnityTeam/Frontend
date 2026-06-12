@@ -25,17 +25,20 @@ export function ResetPasswordForm({ onSubmit, onClose, isPending }: Props) {
   }
 
   return (
-    <form className="flex flex-col" onSubmit={handleSubmit}>
-      <ModalTitle className="pb-4 text-[20px] leading-[130%] sm:pb-6 sm:text-4xl">
+    <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+      <ModalTitle className="text-[20px] leading-[130%] sm:text-4xl">
         Восстановление пароля
       </ModalTitle>
       <ModalBody className="overflow-visible">
-        <ModalDescription className="mb-4 text-base leading-normal text-foreground sm:mb-6 sm:text-lg">
+        <ModalDescription className="mb-4 font-raleway text-base text-foreground sm:mb-6 sm:text-lg">
           Введите E-mail, указанный при регистрации. Мы отправим на него ссылку
           для сброса пароля
         </ModalDescription>
         <Field className="gap-1">
-          <Label htmlFor="email" className="text-base font-semibold sm:text-xl">
+          <Label
+            htmlFor="email"
+            className="font-raleway text-base font-semibold sm:text-xl"
+          >
             E-mail
           </Label>
           <Input
@@ -46,15 +49,15 @@ export function ResetPasswordForm({ onSubmit, onClose, isPending }: Props) {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full"
+            className="w-full h-14 p-4 font-raleway text-lg"
           />
         </Field>
       </ModalBody>
-      <ModalFooter className="flex-col gap-3 pt-4 sm:flex-col sm:gap-4 sm:pt-6">
+      <ModalFooter className="flex-col gap-3 pt-0 sm:flex-col sm:gap-5">
         <Button
           type="submit"
           disabled={isPending}
-          className="h-12 w-full rounded-lg text-base font-semibold sm:h-13.25 sm:text-lg"
+          className="h-12 w-full rounded-lg text-base sm:h-13.25 sm:text-base"
         >
           Отправить ссылку
         </Button>

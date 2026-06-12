@@ -34,22 +34,22 @@ export function ResetPasswordSuccess({
   }
 
   return (
-    <>
-      <ModalTitle className="pb-4 text-[20px] leading-[130%] sm:pb-6 sm:text-4xl">
+    <div className="flex flex-col gap-6">
+      <ModalTitle className="text-[20px] leading-[130%] sm:text-4xl">
         Письмо отправлено!
       </ModalTitle>
-      <ModalBody>
-        <ModalDescription className="text-base leading-normal text-foreground sm:text-lg">
+      <ModalBody className="overflow-visible">
+        <ModalDescription className=" font-raleway text-base text-foreground sm:text-lg">
           Мы отправили инструкции на почту{" "}
           <span className="font-semibold">{email}</span>. Если письма нет,
           проверьте папку «Спам»
         </ModalDescription>
       </ModalBody>
-      <ModalFooter className="flex-col gap-3 pt-4 sm:flex-col sm:gap-4 sm:pt-6">
+      <ModalFooter className="flex-col gap-3 pt-0 sm:flex-col sm:gap-5">
         <Button
           type="button"
           onClick={onClose}
-          className="h-12 w-full rounded-2xl text-base font-semibold sm:h-13.25 sm:text-lg"
+          className="h-12 w-full rounded-lg text-base sm:h-13.25 sm:text-base"
         >
           Понятно
         </Button>
@@ -62,12 +62,12 @@ export function ResetPasswordSuccess({
             type="button"
             variant="link"
             onClick={handleResendRequest}
-            className="h-auto p-0 text-sm text-foreground"
+            className="h-auto w-full p-0 text-sm text-foreground"
           >
             Отправить повторно
           </Button>
         )}
       </ModalFooter>
-    </>
+    </div>
   );
 }
