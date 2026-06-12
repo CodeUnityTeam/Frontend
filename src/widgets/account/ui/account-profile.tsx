@@ -5,6 +5,7 @@ import { EmptyState } from "@/widgets/account/ui/empty-state";
 import avatarImg from "@/shared/assets/images/account-avatar.jpg";
 import { accountData } from "@/widgets/account/model/account-data";
 import type { AccountProfileProps } from "@/widgets/account/model/types";
+import { SetSkillsModal } from "@/widgets/set-skills-modal";
 
 export const AccountProfile = ({
   profile,
@@ -14,6 +15,7 @@ export const AccountProfile = ({
   experience,
 }: AccountProfileProps) => {
   const [tab, setTab] = React.useState<"profile" | "experience">("profile");
+  const [isSkillsModalOpen, setSkillsModalOpen] = React.useState<boolean>(false);
   const profileData = profile ?? {
     ...accountData.profile,
     avatar: accountData.profile.avatar || avatarImg,
@@ -122,11 +124,22 @@ export const AccountProfile = ({
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => alert("В разработке")}
+            onClick={() => tab === "profile" ? setSkillsModalOpen(!isSkillsModalOpen) : alert("В разработке!")}
             className="text-foreground hover:text-foreground"
           >
             <Icon icon="ph:pencil-simple-line" className="h-5 w-5" />
           </Button>
+          <SetSkillsModal
+            open={isSkillsModalOpen}
+            onOpenChange={setSkillsModalOpen}
+            onSubmit={(e) => {
+              e.preventDefault();
+              alert("В разработке");
+            }}
+            skillsData={skillsData}
+            qualitiesData={qualitiesData}
+            aboutData={aboutData}
+            />
         </div>
 
         <div className="mt-5 flex flex-col divide-y divide-border *:py-6">
