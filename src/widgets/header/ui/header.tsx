@@ -5,18 +5,15 @@ import Logo from "@/shared/assets/icons/logo.svg";
 import { navigationConfigs } from "@/shared/config";
 import { Button } from "@/shared/ui/button";
 import { Navigation } from "@/shared/ui/navigation";
-import { isAuth } from "@/shared/config/mock-config";
 import { useModal } from "@/shared/lib/hooks";
-import { getAccessToken } from "@/shared/lib/auth";
+import { useIsAuthed } from "@/shared/lib/auth"
 import { LoginModal } from "@/features/login-modal";
 import { ProfileMenu } from "./profile-menu";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const loginModal = useModal();
-  const [authed, setAuthed] = useState(
-    () => isAuth || Boolean(getAccessToken()),
-  );
+  const authed = useIsAuthed();
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -94,11 +91,7 @@ export function Header() {
         </div>
       </div>
 
-      <LoginModal
-        open={loginModal.open}
-        onOpenChange={loginModal.setOpen}
-        onSuccess={() => setAuthed(true)}
-      />
+      <LoginModal open={loginModal.open} onOpenChange={loginModal.setOpen} />
     </header>
   );
 }

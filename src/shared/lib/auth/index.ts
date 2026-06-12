@@ -6,3 +6,4 @@ export {
   clearTokens,
 } from "./token-storage";
 export type { TokenPair } from "./token-storage";
+export { useIsAuthed } from "./use-is-authed";

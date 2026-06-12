@@ -1,3 +1,4 @@
+import { Button } from "@/shared/ui/button";
 import { Icon } from "@/shared/ui/icon";
 
 export function SocialLogin() {
@@ -8,23 +9,27 @@ export function SocialLogin() {
       </p>
 
       <div className="flex items-center gap-4">
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="icon"
           aria-label="Войти через Яндекс"
           onClick={() => alert("Раздел в разработке")}
-          className="flex cursor-pointer transition-opacity hover:opacity-80"
+          className="p-0 transition-opacity hover:opacity-80 [&_svg]:size-8"
         >
           <Icon name="yandex" size={32} />
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="icon"
           aria-label="Войти через Почту"
           onClick={() => alert("Раздел в разработке")}
-          className="flex cursor-pointer transition-opacity hover:opacity-80"
+          className="p-0 transition-opacity hover:opacity-80 [&_svg]:size-8"
         >
           <Icon name="mail-ru" size={32} />
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -2,7 +2,10 @@ import { useMutation } from "@tanstack/react-query";
 
 import { setTokens } from "@/shared/lib/auth";
 import { login } from "./login";
-import type { AuthSession, LoginCredentials } from "../model/types";
+import type {
+  AuthSession,
+  LoginCredentials,
+} from "@/entities/auth/model/types";
 
 export function useLogin() {
   return useMutation<AuthSession, Error, LoginCredentials>({

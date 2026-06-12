@@ -1,5 +1,6 @@
 import { Modal } from "@/shared/ui/modal/modal";
 import { Icon } from "@/shared/ui/icon";
+import { Button } from "@/shared/ui/button";
 import {
   DialogClose,
   DialogDescription,
@@ -11,16 +12,9 @@ import { SocialLogin } from "./social-login";
 interface LoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-
-  onSuccess?: () => void;
 }
 
-export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
-  const handleSuccess = () => {
-    onSuccess?.();
-    onOpenChange(false);
-  };
-
+export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   return (
     <Modal
       open={open}
@@ -46,17 +40,19 @@ export function LoginModal({ open, onOpenChange, onSuccess }: LoginModalProps) {
           </DialogDescription>
         </div>
 
-        <LoginForm onSuccess={handleSuccess} />
+        <LoginForm onSuccess={() => onOpenChange(false)} />
 
         <SocialLogin />
 
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => alert("Раздел в разработке")}
-          className="cursor-pointer text-[14px] text-foreground transition-colors hover:text-primary"
+          className="font-normal text-foreground"
         >
           Забыли пароль?
-        </button>
+        </Button>
       </div>
     </Modal>
   );
