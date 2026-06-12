@@ -5,6 +5,11 @@ export type RegistrationRequest = {
   password: string;
 };
 
+export type ApiRequestError = Error & {
+  status?: number;
+  data?: unknown;
+};
+
 async function parseJsonSafe(response: Response) {
   const text = await response.text();
   try {
@@ -12,6 +17,17 @@ async function parseJsonSafe(response: Response) {
   } catch {
     return text;
   }
+}
+
+function createApiRequestError(
+  message: string,
+  status?: number,
+  data?: unknown,
+): ApiRequestError {
+  const error = new Error(message) as ApiRequestError;
+  error.status = status;
+  error.data = data;
+  return error;
 }
 
 export async function registerUser(payload: RegistrationRequest) {
@@ -29,11 +45,7 @@ export async function registerUser(payload: RegistrationRequest) {
 
   const data = await parseJsonSafe(res);
   if (!res.ok) {
-    // Throw a structured error that includes status and parsed body
-    const err: any = new Error("Registration failed");
-    err.status = res.status;
-    err.data = data;
-    throw err;
+    throw createApiRequestError("Registration failed", res.status, data);
   }
 
   return data;
@@ -46,15 +58,18 @@ export async function getProviderUrl(provider: string) {
   const res = await fetch(url, { method: "GET", credentials: "include" });
   if (!res.ok) {
     const data = await parseJsonSafe(res).catch(() => null);
-    const err: any = new Error("Failed to fetch provider url");
-    err.status = res.status;
-    err.data = data;
-    throw err;
+    throw createApiRequestError(
+      "Failed to fetch provider url",
+      res.status,
+      data,
+    );
   }
 
   const data = await res.json();
   // backend may return different shapes: { url }, { authorization_url }, { auth_url }
-  return (data && (data.url || data.authorization_url || data.auth_url)) || null;
+  return (
+    (data && (data.url || data.authorization_url || data.auth_url)) || null
+  );
 }
 
 export default {

@@ -1,4 +1,6 @@
-import { useRegisterForm } from "../model/use-register-form";
+import { useLocation } from "react-router";
+
+import { useRegisterForm, type RegisterFormData } from "../model/use-register-form";
 import { tags } from "@/widgets/tags/model/tags";
 import { OnboardingLayout } from "./register-layout";
 import { OnboardingStep1 } from "./step-meet-me";
@@ -6,8 +8,18 @@ import { OnboardingStep2 } from "./step-skills";
 import { OnboardingStep3 } from "./step-experience";
 import { OnboardingStep4 } from "./step-about";
 
+type RegisterLocationState = {
+  prefill?: Pick<RegisterFormData, "name" | "surname" | "email">;
+};
+
 function RegisterPage() {
-  const { state, next, back, patch } = useRegisterForm();
+  const location = useLocation<RegisterLocationState>();
+  const stateData = location.state?.prefill;
+  const { state, next, back, patch } = useRegisterForm({
+    name: stateData?.name ?? "",
+    surname: stateData?.surname ?? "",
+    email: stateData?.email ?? "",
+  });
 
   const handleFinish = (patch: Parameters<typeof next>[0]) => {
     // Assemble final data

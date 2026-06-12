@@ -20,12 +20,15 @@ import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registrationSchema, type RegistrationFormValues } from "../model/registration-schema";
+import {
+  registrationSchema,
+  type RegistrationFormValues,
+} from "../model/registration-schema";
 import { useRegisterMutation } from "../model/use-register-mutation";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { ROUTES } from "@/shared/model/routes";
-import { getProviderUrl } from "@/shared/api/auth";
+import { getProviderUrl, type RegistrationRequest } from "@/shared/api/auth";
 
 interface RegistrationModalProps {
   open: boolean;
@@ -33,7 +36,49 @@ interface RegistrationModalProps {
   onOpenLogin?: () => void;
 }
 
-export function RegistrationModal({ open, onOpenChange, onOpenLogin }: RegistrationModalProps) {
+function getSuccessMessage(data: unknown): string {
+  if (typeof data === "object" && data !== null && "detail" in data) {
+    const detail = (data as { detail?: unknown }).detail;
+    if (typeof detail === "string" && detail.trim()) {
+      return detail;
+    }
+  }
+
+  return "Регистрация выполнена";
+}
+
+function getErrorMessage(error: unknown): string {
+  if (typeof error !== "object" || error === null) {
+    return "Серверная ошибка. Попробуйте позже";
+  }
+
+  const status =
+    "status" in error ? (error as { status?: number }).status : undefined;
+  const data = "data" in error ? (error as { data?: unknown }).data : undefined;
+
+  if (status === 409) {
+    return "Пользователь с таким E-mail уже существует";
+  }
+
+  if (status === 400 && data) {
+    if (typeof data === "string") return data;
+
+    if (typeof data === "object") {
+      const values = Object.values(data).flat();
+      const firstMessage = values.find((item) => typeof item === "string");
+      if (typeof firstMessage === "string") return firstMessage;
+      return JSON.stringify(data);
+    }
+  }
+
+  return "Серверная ошибка. Попробуйте позже";
+}
+
+export function RegistrationModal({
+  open,
+  onOpenChange,
+  onOpenLogin,
+}: RegistrationModalProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [providerLoading, setProviderLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -60,30 +105,30 @@ export function RegistrationModal({ open, onOpenChange, onOpenLogin }: Registrat
   });
 
   const onSubmit = (values: RegistrationFormValues) => {
-    const payload = {
+    const payload: RegistrationRequest = {
       email: values.email,
       first_name: values.firstName,
       last_name: values.lastName,
       password: values.password,
-    } as const;
+    };
 
-    const mutatePayload: any = payload;
-    mutation.mutate(mutatePayload, {
-      onSuccess: (data: any) => {
-        toast.success((data && (data.detail || "Регистрация выполнена")) || "Регистрация выполнена");
+    mutation.mutate(payload, {
+      onSuccess: (data: unknown) => {
+        toast.success(getSuccessMessage(data));
         onOpenChange(false);
         // Redirect to onboarding (existing register page)
-        navigate(ROUTES.REGISTER);
+        navigate(ROUTES.REGISTER, {
+          state: {
+            prefill: {
+              name: values.firstName,
+              surname: values.lastName,
+              email: values.email,
+            },
+          },
+        });
       },
-      onError: (err: any) => {
-        if (err?.status === 409) {
-          toast.error("Пользователь с таким E-mail уже существует");
-        } else if (err?.status === 400 && err?.data) {
-          const msg = typeof err.data === "string" ? err.data : (err.data.detail || JSON.stringify(err.data));
-          toast.error(msg || "Проверьте данные формы");
-        } else {
-          toast.error("Серверная ошибка. Попробуйте позже");
-        }
+      onError: (err: unknown) => {
+        toast.error(getErrorMessage(err));
       },
     });
   };
@@ -94,17 +139,31 @@ export function RegistrationModal({ open, onOpenChange, onOpenLogin }: Registrat
       const url = await getProviderUrl(providerId);
       if (!url) throw new Error("No url returned");
       // Redirect to provider
-      window.location.href = url;
-    } catch (e) {
+      window.location.assign(url);
+    } catch {
       toast.error("Не удалось начать аутентификацию провайдера");
       setProviderLoading(false);
     }
   };
 
   const providers = [
-    { id: "yandex", label: "Yandex", render: () => <span className="font-semibold">Я</span> },
-    { id: "email", label: "E-mail", render: () => <span className="text-lg">@</span> },
-    { id: "telegram", label: "Telegram", render: () => <img src={telegramSvg} alt="Telegram" className="h-5 w-5" /> },
+    {
+      id: "yandex",
+      label: "Yandex",
+      render: () => <span className="font-semibold">Я</span>,
+    },
+    {
+      id: "email",
+      label: "E-mail",
+      render: () => <span className="text-lg">@</span>,
+    },
+    {
+      id: "telegram",
+      label: "Telegram",
+      render: () => (
+        <img src={telegramSvg} alt="Telegram" className="h-5 w-5" />
+      ),
+    },
   ];
 
   const providersButtons = (
@@ -114,7 +173,7 @@ export function RegistrationModal({ open, onOpenChange, onOpenLogin }: Registrat
           key={p.id}
           type="button"
           aria-label={p.label}
-          className="h-10 w-10 rounded-full border flex items-center justify-center bg-white"
+          className="flex h-10 w-10 items-center justify-center rounded-full border bg-white"
           onClick={() => handleProvider(p.id)}
           disabled={providerLoading}
         >
@@ -125,7 +184,10 @@ export function RegistrationModal({ open, onOpenChange, onOpenLogin }: Registrat
   );
 
   const form = (
-    <form onSubmit={handleSubmit(onSubmit)} className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2"
+    >
       <div>
         <Input
           label="Имя"
@@ -179,10 +241,15 @@ export function RegistrationModal({ open, onOpenChange, onOpenLogin }: Registrat
       </div>
 
       <div className="md:col-span-2">
-        <Button type="submit" size="lg" className="w-full" disabled={mutation.status === "pending" || isSubmitting}>
+        <Button
+          type="submit"
+          size="lg"
+          className="w-full"
+          disabled={mutation.status === "pending" || isSubmitting}
+        >
           {mutation.status === "pending" || isSubmitting ? (
             <>
-              <Icon icon="ph:spinner" className="animate-spin mr-2" />
+              <Icon icon="ph:spinner" className="mr-2 animate-spin" />
               Регистрация...
             </>
           ) : (
@@ -212,17 +279,21 @@ export function RegistrationModal({ open, onOpenChange, onOpenLogin }: Registrat
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent side="bottom" showClose className="h-full">
-          <div className="h-full flex flex-col px-[5%] pt-6 pb-6">
+          <div className="flex h-full flex-col px-[5%] pt-6 pb-6">
             <SheetHeader>
               <SheetTitle className="text-2xl">Регистрация</SheetTitle>
-              <SheetDescription className="mt-1">Регистрация профиля</SheetDescription>
+              <SheetDescription className="mt-1">
+                Регистрация профиля
+              </SheetDescription>
             </SheetHeader>
 
-            <div className="flex-1 overflow-auto mt-2">
+            <div className="mt-2 flex-1 overflow-auto">
               {form}
 
               <div className="mt-6">
-                <div className="text-center text-sm text-muted-foreground mb-4">Зарегистрироваться через</div>
+                <div className="mb-4 text-center text-sm text-muted-foreground">
+                  Зарегистрироваться через
+                </div>
                 {providersButtons}
                 {switchLine}
               </div>
@@ -238,13 +309,17 @@ export function RegistrationModal({ open, onOpenChange, onOpenLogin }: Registrat
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle className="text-2xl">Регистрация</DialogTitle>
-          <DialogDescription className="mt-1">Регистрация профиля</DialogDescription>
+          <DialogDescription className="mt-1">
+            Регистрация профиля
+          </DialogDescription>
         </DialogHeader>
 
         {form}
 
         <div className="mt-6">
-          <div className="text-center text-sm text-muted-foreground mb-4">Зарегистрироваться через</div>
+          <div className="mb-4 text-center text-sm text-muted-foreground">
+            Зарегистрироваться через
+          </div>
           {providersButtons}
           {switchLine}
         </div>
