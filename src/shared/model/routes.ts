@@ -17,6 +17,7 @@ export const ROUTES = {
 
   PROFILE: "/profile",
   SETTINGS: "/settings",
+  RESET_PASSWORD: "/reset-password",
 
   /*
    * пример: путь с параметром
