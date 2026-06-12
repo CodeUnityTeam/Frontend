@@ -31,7 +31,7 @@ export function ChatbotWrapper({
           id: "1",
           card: (
             <ChatBotCard
-              title='Чат-бот «CodeBuddy»'
+              title="Чат-бот «CodeBuddy»"
               description="Разрабатываем Телеграм-бота, который отвечает на типовые вопросы по отладке, синтаксису и заданиям из курсов."
               tags={["Python", "Flask/FastAPI", "SQLite", "Telegram Bot API", "Figma"]}
               date="15.04"
@@ -43,7 +43,7 @@ export function ChatbotWrapper({
           id: "2",
           card: (
             <ChatBotCard
-              title='Чат-бот «CodeBuddy»'
+              title="Чат-бот «CodeBuddy»"
               description="Разрабатываем Телеграм-бота, который отвечает на типовые вопросы по отладке, синтаксису и заданиям из курсов."
               tags={["Python", "Flask/FastAPI", "SQLite", "Telegram Bot API", "Figma"]}
               date="15.04"
@@ -55,7 +55,7 @@ export function ChatbotWrapper({
           id: "3",
           card: (
             <ChatBotCard
-              title='Чат-бот «CodeBuddy»'
+              title="Чат-бот «CodeBuddy»"
               description="Разрабатываем Телеграм-бота, который отвечает на типовые вопросы по отладке, синтаксису и заданиям из курсов."
               tags={["Python", "Flask/FastAPI", "SQLite", "Telegram Bot API", "Figma"]}
               date="15.04"
@@ -67,7 +67,7 @@ export function ChatbotWrapper({
           id: "4",
           card: (
             <ChatBotCard
-              title='Чат-бот «CodeBuddy»'
+              title="Чат-бот «CodeBuddy»"
               description="Разрабатываем Телеграм-бота, который отвечает на типовые вопросы по отладке, синтаксису и заданиям из курсов."
               tags={["Python", "Flask/FastAPI", "SQLite", "Telegram Bot API", "Figma"]}
               date="15.04"
@@ -79,7 +79,7 @@ export function ChatbotWrapper({
           id: "5",
           card: (
             <ChatBotCard
-              title='Чат-бот «CodeBuddy»'
+              title="Чат-бот «CodeBuddy»"
               description="Разрабатываем Телеграм-бота, который отвечает на типовые вопросы по отладке, синтаксису и заданиям из курсов."
               tags={["Python", "Flask/FastAPI", "SQLite", "Telegram Bot API", "Figma"]}
               date="15.04"
