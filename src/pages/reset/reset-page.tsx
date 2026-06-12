@@ -2,7 +2,7 @@ import { ResetPasswordModal } from "@/features/reset-password";
 import { PageContainer } from "@/shared/ui/page-container";
 import { useNavigate } from "react-router";
 
-export function ResetPasswordPage() {
+export function ResetPage() {
   const navigate = useNavigate();
 
   return (
@@ -12,4 +12,4 @@ export function ResetPasswordPage() {
   );
 }
 
-export const Component = ResetPasswordPage;
+export const Component = ResetPage;
