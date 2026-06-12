@@ -6,15 +6,7 @@ import avatarImg from "@/shared/assets/images/account-avatar.jpg";
 import { accountData } from "@/widgets/account/model/account-data";
 import type { AccountProfileProps } from "@/widgets/account/model/types";
 
-import {
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-} from "@/shared/ui/modal/modal";
-
-import { Input } from "@/shared/ui/input";
-import { Textarea } from "@/shared/ui/textarea";
+import { ExperienceModal } from "@/widgets/account/ui/experience-modal";
 
 export const AccountProfile = ({
   profile,
@@ -248,52 +240,10 @@ export const AccountProfile = ({
         </div>
       </main>
 
-      <Modal
+      <ExperienceModal
         open={isExperienceModalOpen}
         onOpenChange={setIsExperienceModalOpen}
-        className="rounded-[20px] sm:max-w-178"
-      >
-        <ModalHeader />
-
-        <ModalBody>
-          <div className="flex flex-col gap-4 sm:gap-7">
-            <Input label="Название компании" placeholder="Например Яндекс" />
-
-            <Input label="Должность" placeholder="Например Дизайнер" />
-
-            <Textarea
-              label="Обязанности"
-              placeholder="Распишите подробно свои обязанности"
-            />
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
-              <Input
-                label="Дата начала проекта"
-                placeholder="дд.мм.гггг"
-                rightElement={<Icon icon="solar:calendar-linear" />}
-              />
-
-              <Input
-                label="Дата окончания проекта"
-                placeholder="дд.мм.гггг"
-                rightElement={<Icon icon="solar:calendar-linear" />}
-              />
-            </div>
-          </div>
-        </ModalBody>
-
-        <ModalFooter>
-          <Button
-            size="lg"
-            onClick={() => {
-              setIsExperienceModalOpen(false);
-              alert("В разработке");
-            }}
-          >
-            Сохранить
-          </Button>
-        </ModalFooter>
-      </Modal>
+      />
     </div>
   );
 };
