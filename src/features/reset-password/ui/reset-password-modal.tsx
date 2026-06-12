@@ -1,8 +1,9 @@
 import { Dialog } from "@/shared/ui/dialog";
+import { toast } from "sonner";
 import { useState } from "react";
 import { ResetPasswordForm } from "@/features/reset-password/ui/reset-password-form";
 import { ResetPasswordSuccess } from "@/features/reset-password/ui/reset-password-success";
-import { resetPasswordApi } from "@/features/reset-password/api/reset-password-api";
+import { useResetPassword } from "@/features/reset-password/model/use-reset-mutation";
 
 type ResetPasswordModalProps = {
   onClose: () => void;
@@ -11,6 +12,7 @@ type ResetPasswordModalProps = {
 export function ResetPasswordModal({ onClose }: ResetPasswordModalProps) {
   const [state, setState] = useState<"form" | "success">("form");
   const [email, setEmail] = useState("");
+  const { mutate, isPending } = useResetPassword();
 
   return (
     <Dialog open={true} onOpenChange={(open) => !open && onClose()}>
@@ -18,17 +20,22 @@ export function ResetPasswordModal({ onClose }: ResetPasswordModalProps) {
         {state === "form" ? (
           <ResetPasswordForm
             onSubmit={(submittedEmail: string): void => {
-              resetPasswordApi(submittedEmail);
-              setEmail(submittedEmail);
-              setState("success");
+              mutate(submittedEmail, {
+                onSuccess: () => {
+                  setEmail(submittedEmail);
+                  setState("success")
+                },
+                onError: (error) => toast.error(error.message)
+              })
             }}
+            isPending={isPending}
             onClose={onClose}
           />
         ) : (
           <ResetPasswordSuccess
             email={email}
             onClose={onClose}
-            onResend={() => resetPasswordApi(email)}
+            onResend={() => mutate(email)}
           />
         )}
       </div>
