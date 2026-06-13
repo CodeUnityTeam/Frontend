@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import { EmptyState } from "@/widgets/account/ui/empty-state";
 import avatarImg from "@/shared/assets/images/account-avatar.jpg";
 import { accountData } from "@/widgets/account/model/account-data";
-import type { AccountProfileProps } from "@/widgets/account/model/types";
+import type { AccountProfileProps, SkillsFormData } from "@/widgets/account/model/types";
 import { SetSkillsModal } from "@/widgets/set-skills-modal";
 
 export const AccountProfile = ({
@@ -34,6 +34,24 @@ export const AccountProfile = ({
 
   const hasProfileData =
     skillsData.length > 0 || qualitiesData.length > 0 || Boolean(aboutData);
+
+  // данные и хендлеры для SetSkillsModal
+  const [skillsFormData, setSkillsFormData] = React.useState<SkillsFormData>({
+    skills: skillsData || [],
+    qualities: qualitiesData || [],
+    about: aboutData || ""
+  });
+
+  const handleSkillsFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    alert("В разработке");
+  }
+
+  const handleSkillsFormChange = (field: keyof SkillsFormData) => (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSkillsFormData(prev => ({ ...prev, [field]: field !== "about" ? e.target.value.split(", ") : e.target.value}));
+  }
 
   return (
     <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[413px_1fr]">
@@ -132,13 +150,9 @@ export const AccountProfile = ({
           <SetSkillsModal
             open={isSkillsModalOpen}
             onOpenChange={setSkillsModalOpen}
-            onSubmit={(e) => {
-              e.preventDefault();
-              alert("В разработке");
-            }}
-            skillsData={skillsData}
-            qualitiesData={qualitiesData}
-            aboutData={aboutData}
+            formData={skillsFormData}
+            onSubmit={handleSkillsFormSubmit}
+            onChange={handleSkillsFormChange}
             />
         </div>
 
