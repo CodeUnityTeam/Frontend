@@ -1,6 +1,6 @@
 import { ChatbotWrapper } from "@/widgets/chatbot-content/ui/chatbot-wrapper";
 
-export function ChatbotCardsPage() {
+export function ChatbotCards() {
   return (
     <section
       className="mx-auto mt-15 w-full max-w-[1280px] py-6 ps-4 pe-0 md:pr-0 md:pl-8"
@@ -20,4 +20,4 @@ export function ChatbotCardsPage() {
   );
 }
 
-export const Component = ChatbotCardsPage;
+export const Component = ChatbotCards;

@@ -1,12 +1,12 @@
 import { HomeBanner } from "@/widgets/home-banner";
 import { ValueProps } from "@/widgets/value-props";
-import { ChatbotCardsPage } from "@/pages/chatbot-cards/chatbot-cards";
+import { ChatbotCards } from "@/widgets/chatbot-content";
 
 const HomePage = () => {
   return (
     <>
       <HomeBanner />
-      <ChatbotCardsPage />
+      <ChatbotCards />
       <ValueProps />
     </>
   );
