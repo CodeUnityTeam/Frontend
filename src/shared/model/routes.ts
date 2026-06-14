@@ -10,6 +10,14 @@ import "react-router";
 export const ROUTES = {
   HOME: "/",
   NOT_FOUND: "/404",
+  REGISTER: "/register",
+
+  QA: "/qa",
+  QA_CREATE: "/qa/create",
+  QA_EDIT: "/qa/:id/edit",
+
+  PROFILE: "/profile",
+  SETTINGS: "/settings",
 
   /*
    * пример: путь с параметром
@@ -23,6 +31,9 @@ export const ROUTES = {
 
 export type PathParams = {
   [ROUTES.NAME_PAGE_1]: {
+    id: string;
+  };
+  [ROUTES.QA_EDIT]: {
     id: string;
   };
 };

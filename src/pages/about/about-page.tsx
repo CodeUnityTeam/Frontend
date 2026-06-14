@@ -1,5 +1,6 @@
 import { Banner, Description, JoinUs } from "@/widgets/about";
 import { ReviewsSection } from "@/widgets/reviews-section";
+import { SupportSection } from "@/widgets/support-section";
 
 function AboutPage() {
   return (
@@ -7,6 +8,7 @@ function AboutPage() {
       <Banner />
       <Description />
       <ReviewsSection />
+      <SupportSection />
       <JoinUs />
     </>
   );
