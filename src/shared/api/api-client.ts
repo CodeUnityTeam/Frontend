@@ -32,7 +32,7 @@ let refreshPromise: Promise<string> | null = null;
 
 function refreshAccessToken(): Promise<string> {
   if (!refreshPromise) {
-    refreshPromise = axios
+    refreshPromise = apiClient
       .post<{ access: string; refresh?: string }>(
         "/user/auth/token/refresh/",
         { refresh: getRefreshToken() },
