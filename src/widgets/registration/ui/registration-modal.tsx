@@ -116,8 +116,7 @@ export function RegistrationModal({
       onSuccess: (data: unknown) => {
         toast.success(getSuccessMessage(data));
         onOpenChange(false);
-        // Redirect to onboarding (existing register page)
-        navigate(ROUTES.REGISTER, {
+        navigate(ROUTES.REGISTER_CHECK_EMAIL, {
           state: {
             prefill: {
               name: values.firstName,
