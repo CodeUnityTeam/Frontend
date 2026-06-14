@@ -36,9 +36,9 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://dev.code-unity.ru",
+        target: "https://dev.code-unity.ru/api/v1",
         changeOrigin: true,
-        secure: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },
