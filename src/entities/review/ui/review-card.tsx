@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/ui/card";
-import type { Review } from "../model/types";
+import type { Review } from "@/entities/review/model/types";
 
 type ReviewCardProps = Omit<Review, "id">;
 
