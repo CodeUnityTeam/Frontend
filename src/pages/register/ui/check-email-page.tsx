@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Icon } from "@iconify/react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 
 import { verifyEmail } from "@/shared/api/auth";
 import { ROUTES } from "@/shared/model/routes";
@@ -29,6 +29,7 @@ type CheckEmailLocationState = {
 
 function CheckEmailPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const prefill = (location.state as CheckEmailLocationState | undefined)
     ?.prefill;
   const email = prefill?.email?.trim();
@@ -36,6 +37,20 @@ function CheckEmailPage() {
   const [manualKey, setManualKey] = useState("");
   const [manualStatus, setManualStatus] = useState<ManualVerifyStatus>("idle");
   const [manualMessage, setManualMessage] = useState<string>("");
+  const hasPrefillEmail = Boolean(email);
+
+  const handleContinue = () => {
+    if (hasPrefillEmail) {
+      navigate(ROUTES.REGISTER, {
+        state: {
+          prefill,
+        },
+      });
+      return;
+    }
+
+    openAuthLogin();
+  };
 
   const handleManualSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -205,15 +220,14 @@ function CheckEmailPage() {
                 </Button>
 
                 {manualStatus === "success" && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full sm:order-1 sm:w-auto"
-                    onClick={openAuthLogin}
-                  >
-                    Войти и продолжить
-                  </Button>
-                )}
+                <Button
+                  type="button"
+                  className="w-full sm:order-1 sm:w-auto"
+                  onClick={handleContinue}
+                >
+                  {hasPrefillEmail ? "Продолжить" : "Войти и продолжить"}
+                </Button>
+              )}
               </div>
 
               {manualStatus === "success" && (

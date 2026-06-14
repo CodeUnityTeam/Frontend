@@ -9,6 +9,7 @@ import { useModal } from "@/shared/lib/hooks";
 import { useIsAuthed } from "@/shared/lib/auth";
 import { LoginModal } from "@/features/login-modal";
 import { ProfileMenu } from "./profile-menu";
+import { openAuthRegister } from "@/widgets/registration/model/auth-modal-actions";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -91,7 +92,11 @@ export function Header() {
         </div>
       </div>
 
-      <LoginModal open={loginModal.open} onOpenChange={loginModal.setOpen} />
+      <LoginModal
+        open={loginModal.open}
+        onOpenChange={loginModal.setOpen}
+        onOpenRegister={openAuthRegister}
+      />
     </header>
   );
 }
