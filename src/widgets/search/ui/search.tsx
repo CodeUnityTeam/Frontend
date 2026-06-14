@@ -56,7 +56,7 @@ export function Search() {
             <Button
               className="mx-6 my-3 rounded-[12px] px-8 py-3"
               variant="outline"
-              size="default"
+              size="md"
               onClick={() => {
                 handleSearch();
               }}
