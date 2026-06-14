@@ -31,7 +31,7 @@ export function Search() {
   return (
     <div className="my-8.5 flex flex-col justify-start px-20 py-4 max-md:px-5">
       <InputGroup
-        className={isMobile ? "h-14 rounded-[28px]" : "h-20 rounded-[28px]"}
+        className={isMobile ? "h-14 rounded-[28px]" : "h-18 rounded-[28px]"}
       >
         <InputGroupAddon className="ml-4.5">
           <Icon icon="boxicons:search" className="size-6"></Icon>
@@ -55,7 +55,7 @@ export function Search() {
             <Button
               className="mx-6 my-3 rounded-[12px] px-8 py-3"
               variant="outline"
-              size="lg"
+              size="default"
               onClick={() => {
                 handleSearch();
               }}
