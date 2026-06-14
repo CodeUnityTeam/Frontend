@@ -3,10 +3,10 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@/shared/ui/input/input-group";
+} from "@/shared/ui/input";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
-import { mockTags } from "../model/tags-data";
+import { mockTags } from "@/widgets/search/model/tags-data";
 
 const SEARCH_TAGS_LIMIT = 10;
 

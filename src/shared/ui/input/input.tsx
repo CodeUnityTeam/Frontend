@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Field, FieldError, FieldLabel } from "../field";
+import { Field, FieldError, FieldLabel } from "@/shared/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "./input-group";
 import { cn } from "@/shared/lib/utils";
 
