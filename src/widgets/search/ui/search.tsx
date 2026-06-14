@@ -7,6 +7,7 @@ import {
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { mockTags } from "@/widgets/search/model/tags-data";
+import { Tag } from "@/shared/ui/tag";
 
 const SEARCH_TAGS_LIMIT = 10;
 
@@ -66,14 +67,7 @@ export function Search() {
         </InputGroupAddon>
       </InputGroup>
       <div className="mt-3 flex flex-wrap gap-2">
-        {searchTag.map((tag, index) => (
-          <span
-            key={`${tag}-${index}`}
-            className="flex justify-center rounded-lg border border-border px-3 py-1 align-baseline"
-          >
-            {tag}
-          </span>
-        ))}
+        {searchTag.map((tag) => <Tag className="text-sm" variant="outline" key={tag}>{tag}</Tag>)}
       </div>
     </div>
   );
