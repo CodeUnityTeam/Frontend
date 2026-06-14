@@ -1,6 +1,9 @@
 import { useLocation } from "react-router";
 
-import { useRegisterForm, type RegisterFormData } from "../model/use-register-form";
+import {
+  useRegisterForm,
+  type RegisterFormData,
+} from "../model/use-register-form";
 import { tags } from "@/widgets/tags/model/tags";
 import { OnboardingLayout } from "./register-layout";
 import { OnboardingStep1 } from "./step-meet-me";
@@ -14,7 +17,8 @@ type RegisterLocationState = {
 
 function RegisterPage() {
   const location = useLocation();
-  const stateData = (location.state as RegisterLocationState | undefined)?.prefill;
+  const stateData = (location.state as RegisterLocationState | undefined)
+    ?.prefill;
   const { state, next, back, patch } = useRegisterForm({
     name: stateData?.name ?? "",
     surname: stateData?.surname ?? "",
@@ -27,7 +31,9 @@ function RegisterPage() {
 
     // Map visible labels back to tag values for backend consumption
     const labelToValue = new Map(tags.map((t) => [t.label, t.value]));
-    const skillsValues = (finalData.skills || []).map((s) => labelToValue.get(s) ?? s);
+    const skillsValues = (finalData.skills || []).map(
+      (s) => labelToValue.get(s) ?? s,
+    );
 
     const payload = {
       ...finalData,
@@ -47,13 +53,28 @@ function RegisterPage() {
         <OnboardingStep1 data={state.data} onNext={next} onPatch={patch} />
       )}
       {state.step === 2 && (
-        <OnboardingStep2 data={state.data} onNext={next} onBack={back} onPatch={patch} />
+        <OnboardingStep2
+          data={state.data}
+          onNext={next}
+          onBack={back}
+          onPatch={patch}
+        />
       )}
       {state.step === 3 && (
-        <OnboardingStep3 data={state.data} onNext={next} onBack={back} onPatch={patch} />
+        <OnboardingStep3
+          data={state.data}
+          onNext={next}
+          onBack={back}
+          onPatch={patch}
+        />
       )}
       {state.step === 4 && (
-        <OnboardingStep4 data={state.data} onNext={handleFinish} onBack={back} onPatch={patch} />
+        <OnboardingStep4
+          data={state.data}
+          onNext={handleFinish}
+          onBack={back}
+          onPatch={patch}
+        />
       )}
     </OnboardingLayout>
   );

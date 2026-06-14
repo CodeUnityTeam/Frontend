@@ -5,6 +5,10 @@ export type RegistrationRequest = {
   password: string;
 };
 
+export type VerifyEmailRequest = {
+  key: string;
+};
+
 export type ApiRequestError = Error & {
   status?: number;
   data?: unknown;
@@ -87,6 +91,27 @@ export async function registerUser(payload: RegistrationRequest) {
   return data;
 }
 
+export async function verifyEmail(payload: VerifyEmailRequest) {
+  const base = import.meta.env.VITE_API_URL as string;
+  const url = `${base.replace(/\/$/, "")}/api/v1/user/auth/registration/verify-email/`;
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+    credentials: AUTH_REQUEST_CREDENTIALS,
+  });
+
+  const data = await parseJsonSafe(res);
+  if (!res.ok) {
+    throw createApiRequestError("Email verification failed", res.status, data);
+  }
+
+  return data;
+}
+
 export async function getProviderUrl(provider: string) {
   const base = import.meta.env.VITE_API_URL as string;
   const url = `${base.replace(/\/$/, "")}/api/v1/user/auth/${provider}/url/`;
@@ -113,5 +138,6 @@ export async function getProviderUrl(provider: string) {
 
 export default {
   registerUser,
+  verifyEmail,
   getProviderUrl,
 };
