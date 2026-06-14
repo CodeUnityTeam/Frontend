@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useModal } from "@/shared/lib/hooks/use-modal";
 import RegistrationModal from "./registration-modal";
 import LoginModal from "./login-modal";

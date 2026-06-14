@@ -10,7 +10,22 @@ export type ApiRequestError = Error & {
   data?: unknown;
 };
 
-async function parseJsonSafe(response: Response) {
+const DEFAULT_AUTH_REQUEST_CREDENTIALS: RequestCredentials = "include";
+const ACCESS_TOKEN_COOKIE_NAME = "access-token";
+
+function resolveAuthRequestCredentials(): RequestCredentials {
+  const mode = import.meta.env.VITE_AUTH_REQUEST_CREDENTIALS;
+
+  if (mode === "include" || mode === "omit" || mode === "same-origin") {
+    return mode;
+  }
+
+  return DEFAULT_AUTH_REQUEST_CREDENTIALS;
+}
+
+export const AUTH_REQUEST_CREDENTIALS = resolveAuthRequestCredentials();
+
+export async function parseJsonSafe(response: Response) {
   const text = await response.text();
   try {
     return text ? JSON.parse(text) : null;
@@ -19,7 +34,7 @@ async function parseJsonSafe(response: Response) {
   }
 }
 
-function createApiRequestError(
+export function createApiRequestError(
   message: string,
   status?: number,
   data?: unknown,
@@ -28,6 +43,27 @@ function createApiRequestError(
   error.status = status;
   error.data = data;
   return error;
+}
+
+function getCookie(name: string): string | null {
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  const cookie = document.cookie
+    .split("; ")
+    .find((entry) => entry.startsWith(`${name}=`));
+
+  if (!cookie) {
+    return null;
+  }
+
+  const value = cookie.slice(name.length + 1);
+  return value ? decodeURIComponent(value) : null;
+}
+
+export function getAccessTokenFromCookie(): string | null {
+  return getCookie(ACCESS_TOKEN_COOKIE_NAME);
 }
 
 export async function registerUser(payload: RegistrationRequest) {
@@ -40,7 +76,7 @@ export async function registerUser(payload: RegistrationRequest) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(payload),
-    credentials: "include",
+    credentials: AUTH_REQUEST_CREDENTIALS,
   });
 
   const data = await parseJsonSafe(res);
@@ -55,7 +91,10 @@ export async function getProviderUrl(provider: string) {
   const base = import.meta.env.VITE_API_URL as string;
   const url = `${base.replace(/\/$/, "")}/api/v1/user/auth/${provider}/url/`;
 
-  const res = await fetch(url, { method: "GET", credentials: "include" });
+  const res = await fetch(url, {
+    method: "GET",
+    credentials: AUTH_REQUEST_CREDENTIALS,
+  });
   if (!res.ok) {
     const data = await parseJsonSafe(res).catch(() => null);
     throw createApiRequestError(

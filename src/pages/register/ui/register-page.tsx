@@ -13,8 +13,8 @@ type RegisterLocationState = {
 };
 
 function RegisterPage() {
-  const location = useLocation<RegisterLocationState>();
-  const stateData = location.state?.prefill;
+  const location = useLocation();
+  const stateData = (location.state as RegisterLocationState | undefined)?.prefill;
   const { state, next, back, patch } = useRegisterForm({
     name: stateData?.name ?? "",
     surname: stateData?.surname ?? "",
