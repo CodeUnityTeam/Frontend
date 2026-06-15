@@ -5,19 +5,19 @@ import { ChatbotBtn } from "./chatbot-btn";
 import { useMemo, useState } from "react";
 import { ChatBotCard } from "@/widgets/project-card";
 import { ChatbotRender } from "./chatbot-render";
+import type { CarouselApi } from "@/shared/ui/carousel";
 
 export type TTabId = "popular" | "recommended" | "profile";
 
 export function ChatbotWrapper({
   onTabChange,
-  onPrev,
-  onNext,
   title,
   buttonText,
   onButtonClick
 }: TChatbotWrapper) {
 
   const [activeTab, setActiveTab] = useState<TTabId>("popular");
+  const [api, setApi] = useState<CarouselApi>();
 
   const tabs = [
       { id: "popular", label: "Популярное" },
@@ -105,10 +105,11 @@ export function ChatbotWrapper({
             onTabChange={handleTabChange}
           />
 
-          <ChatbotNavigate onPrev={onPrev} onNext={onNext} />
+          <ChatbotNavigate onPrev={() => api?.scrollPrev()} 
+          onNext={() => api?.scrollNext()} />
         </div>
 
-        <ChatbotRender items={items}  />
+        <ChatbotRender items={items}  api={setApi} />
 
         <ChatbotBtn
           buttonTitle={title}

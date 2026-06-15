@@ -1,4 +1,4 @@
-import { valueProps } from "../model/value-props-data";
+import { valueProps } from "@/widgets/value-props/model/value-props-data";
 
 export const ValueProps = () => {
   return (
