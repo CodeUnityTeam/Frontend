@@ -1,120 +1,98 @@
 import type { Project } from "./types";
 
-const mockProjects: Project[] = [
-  {
-    id: "1",
-    title: "Чат-бот «CodeBuddy»",
-    description:
-      "Разрабатываем Телеграм-бота, который отвечает на типовые вопросы по отладке, синтаксису и заданиям из курсов.",
-    location: "Москва (удаленно)",
-    startDate: "2026-04-15",
-    skills: ["Python", "Flask/FastAPI", "SQLite", "Telegram Bot API"],
-    specializations: ["Backend", "Frontend", "DevOps"],
-    workFormats: ["Удаленно", "Гибрид"],
-    status: "published",
-    author: {
+export const mockProject: Project = {
+  id: "1",
+  title: "Чат-бот «CodeBuddy»",
+  description:
+    "Разрабатываем Telegram-бота, который отвечает на типовые вопросы по отладке, синтаксису и заданиям из курсов.",
+
+  startDate: "15 апреля, 2026",
+
+  skills: [
+    "Python",
+    "Flask/FastAPI",
+    "SQLite",
+    "Telegram Bot API",
+    "Figma",
+  ],
+
+  specializations: [
+    "Разработчиков (backend, frontend, fullstack)",
+    "DevOps-инженеров, системных администраторов",
+    "UX/UI дизайнеров",
+    "Аналитиков данных и Data Scientists",
+    "Тестировщиков и QA-специалистов",
+    "Менеджеров IT-проектов",
+  ],
+
+  status: "published",
+
+  author: {
+    id: 1,
+    username: "Alex888",
+    email: "alex.designer@ya.ru",
+    firstName: "Алексей",
+    avatar:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80",
+  },
+
+  participants: [
+    {
       id: 1,
-      username: "@Alex888",
-      email: "alex.designer@ya.ru",
-      firstName: "Алексей",
-      lastName: "Смирнов",
-      avatar: "https://i.pravatar.cc/150?img=1", // Добавил аватар
-    },
-    participants: [
-      {
+      role: "author",
+      user: {
         id: 1,
-        user: {
-          id: 1,
-          username: "@Alex888",
-          email: "alex@ya.ru",
-          firstName: "Алексей",
-          lastName: "Смирнов",
-          avatar: "https://i.pravatar.cc/150?img=1",
-        },
-        role: "author",
+        username: "Alex888",
+        email: "alex.designer@ya.ru",
+        firstName: "Алексей",
+        avatar:
+          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80",
+        phone: "+7 (999) 123-45-67",
       },
-      {
-        id: 2,
-        user: {
-          id: 2,
-          username: "@AnnDesign",
-          email: "ann@ya.ru",
-          firstName: "Анна",
-          lastName: "Иванова",
-          avatar: "https://i.pravatar.cc/150?img=2",
-        },
-        role: "member",
-      },
-      {
-        id: 3,
-        user: {
-          id: 3,
-          username: "@DimDev",
-          email: "dim@ya.ru",
-          firstName: "Дмитрий",
-          lastName: "Петров",
-          avatar: "https://i.pravatar.cc/150?img=3",
-        },
-        role: "member",
-      },
-      {
-        id: 4,
-        user: {
-          id: 4,
-          username: "@ElenaQA",
-          email: "elena@ya.ru",
-          firstName: "Елена",
-          lastName: "Сидорова",
-          avatar: "https://i.pravatar.cc/150?img=4",
-        },
-        role: "member",
-      },
-    ],
-    likesCount: 5,
-    isLiked: false,
-    isApplied: false,
-  },
-  {
-    id: "2",
-    title: "Мобильное приложение FitTrack",
-    description:
-      "Создаем приложение для отслеживания тренировок и питания с элементами геймификации.",
-    location: "Санкт-Петербург",
-    startDate: "2026-05-01",
-    skills: ["React Native", "TypeScript", "Node.js", "MongoDB"],
-    specializations: ["Mobile", "Backend", "UI/UX"],
-    workFormats: ["Офис", "Гибрид"],
-    status: "recruiting_closed",
-    author: {
-      id: 5,
-      username: "@MikeFit",
-      email: "mike@fit.com",
-      firstName: "Михаил",
-      avatar: "https://i.pravatar.cc/150?img=5",
     },
-    participants: [
-      {
-        id: 5,
-        user: {
-          id: 5,
-          username: "@MikeFit",
-          email: "mike@fit.com",
-          firstName: "Михаил",
-          avatar: "https://i.pravatar.cc/150?img=5",
-        },
-        role: "author",
+    {
+      id: 2,
+      role: "member",
+      user: {
+        id: 2,
+        username: "ivan_dev",
+        email: "ivan@example.com",
+        firstName: "Иван",
+        avatar:
+          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80",
       },
-    ],
-    likesCount: 12,
-    isLiked: true,
-    isApplied: true,
-  },
-];
+    },
+    {
+      id: 3,
+      role: "member",
+      user: {
+        id: 3,
+        username: "anna_ui",
+        email: "anna@example.com",
+        firstName: "Анна",
+        avatar:
+          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80",
+      },
+    },
+    {
+      id: 4,
+      role: "member",
+      user: {
+        id: 4,
+        username: "max_qa",
+        email: "max@example.com",
+        firstName: "Максим",
+        avatar:
+          "https://images.unsplash.com/photo-1504593811423-6dd665756598?w=200&q=80",
+      },
+    },
+  ],
 
-export function getProjectById(id: string): Project | undefined {
-  return mockProjects.find((project) => project.id === id);
-}
+  likesCount: 10,
 
-export function getAllProjects(): Project[] {
-  return mockProjects;
-}
+  isLiked: false,
+
+  isApplied: false,
+};
+
+export const mockProjects: Project[] = [mockProject];
