@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { useModal } from "@/shared/lib/hooks/use-modal";
 import RegistrationModal from "./registration-modal";
-import LoginModal from "./login-modal";
+import { LoginModal } from "@/features/login-modal";
 import {
   type AuthAction,
   subscribeAuthModalActions,
 } from "../model/auth-modal-actions";
 
 interface AuthModalManagerProps {
- 
   initialOpen?: boolean;
 }
 
@@ -51,13 +50,13 @@ export function AuthModalManager({
     <>
       <RegistrationModal
         open={register.open}
-        onOpenChange={(v) => register.setOpen(v)}
+        onOpenChange={(v: boolean) => register.setOpen(v)}
         onOpenLogin={openLoginFromRegister}
       />
 
       <LoginModal
         open={login.open}
-        onOpenChange={(v) => login.setOpen(v)}
+        onOpenChange={(v: boolean) => login.setOpen(v)}
         onOpenRegister={openRegisterFromLogin}
       />
     </>
