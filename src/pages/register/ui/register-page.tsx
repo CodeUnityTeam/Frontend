@@ -25,10 +25,10 @@ function RegisterPage() {
   });
 
   const handleFinish = (patch: Parameters<typeof next>[0]) => {
-    // Assemble final data
+   
     const finalData = { ...state.data, ...patch };
 
-    // Map visible labels back to tag values for backend consumption
+    
     const labelToValue = new Map(tags.map((t) => [t.label, t.value]));
     const skillsValues = (finalData.skills || []).map(
       (s) => labelToValue.get(s) ?? s,
@@ -37,12 +37,13 @@ function RegisterPage() {
     const payload = {
       ...finalData,
       role: finalData.employmentRole,
-      // send values as `skills` and keep original labels for readability
+      
       skills: skillsValues,
       skillsLabels: finalData.skills,
     };
 
-    // TODO: replace with real API call
+    // TODO real API call куда передать эти данные??
+
     console.log("Registration complete", payload);
   };
 

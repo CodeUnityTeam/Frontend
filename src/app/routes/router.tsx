@@ -52,7 +52,6 @@ export const router = createBrowserRouter([
         lazy: () => import("@/pages/register/ui/verify-email-page"),
       },
       {
-        // Backend email links may still arrive as "/{key}".
         path: ":key",
         lazy: () => import("@/pages/register/ui/verify-email-page"),
       },
