@@ -1,11 +1,5 @@
-export async function resetPasswordApi(email: string): Promise<void> {
-  const response = await fetch(`api/v1/user/auth/password/reset`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email })
-  });
+import { apiClient } from "@/shared/api";
 
-  if(!response.ok) {
-    throw new Error('Ошибка при отправке запроса для сброса пароля')
-  }
+export async function resetPasswordApi(email: string): Promise<void> {
+   await apiClient.post("/user/auth/password/reset", {email});
 }

@@ -40,8 +40,7 @@ export const router = createBrowserRouter([
       {
         path: "register",
         lazy: () => import("@/pages/register/ui/register-page"),
-      },
-      { path: "reset", lazy: () => import("@/pages/reset/reset-page") },
+      }
     ],
   },
 ]);

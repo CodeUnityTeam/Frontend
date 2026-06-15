@@ -6,13 +6,15 @@ import { navigationConfigs } from "@/shared/config";
 import { Button } from "@/shared/ui/button";
 import { Navigation } from "@/shared/ui/navigation";
 import { useModal } from "@/shared/lib/hooks";
-import { useIsAuthed } from "@/shared/lib/auth"
+import { useIsAuthed } from "@/shared/lib/auth";
 import { LoginModal } from "@/features/login-modal";
 import { ProfileMenu } from "./profile-menu";
+import { ResetPasswordModal } from "@/features/reset-password";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const loginModal = useModal();
+  const resetPasswordModal = useModal();
   const authed = useIsAuthed();
 
   useEffect(() => {
@@ -91,7 +93,22 @@ export function Header() {
         </div>
       </div>
 
-      <LoginModal open={loginModal.open} onOpenChange={loginModal.setOpen} />
+      <LoginModal
+        open={loginModal.open}
+        onOpenChange={loginModal.setOpen}
+        onForgotPassword={() => {
+          loginModal.closeModal();
+          resetPasswordModal.openModal();
+        }}
+      />
+      <ResetPasswordModal
+        open={resetPasswordModal.open}
+        onClose={resetPasswordModal.closeModal}
+        onBack={() => {
+          resetPasswordModal.closeModal();
+          loginModal.openModal()
+        }}
+      />
     </header>
   );
 }

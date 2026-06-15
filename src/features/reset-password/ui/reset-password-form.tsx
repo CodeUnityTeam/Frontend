@@ -12,11 +12,11 @@ import { type FormEvent, useState } from "react";
 
 type Props = {
   onSubmit: (email: string) => void;
-  onClose: () => void;
+  onBack: () => void;
   isPending?: boolean;
 };
 
-export function ResetPasswordForm({ onSubmit, onClose, isPending }: Props) {
+export function ResetPasswordForm({ onSubmit, onBack, isPending }: Props) {
   const [email, setEmail] = useState("");
 
   function handleSubmit(e: FormEvent) {
@@ -49,7 +49,7 @@ export function ResetPasswordForm({ onSubmit, onClose, isPending }: Props) {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full h-14 p-4 font-raleway text-lg"
+            className="h-14 w-full p-4 font-raleway text-lg"
           />
         </Field>
       </ModalBody>
@@ -64,7 +64,7 @@ export function ResetPasswordForm({ onSubmit, onClose, isPending }: Props) {
         <Button
           type="button"
           variant="link"
-          onClick={onClose}
+          onClick={onBack}
           className="h-auto w-full p-0 text-sm text-foreground"
         >
           Вернуться ко входу
