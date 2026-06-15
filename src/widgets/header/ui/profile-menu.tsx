@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import Avatar from "@/shared/assets/images/avatar.png";
 import { ROUTES } from "@/shared/model/routes";
 import { currentUser } from "@/shared/config/mock-config";
+import { clearTokens } from "@/shared/lib/auth";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -54,7 +55,10 @@ export function ProfileMenu() {
 
         <DropdownMenuItem
           className={itemClass}
-          onSelect={() => navigate(ROUTES.HOME)}
+          onSelect={() => {
+            clearTokens();
+            navigate(ROUTES.HOME);
+          }}
         >
           <Icon icon="ph:sign-out" />
           Выйти

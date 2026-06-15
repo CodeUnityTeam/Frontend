@@ -1,4 +1,5 @@
 import { cn } from "@/shared/lib/utils";
+import { Search } from "@/widgets/search";
 import { TagsList } from "@/widgets/tags";
 import { QuestionCard } from "@/widgets/question-card";
 import { testQuestion } from "@/pages/qa/model/mocks";
