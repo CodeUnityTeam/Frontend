@@ -5,12 +5,15 @@ import Logo from "@/shared/assets/icons/logo.svg";
 import { navigationConfigs } from "@/shared/config";
 import { Button } from "@/shared/ui/button";
 import { Navigation } from "@/shared/ui/navigation";
-import { isAuth } from "@/shared/config/mock-config";
-import { ROUTES } from "@/shared/model/routes";
+import { useModal } from "@/shared/lib/hooks";
+import { useIsAuthed } from "@/shared/lib/auth"
+import { LoginModal } from "@/features/login-modal";
 import { ProfileMenu } from "./profile-menu";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const loginModal = useModal();
+  const authed = useIsAuthed();
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -41,19 +44,17 @@ export function Header() {
           <Icon icon="ph:list" height={24} />
         </Button>
 
-        {isAuth ? (
+        {authed ? (
           <ProfileMenu />
         ) : (
           <Button
-            asChild
             variant="ghost"
             size="sm"
+            onClick={loginModal.openModal}
             className="flex items-center gap-1.5 px-2 py-1 text-sm font-semibold"
           >
-            <Link to={ROUTES.REGISTER}>
-              <Icon icon="ph:sign-in" height={24} className="h-3.5 w-3.5" />
-              Войти
-            </Link>
+            <Icon icon="ph:sign-in" height={24} className="h-3.5 w-3.5" />
+            Войти
           </Button>
         )}
       </div>
@@ -89,6 +90,8 @@ export function Header() {
           </div>
         </div>
       </div>
+
+      <LoginModal open={loginModal.open} onOpenChange={loginModal.setOpen} />
     </header>
   );
 }
