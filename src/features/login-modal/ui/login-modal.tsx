@@ -12,9 +12,14 @@ import { SocialLogin } from "./social-login";
 interface LoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onOpenRegister?: () => void;
 }
 
-export function LoginModal({ open, onOpenChange }: LoginModalProps) {
+export function LoginModal({
+  open,
+  onOpenChange,
+  onOpenRegister,
+}: LoginModalProps) {
   return (
     <Modal
       open={open}
@@ -48,10 +53,13 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           type="button"
           variant="ghost"
           size="sm"
-          onClick={() => alert("Раздел в разработке")}
+          onClick={() => {
+            onOpenChange(false);
+            onOpenRegister?.();
+          }}
           className="font-normal text-foreground"
         >
-          Забыли пароль?
+          Регистрация
         </Button>
       </div>
     </Modal>
