@@ -14,6 +14,11 @@ export const router = createBrowserRouter([
         path: "projects",
         lazy: () => import("@/pages/projects/projects-page"),
       },
+      //маршрут для детальной страницы проекта
+      {
+        path: "projects/:id",
+        lazy: () => import("@/pages/project-details/project-details"),
+      },
       { path: "qa", lazy: () => import("@/pages/qa/qa-page") },
       { path: "qa/create", lazy: () => import("@/pages/qa-create/qa-create-page") },
       { path: "qa/:id/edit", lazy: () => import("@/pages/qa-edit/qa-edit-page") },
