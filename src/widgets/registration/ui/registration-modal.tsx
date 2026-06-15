@@ -15,7 +15,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/shared/ui/sheet/sheet";
-import telegramSvg from "@/shared/assets/icons/telegram.svg";
+import yandexSvg from "@/shared/assets/icons/yandex.svg";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { useForm } from "react-hook-form";
@@ -149,36 +149,30 @@ export function RegistrationModal({
     {
       id: "yandex",
       label: "Yandex",
-      render: () => <span className="font-semibold">Я</span>,
-    },
-    {
-      id: "email",
-      label: "E-mail",
-      render: () => <span className="text-lg">@</span>,
-    },
-    {
-      id: "telegram",
-      label: "Telegram",
-      render: () => (
-        <img src={telegramSvg} alt="Telegram" className="h-5 w-5" />
-      ),
+      icon: yandexSvg,
     },
   ];
 
   const providersButtons = (
-    <div className="flex justify-center gap-4">
-      {providers.map((p) => (
-        <button
-          key={p.id}
-          type="button"
-          aria-label={p.label}
-          className="flex h-10 w-10 items-center justify-center rounded-full border bg-white"
-          onClick={() => handleProvider(p.id)}
-          disabled={providerLoading}
-        >
-          {p.render()}
-        </button>
-      ))}
+    <div className="mt-6 flex flex-col items-center gap-5">
+      <div className="h-px w-full bg-primary/70" />
+
+      <div className="flex items-center justify-center gap-4">
+        {providers.map((p) => (
+          <Button
+            key={p.id}
+            type="button"
+            aria-label={p.label}
+            variant="outline"
+            size="icon_lg"
+            className="h-12 w-12 rounded-full border-0 bg-[#252728] p-0 text-white hover:bg-[#373a3b] focus-visible:bg-[#373a3b]"
+            onClick={() => handleProvider(p.id)}
+            disabled={providerLoading}
+          >
+            <img src={p.icon} alt="" aria-hidden="true" className="h-6 w-6" />
+          </Button>
+        ))}
+      </div>
     </div>
   );
 
@@ -227,14 +221,15 @@ export function RegistrationModal({
           error={errors.password?.message}
           className="h-12 rounded-lg"
           rightElement={
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
               aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
               onClick={() => setShowPassword((s) => !s)}
-              className="p-2"
             >
               <Icon icon={showPassword ? "ph:eye-slash" : "ph:eye"} />
-            </button>
+            </Button>
           }
         />
       </div>
@@ -261,16 +256,18 @@ export function RegistrationModal({
 
   const switchLine = (
     <div className="mt-4 text-center">
-      <button
+      <Button
         type="button"
-        className="text-sm text-muted-foreground underline"
+        variant="ghost"
+        size="sm"
+        className="h-auto p-0 text-sm text-muted-foreground underline"
         onClick={() => {
           onOpenChange(false);
           onOpenLogin?.();
         }}
       >
         Уже есть профиль?
-      </button>
+      </Button>
     </div>
   );
 
@@ -316,7 +313,7 @@ export function RegistrationModal({
         {form}
 
         <div className="mt-6">
-          <div className="mb-4 text-center text-sm text-muted-foreground">
+          <div className="mb-4 text-center text-xl text-muted-foreground"> 
             Зарегистрироваться через
           </div>
           {providersButtons}

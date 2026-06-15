@@ -8,7 +8,7 @@ import {
 } from "../model/auth-modal-actions";
 
 interface AuthModalManagerProps {
-  /** If true, open registration modal on mount */
+ 
   initialOpen?: boolean;
 }
 
