@@ -62,6 +62,7 @@ export function ResetPasswordSuccess({
             type="button"
             variant="link"
             onClick={handleResendRequest}
+            disabled={countdown > 0}
             className="h-auto w-full p-0 text-sm text-foreground"
           >
             Отправить повторно
