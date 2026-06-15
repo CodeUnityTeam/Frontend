@@ -15,6 +15,8 @@ export const router = createBrowserRouter([
         lazy: () => import("@/pages/projects/projects-page"),
       },
       { path: "qa", lazy: () => import("@/pages/qa/qa-page") },
+      { path: "qa/create", lazy: () => import("@/pages/qa-create/qa-create-page") },
+      { path: "qa/:id/edit", lazy: () => import("@/pages/qa-edit/qa-edit-page") },
       {
         path: "qa/create",
         lazy: () => import("@/pages/qa-create/qa-create-page"),

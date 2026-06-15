@@ -14,6 +14,7 @@ export const ROUTES = {
 
   QA: "/qa",
   QA_CREATE: "/qa/create",
+  QA_EDIT: "/qa/:id/edit",
 
   PROFILE: "/profile",
   SETTINGS: "/settings",
@@ -31,6 +32,9 @@ export const ROUTES = {
 
 export type PathParams = {
   [ROUTES.NAME_PAGE_1]: {
+    id: string;
+  };
+  [ROUTES.QA_EDIT]: {
     id: string;
   };
 };

@@ -1,3 +1,5 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import { Toaster } from "@/shared/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
