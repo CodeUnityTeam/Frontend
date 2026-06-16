@@ -27,7 +27,6 @@ export function DeleteAccountModal({
       closeOnOutsideClick
       onConfirm={() => {
         mutate(undefined, {
-          // TODO: После успешного запроса разлогинить пользователя
           onSuccess: () => {
             alert("Удаление аккаунта в разработке");
           },
@@ -39,5 +38,3 @@ export function DeleteAccountModal({
 }
 
 export const Component = DeleteAccountModal;
-
- // TODO - Присоединить API для удаления и удалить лишнюю страницу
