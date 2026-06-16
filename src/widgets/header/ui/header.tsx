@@ -98,7 +98,7 @@ export function Header() {
         open={loginModal.open}
         onOpenChange={loginModal.setOpen}
         onOpenRegister={openAuthRegister}
-        onForgotPassword={() => {
+        onOpenResetPassword={() => {
           loginModal.closeModal();
           resetPasswordModal.openModal();
         }}

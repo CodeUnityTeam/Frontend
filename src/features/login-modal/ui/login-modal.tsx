@@ -12,15 +12,14 @@ import { SocialLogin } from "./social-login";
 interface LoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onForgotPassword: () => void
+  onOpenResetPassword?: () => void;
   onOpenRegister?: () => void;
 }
 
 export function LoginModal({
   open,
   onOpenChange,
-  onOpenRegister,
-onForgotPassword
+  onOpenResetPassword,
 }: LoginModalProps) {
   return (
     <Modal
@@ -55,7 +54,7 @@ onForgotPassword
           type="button"
           variant="ghost"
           size="sm"
-          onClick={onForgotPassword}
+          onClick={() => onOpenResetPassword?.()}
           className="font-normal text-foreground"
         >
           Забыли пароль?
