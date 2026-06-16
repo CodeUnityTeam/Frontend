@@ -1,4 +1,3 @@
-
 import { Button } from "@/shared/ui/button";
 import { Icon } from "@iconify/react";
 
@@ -7,10 +6,7 @@ type TChatbotNavigate = {
   onNext?: () => void;
 };
 
-export function ChatbotNavigate({
-  onPrev,
-  onNext,
-}: TChatbotNavigate) {
+export function ChatbotNavigate({ onPrev, onNext }: TChatbotNavigate) {
   return (
     <>
       <div className="flex items-center justify-end gap-3 pr-8">
@@ -20,7 +16,7 @@ export function ChatbotNavigate({
           variant="ghost"
           onClick={onPrev}
           className="rounded-2xl"
-          style={{ background: 'var(--color-light-gray-200)' }}
+          style={{ background: "var(--color-light-gray-200)" }}
         >
           <Icon icon="ph:caret-left" className="text-xs" />
         </Button>
@@ -31,7 +27,7 @@ export function ChatbotNavigate({
           variant="outline"
           onClick={onNext}
           className="rounded-2xl border-1"
-          style={{ background: 'var(--color-white)' }}
+          style={{ background: "var(--color-white)" }}
         >
           <Icon icon="ph:caret-right" className="text-xl" />
         </Button>

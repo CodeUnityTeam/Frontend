@@ -1,4 +1,4 @@
-export { ChatbotWrapper, } from "./ui/chatbot-wrapper";
+export { ChatbotWrapper } from "./ui/chatbot-wrapper";
 export { ChatbotNavigate } from "./ui/chatbot-navigate";
 export { ChatbotTabs } from "./ui/chatbot-tabs";
 export { ChatbotRender } from "./ui/chatbot-render";

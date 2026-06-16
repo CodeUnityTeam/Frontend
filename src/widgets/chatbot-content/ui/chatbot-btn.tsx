@@ -12,10 +12,8 @@ export function ChatbotBtn({
   onButtonClick,
 }: TChatbotBtn) {
   return (
-    <div className="flex flex-col items-center justify-center pt-6 pb-8 pr-8">
-      <h2 className="text-center text-[26px] font-bold">
-        {buttonTitle}
-      </h2>
+    <div className="flex flex-col items-center justify-center pt-6 pr-8 pb-8">
+      <h2 className="text-center text-[26px] font-bold">{buttonTitle}</h2>
 
       <Button
         type="button"
