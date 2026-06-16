@@ -9,6 +9,7 @@ import {
   FiltersSidebar,
   FiltersMobile,
 } from "@/widgets/filters";
+import { ProjectsCatalog } from "@/widgets/projects-catalog";
 
 function ProjectsPage() {
   if (!isAuth) {
@@ -24,7 +25,9 @@ function ProjectsPage() {
         <div className="md:flex md:items-start md:gap-8">
           <FiltersSidebar className="hidden md:block" />
 
-          <div className="flex-1"></div>
+          <div className="flex-1">
+            <ProjectsCatalog />
+          </div>
         </div>
       </PageContainer>
     </FiltersProvider>
