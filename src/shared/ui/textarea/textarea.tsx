@@ -1,8 +1,8 @@
 import React from "react";
 
 import { cn } from "@/shared/lib/utils";
-import { Field, FieldError, FieldLabel } from "../field";
-import { InputGroup, InputGroupTextarea } from "../input/input-group";
+import { Field, FieldError, FieldLabel } from "@/shared/ui/field";
+import { InputGroup, InputGroupTextarea } from "@/shared/ui/input";
 import type { TextareaBasic } from "./textarea-basic";
 
 interface TextareaProps extends React.ComponentPropsWithoutRef<

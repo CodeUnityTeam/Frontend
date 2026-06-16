@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
-import { TextareaBasic } from "../textarea/textarea-basic";
+import { TextareaBasic } from "@/shared/ui/textarea/textarea-basic";
 import { InputBasic } from "./input-basic";
 
 function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
@@ -131,12 +131,13 @@ function InputGroupText({ className, ...props }: React.ComponentProps<"span">) {
   );
 }
 
-function InputGroupInput({
-  className,
-  ...props
-}: React.ComponentProps<"input">) {
+const InputGroupInput = React.forwardRef<
+  HTMLInputElement,
+  React.ComponentProps<"input">
+>(({ className, ...props }, ref) => {
   return (
     <InputBasic
+      ref={ref}
       data-slot="input-group-control"
       className={cn(
         "h-full flex-1 rounded-none border-0 bg-transparent shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-transparent",
@@ -145,14 +146,17 @@ function InputGroupInput({
       {...props}
     />
   );
-}
+});
 
-function InputGroupTextarea({
-  className,
-  ...props
-}: React.ComponentProps<"textarea">) {
+InputGroupInput.displayName = "InputGroupInput";
+
+const InputGroupTextarea = React.forwardRef<
+  HTMLTextAreaElement,
+  React.ComponentProps<"textarea">
+>(({ className, ...props }, ref) => {
   return (
     <TextareaBasic
+      ref={ref}
       data-slot="input-group-control"
       className={cn(
         "flex-1 resize-none rounded-none border-0 bg-transparent py-3 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-transparent",
@@ -161,7 +165,9 @@ function InputGroupTextarea({
       {...props}
     />
   );
-}
+});
+
+InputGroupTextarea.displayName = "InputGroupTextarea";
 
 export {
   InputGroup,
