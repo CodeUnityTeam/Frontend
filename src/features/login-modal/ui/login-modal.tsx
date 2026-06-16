@@ -13,7 +13,6 @@ interface LoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onOpenResetPassword?: () => void;
-  onOpenRegister?: () => void;
 }
 
 export function LoginModal({
@@ -46,7 +45,10 @@ export function LoginModal({
           </DialogDescription>
         </div>
 
-        <LoginForm onSuccess={() => onOpenChange(false)} />
+        <LoginForm
+          onSuccess={() => onOpenChange(false)}
+          onOpenRegister={() => onOpenChange(false)}
+        />
 
         <SocialLogin />
 
