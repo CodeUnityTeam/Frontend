@@ -12,10 +12,14 @@ import { SocialLogin } from "./social-login";
 interface LoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onForgotPassword: () => void
+  onForgotPassword: () => void;
 }
 
-export function LoginModal({ open, onOpenChange, onForgotPassword }: LoginModalProps) {
+export function LoginModal({
+  open,
+  onOpenChange,
+  onForgotPassword,
+}: LoginModalProps) {
   return (
     <Modal
       open={open}
@@ -41,7 +45,10 @@ export function LoginModal({ open, onOpenChange, onForgotPassword }: LoginModalP
           </DialogDescription>
         </div>
 
-        <LoginForm onSuccess={() => onOpenChange(false)} />
+        <LoginForm
+          onSuccess={() => onOpenChange(false)}
+          onOpenRegister={() => onOpenChange(false)}
+        />
 
         <SocialLogin />
 
