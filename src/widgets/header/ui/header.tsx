@@ -10,6 +10,7 @@ import { useIsAuthed } from "@/shared/lib/auth";
 import { LoginModal } from "@/features/login-modal";
 import { ProfileMenu } from "./profile-menu";
 import { ResetPasswordModal } from "@/features/reset-password";
+import { openAuthRegister } from "@/widgets/registration/model/auth-modal-actions";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -96,6 +97,7 @@ export function Header() {
       <LoginModal
         open={loginModal.open}
         onOpenChange={loginModal.setOpen}
+        onOpenRegister={openAuthRegister}
         onForgotPassword={() => {
           loginModal.closeModal();
           resetPasswordModal.openModal();

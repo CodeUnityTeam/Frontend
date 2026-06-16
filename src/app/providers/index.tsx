@@ -1,11 +1,11 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/shared/ui/sonner";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 interface ProvidersProps {
   children: React.ReactNode;
 }
-
-const queryClient = new QueryClient();
 
 export function Providers({ children }: ProvidersProps) {
   return (

@@ -13,9 +13,15 @@ interface LoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onForgotPassword: () => void
+  onOpenRegister?: () => void;
 }
 
-export function LoginModal({ open, onOpenChange, onForgotPassword }: LoginModalProps) {
+export function LoginModal({
+  open,
+  onOpenChange,
+  onOpenRegister,
+onForgotPassword
+}: LoginModalProps) {
   return (
     <Modal
       open={open}
