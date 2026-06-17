@@ -63,18 +63,25 @@ export function ProjectCard({
       </div>
 
       <div className="mt-4 flex grow flex-col justify-end gap-4">
-        <div className="flex flex-row gap-6">
-          <div className="flex items-center gap-1">
-            <Icon
-              icon="ph:calendar-dots"
-              className="text-xl text-muted-foreground"
-            />
-            <span className="font-raleway text-[14px]">{date}</span>
-          </div>
+        <div className="flex flex-row items-center gap-3">
+          {date && (
+            <div className="flex shrink-0 items-center gap-1">
+              <Icon
+                icon="ph:calendar-dots"
+                className="shrink-0 text-xl text-muted-foreground"
+              />
+              <span className="font-raleway text-[14px] whitespace-nowrap">
+                {date}
+              </span>
+            </div>
+          )}
 
-          <div className="leading-1.4 flex items-center gap-1 text-[14px] font-normal">
-            <Icon icon="ph:map-pin" className="text-xl text-muted-foreground" />
-            <span>{location}</span>
+          <div className="leading-1.4 flex min-w-0 items-center gap-1 text-[14px] font-normal">
+            <Icon
+              icon="ph:map-pin"
+              className="shrink-0 text-xl text-muted-foreground"
+            />
+            <span className="min-w-0 truncate">{location}</span>
           </div>
         </div>
 

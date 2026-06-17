@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 
-import { useProjects } from "@/entities/project";
+import { useProjects, type GetProjectsParams } from "@/entities/project";
 import { Button } from "@/shared/ui/button";
 import { PageContainer } from "@/shared/ui/page-container";
 import {
@@ -9,18 +9,29 @@ import {
   FiltersSidebar,
   FiltersMobile,
   SortMobile,
+  useFilters,
+  DURATION_MAX,
 } from "@/widgets/filters";
 import { ProjectCard } from "@/widgets/project-card";
 
 const PAGE_SIZE = 20;
 
+const SORT_MAP: Record<string, GetProjectsParams["sortBy"]> = {
+  popularity: "like",
+  date: "published_at",
+  relevance: "relevance",
+};
+
 const dateFormatter = new Intl.DateTimeFormat("ru", {
-  day: "numeric",
-  month: "long",
+  day: "2-digit",
+  month: "2-digit",
   year: "numeric",
 });
 
-function formatDate(iso: string): string {
+function formatDate(iso: string | null): string {
+  if (!iso) {
+    return "";
+  }
   const date = new Date(iso);
   return Number.isNaN(date.getTime()) ? "" : dateFormatter.format(date);
 }
@@ -66,6 +77,10 @@ function ProjectsEmpty() {
 }
 
 function ProjectsList() {
+  const { sort, selected, duration } = useFilters();
+
+  const durationParam: GetProjectsParams["duration"] =
+    duration < DURATION_MAX ? { operator: "less", max: duration } : undefined;
   const {
     data,
     isPending,
@@ -74,7 +89,14 @@ function ProjectsList() {
     hasNextPage,
     fetchNextPage,
     refetch,
-  } = useProjects({ pageSize: PAGE_SIZE });
+  } = useProjects({
+    pageSize: PAGE_SIZE,
+    sortBy: SORT_MAP[sort],
+    skillsId: selected.tags,
+    formatId: selected.format,
+    specId: selected.position,
+    duration: durationParam,
+  });
 
   if (isPending) {
     return <ProjectsGridSkeleton />;

@@ -24,4 +24,13 @@ export interface ProjectsPage {
 export interface GetProjectsParams {
   page?: number;
   pageSize?: number;
+  sortBy?: "like" | "published_at" | "relevance";
+  skillsId?: string[];
+  formatId?: string[];
+  specId?: string[];
+  duration?: {
+    operator: "less" | "greater" | "between";
+    min?: number;
+    max?: number;
+  };
 }
