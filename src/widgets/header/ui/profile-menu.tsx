@@ -15,6 +15,7 @@ import {
 import { DeleteAccountModal } from "@/features/delete-account-modal";
 import { useModal } from "@/shared/lib/hooks/use-modal";
 import { ChangePasswordModal } from "@/features/change-password-modal";
+import { ChangeEmailModal } from "@/features/change-email-modal";
 
 const itemClass = "cursor-pointer gap-2 px-2 py-1 max-md:py-2.5 [&_svg]:size-6";
 
@@ -22,6 +23,7 @@ export function ProfileMenu() {
   const navigate = useNavigate();
   const deleteModal = useModal();
   const changePasswordModal = useModal();
+  const changeEmailModal = useModal();
 
   return (
     <DropdownMenu>
@@ -59,11 +61,12 @@ export function ProfileMenu() {
           Изменить пароль
         </DropdownMenuItem>
 
-        <DropdownMenuItem asChild className={itemClass}>
-          <Link to={ROUTES.SETTINGS}>
-            <Icon icon="ph:envelope-simple" />
-            Изменить E-mail
-          </Link>
+        <DropdownMenuItem
+          className={itemClass}
+          onSelect={() => setTimeout(changeEmailModal.openModal, 0)}
+        >
+          <Icon icon="ph:envelope-simple" />
+          Изменить E-mail
         </DropdownMenuItem>
 
         <DropdownMenuItem
@@ -94,6 +97,10 @@ export function ProfileMenu() {
       <ChangePasswordModal
         open={changePasswordModal.open}
         onOpenChange={changePasswordModal.setOpen}
+      />
+      <ChangeEmailModal
+        open={changeEmailModal.open}
+        onOpenChange={changeEmailModal.setOpen}
       />
     </DropdownMenu>
   );
