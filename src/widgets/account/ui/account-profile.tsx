@@ -53,10 +53,18 @@ export const AccountProfile = ({
     alert("В разработке");
   }
 
-  const handleSkillsFormChange = (field: keyof SkillsFormData) => (
+  const handleSkillsChange = (newSkills: string[]) => {
+    setSkillsFormData(prev => ({ ...prev, skills: newSkills }));
+  }
+
+  const handleQualitiesChange = (newQualities: string[]) => {
+    setSkillsFormData(prev => ({ ...prev, qualities: newQualities }));
+  }
+
+  const handleAboutChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setSkillsFormData(prev => ({ ...prev, [field]: field !== "about" ? e.target.value.split(", ") : e.target.value}));
+    setSkillsFormData(prev => ({ ...prev, about: e.target.value}));
   }
 
   return (
@@ -145,20 +153,14 @@ export const AccountProfile = ({
             </button>
           </div>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => tab === "profile" ? setSkillsModalOpen(!isSkillsModalOpen) : alert("В разработке!")}
-            className="text-foreground hover:text-foreground"
-          >
-            <Icon icon="ph:pencil-simple-line" className="h-5 w-5" />
-          </Button>
           <SetSkillsModal
             open={isSkillsModalOpen}
             onOpenChange={setSkillsModalOpen}
             formData={skillsFormData}
             onSubmit={handleSkillsFormSubmit}
-            onChange={handleSkillsFormChange}
+            onSkillsChange={handleSkillsChange}
+            onQualitiesChange={handleQualitiesChange}
+            onAboutChange={handleAboutChange}
             />
           {tab === "experience" && (
             <Button
@@ -175,7 +177,7 @@ export const AccountProfile = ({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => alert("В разработке")}
+              onClick={() => setSkillsModalOpen(!isSkillsModalOpen)}
               className="text-foreground hover:text-foreground"
             >
               <Icon icon="ph:pencil-simple-line" className="h-5 w-5" />

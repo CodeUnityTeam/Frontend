@@ -5,8 +5,8 @@ import {
   FieldError,
   Field,
   FieldContent,
-} from "../field";
-import { InputGroup, InputGroupInput } from "../input/input-group";
+} from "@/shared/ui/field";
+import { InputGroup, InputGroupInput } from "@/shared/ui/input/input-group";
 import { cn } from "@/shared/lib/utils";
 
 interface TextInputProps extends React.ComponentProps<"input"> {

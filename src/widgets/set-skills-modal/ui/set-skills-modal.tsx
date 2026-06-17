@@ -8,23 +8,26 @@ import {
   DialogTitle,
 } from "@/shared/ui/dialog";
 import { TextInput } from "@/shared/ui/text-input";
+import { TagInput } from "@/shared/ui/tag-input";
 import type { SkillsFormData } from "@/widgets/account/model/types";
 
 type setSkillsModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  onChange: (
-    field: keyof SkillsFormData,
-  ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
   formData: SkillsFormData;
+  onSkillsChange: (newSkills: string[]) => void;
+  onQualitiesChange: (newQualities: string[]) => void;
+  onAboutChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export function SetSkillsModal({
   open,
   onOpenChange,
   onSubmit,
-  onChange,
+  onSkillsChange,
+  onQualitiesChange,
+  onAboutChange,
   formData,
 }: setSkillsModalProps) {
   return (
@@ -38,24 +41,24 @@ export function SetSkillsModal({
           </DialogDescription>
         </VisuallyHidden>
         <form onSubmit={onSubmit} className="flex flex-col gap-4 md:gap-6">
-          <TextInput
+          <TagInput
             label="Навыки и инструменты"
             placeholder="Начните вводить здесь"
             description="Выберите программы, которыми вы владеете"
-            value={formData.skills.join(", ")}
-            onChange={onChange("skills")}
+            value={formData.skills}
+            onChange={onSkillsChange}
           />
-          <TextInput
+          <TagInput
             label="Личные качества"
             placeholder="Ваши преимущества"
-            value={formData.qualities.join(", ")}
-            onChange={onChange("qualities")}
+            value={formData.qualities}
+            onChange={onQualitiesChange}
           />
           <TextInput
             label="О себе"
             placeholder="Расскажите о себе"
             value={formData.about}
-            onChange={onChange("about")}
+            onChange={onAboutChange}
           />
           <Button
             type="submit"
