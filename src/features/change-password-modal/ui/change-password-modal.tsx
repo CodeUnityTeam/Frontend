@@ -35,7 +35,7 @@ export function ChangePasswordModal({
     register,
     handleSubmit,
     reset,
-    formState: { errors, touchedFields, isSubmitted },
+    formState: { errors, touchedFields, isSubmitted, isValid },
   } = useForm<ChangePasswordFormValues>({
     resolver: zodResolver(changePasswordSchema),
     mode: "onTouched",
@@ -132,7 +132,7 @@ export function ChangePasswordModal({
               type="submit"
               size="lg"
               className="flex-1"
-              disabled={isPending}
+              disabled={!isValid || isPending}
             >
               Изменить
             </Button>
