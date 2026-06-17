@@ -5,7 +5,6 @@ import { EmptyState } from "@/widgets/account/ui/empty-state";
 import avatarImg from "@/shared/assets/images/account-avatar.jpg";
 import { accountData } from "@/widgets/account/model/account-data";
 import type { AccountProfileProps } from "@/widgets/account/model/types";
-
 import { ExperienceModal } from "@/widgets/account/ui/experience-modal";
 
 export const AccountProfile = ({
