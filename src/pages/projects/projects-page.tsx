@@ -38,7 +38,7 @@ function formatDate(iso: string | null): string {
 
 function ProjectsGridSkeleton() {
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-[repeat(auto-fill,273px)] md:gap-x-3.5">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-[repeat(auto-fill,minmax(273px,1fr))] md:gap-x-3.5">
       {Array.from({ length: 6 }).map((_, index) => (
         <div
           key={`project-skeleton-${index}`}
@@ -117,7 +117,7 @@ function ProjectsList() {
 
   return (
     <>
-      <ul className="grid grid-cols-1 gap-4 md:auto-rows-fr md:grid-cols-[repeat(auto-fill,273px)] md:gap-x-3.5">
+      <ul className="grid grid-cols-1 gap-4 md:auto-rows-fr md:grid-cols-[repeat(auto-fill,minmax(273px,1fr))] md:gap-x-3.5">
         {projects.map((project) => (
           <li key={project.projectId}>
             <ProjectCard

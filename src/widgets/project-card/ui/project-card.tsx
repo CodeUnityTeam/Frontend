@@ -3,6 +3,7 @@ import { useState, useCallback } from "react";
 
 import { useIsAuthed } from "@/shared/lib/auth";
 import { Button } from "@/shared/ui/button";
+import { Tag } from "@/shared/ui/tag";
 
 type ProjectCardProps = {
   title: string;
@@ -53,12 +54,11 @@ export function ProjectCard({
 
       <div className="mt-2 flex flex-wrap gap-1">
         {tags.map((tag) => (
-          <span
+          <Tag
             key={tag}
-            className="rounded-2xl bg-(--secondary-button) px-3 py-1 text-[13px] font-normal"
-          >
-            {tag}
-          </span>
+            label={tag}
+            className="rounded-2xl bg-(--secondary-button) text-[13px] font-normal"
+          />
         ))}
       </div>
 
