@@ -5,17 +5,21 @@ import { Button } from "@/shared/ui/button";
 import { Icon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { useLogin, type LoginCredentials } from "@/entities/auth";
+import { ROUTES } from "@/shared/model/routes";
+import { useNavigate } from "react-router";
 import { emailRules, passwordRules } from "../model/validation";
 
 interface LoginFormProps {
   onSuccess: () => void;
+  onOpenRegister: () => void;
 }
 
-export function LoginForm({ onSuccess }: LoginFormProps) {
+export function LoginForm({ onSuccess, onOpenRegister }: LoginFormProps) {
   const { control, handleSubmit } = useForm<LoginCredentials>({
     mode: "onTouched",
     defaultValues: { email: "", password: "" },
   });
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const { mutate, isPending, error } = useLogin();
 
@@ -101,7 +105,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             type="button"
             variant="outline"
             size="lg"
-            onClick={() => alert("Раздел в разработке")}
+            onClick={() => {
+              onOpenRegister();
+              navigate(ROUTES.REGISTER);
+            }}
             className="flex-1"
           >
             Регистрация

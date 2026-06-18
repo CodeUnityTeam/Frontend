@@ -12,13 +12,13 @@ import { SocialLogin } from "./social-login";
 interface LoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onOpenRegister?: () => void;
+  onOpenResetPassword?: () => void;
 }
 
 export function LoginModal({
   open,
   onOpenChange,
-  onOpenRegister,
+  onOpenResetPassword,
 }: LoginModalProps) {
   return (
     <Modal
@@ -45,7 +45,10 @@ export function LoginModal({
           </DialogDescription>
         </div>
 
-        <LoginForm onSuccess={() => onOpenChange(false)} />
+        <LoginForm
+          onSuccess={() => onOpenChange(false)}
+          onOpenRegister={() => onOpenChange(false)}
+        />
 
         <SocialLogin />
 
@@ -53,13 +56,10 @@ export function LoginModal({
           type="button"
           variant="ghost"
           size="sm"
-          onClick={() => {
-            onOpenChange(false);
-            onOpenRegister?.();
-          }}
+          onClick={() => onOpenResetPassword?.()}
           className="font-normal text-foreground"
         >
-          Регистрация
+          Забыли пароль?
         </Button>
       </div>
     </Modal>
