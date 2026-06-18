@@ -1,4 +1,3 @@
-// Краткая информация о пользователе
 export interface UserShort {
   id: number;
   username: string;
@@ -9,25 +8,22 @@ export interface UserShort {
   phone?: string;
 }
 
-// Автор проекта
 export type ProjectAuthor = UserShort;
 
-// Участник проекта
 export interface ProjectParticipant {
   id: number;
   role: "author" | "member";
   user: UserShort;
 }
 
-// Статус проекта
 export type ProjectStatus =
-  | "draft" // Черновик, виден только автору
-  | "published" // Опубликован, виден всем
-  | "recruiting_closed" // Набор закрыт
-  | "archived" // Заархивирован
-  | "blocked"; // Заблокирован
+  | "draft" 
+  | "published" 
+  | "recruiting_closed" 
+  | "archived" 
+  | "blocked"; 
 
-  // Основной интерфейс проекта
+ 
 export interface Project {
   id: string;
   title: string;
@@ -37,7 +33,7 @@ export interface Project {
   skills: string[];
   specializations: string[];
   workFormats?: string[];
-  participants: ProjectParticipant[];// Список участников проекта
+  participants: ProjectParticipant[];
   likesCount: number;
   isLiked: boolean;
   isApplied: boolean;

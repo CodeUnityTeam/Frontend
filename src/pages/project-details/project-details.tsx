@@ -1,11 +1,6 @@
 import { useNavigate } from "react-router";
 import { Icon } from "@iconify/react";
-
 import { useProject } from "./hooks";
-
-// import { isAuth } from "@/shared/config/mock-config";
-// import { ROUTES } from "@/shared/model/routes";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar/avatar";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent } from "@/shared/ui/card/card";
@@ -17,161 +12,150 @@ function ProjectDetails() {
 
   const { data: project } = useProject();
 
-  // if (!isAuth) {
-  //   return <Navigate to={ROUTES.REGISTER} replace />;
-  // }
-
-  // Пока используем мок через fetchProject()
   if (!project) {
     return null;
   }
 
   return (
-    <PageContainer className="py-8">
+    <PageContainer className="py-4">
       <Button
         variant="ghost"
-        className="mb-6 gap-2 px-0"
+        className="mt-0.5 mb-1 gap-2 px-0"
         onClick={() => navigate(-1)}
       >
         <Icon icon="ph:arrow-left" className="h-5 w-5" />
         Назад
       </Button>
 
-      <div className="grid gap-8 xl:grid-cols-[260px_1fr]">
+      <div className="grid gap-4 xl:grid-cols-[273px_1fr] xl:gap-13">
         {/* Карточка автора */}
-        <Card className="h-fit rounded-3xl">
-          <CardContent className="p-4">
-            <div className="mb-5 flex items-start gap-3">
-              <Avatar className="h-12 w-12">
-                <AvatarImage src={project.author.avatar} />
-                <AvatarFallback>
-                  {project.author.firstName[0]}
-                </AvatarFallback>
-              </Avatar>
+        <Card className="h-fit w-full rounded-2xl">
+          <CardContent className="px-2 pt-5 pb-7">
+            <div className="px-2">
+              {/* Аватар + имя */}
+              <div className="flex items-start gap-3">
+                <Avatar className="h-14 w-14">
+                  <AvatarImage src={project.author.avatar} />
+                  <AvatarFallback>{project.author.firstName[0]}</AvatarFallback>
+                </Avatar>
 
-              <div>
-                <div className="text-xl font-medium">
-                  {project.author.firstName}
-                  {project.author.lastName
-                    ? ` ${project.author.lastName}`
-                    : ""}
+                <div>
+                  <div className="text-lg font-semibold">
+                    {project.author.firstName}
+                    {project.author.lastName
+                      ? ` ${project.author.lastName}`
+                      : ""}
+                  </div>
+
+                  <div className="text-sm text-muted-foreground">
+                    был(а) • 5 марта
+                  </div>
+                </div>
+              </div>
+
+              {/* Контакты */}
+              <div className="mt-3 space-y-3">
+                <div className="flex items-center gap-3">
+                  <Icon
+                    icon="ph:paper-plane-tilt"
+                    className="size-6 text-muted-foreground"
+                  />
+
+                  <span className="text-primary">
+                    @{project.author.username}
+                  </span>
                 </div>
 
-                <div className="text-sm text-muted-foreground">
-                  был(а) • 5 марта
+                <div className="flex items-center gap-3">
+                  <Icon
+                    icon="ph:envelope"
+                    className="size-6 text-muted-foreground"
+                  />
+
+                  <span className="break-all text-primary">
+                    {project.author.email}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <Icon
+                    icon="ph:phone"
+                    className="size-6 text-muted-foreground"
+                  />
+
+                  <span>{project.author.phone ?? "Не указан"}</span>
                 </div>
               </div>
             </div>
 
-            <div className="mb-5 space-y-4">
-              <div className="flex items-center gap-3">
-                <Icon
-                  icon="ph:paper-plane-tilt"
-                  className="text-lg text-muted-foreground"
-                />
-
-                <span className="text-primary">
-                  @{project.author.username}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Icon
-                  icon="ph:envelope"
-                  className="text-lg text-muted-foreground"
-                />
-
-                <span className="break-all text-primary">
-                  {project.author.email}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Icon
-                  icon="ph:phone"
-                  className="text-lg text-muted-foreground"
-                />
-
-                <span>
-                  {project.author.phone ?? "Контактный телефон"}
-                </span>
-              </div>
-            </div>
-
-            <Button className="w-full">
+            <Button variant="outline" className="mt-6 h-10 w-full">
               {project.isApplied ? "Отклик отправлен" : "Откликнуться"}
             </Button>
           </CardContent>
         </Card>
 
         {/* Карточка проекта */}
-        <Card className="rounded-3xl">
-          <CardContent className="flex min-h-[580px] flex-col p-8">
+        <Card className="rounded-[24px]">
+          <CardContent className="flex flex-col p-8 pt-10 pb-8 xl:max-h-[655px]">
             {/* Верхняя панель */}
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-5 flex items-center justify-between">
               <div className="flex items-center gap-2 text-muted-foreground">
-                <Icon icon="ph:calendar" className="text-lg" />
+                <Icon icon="ph:calendar" className="size-7 text-lg" />
 
-                <span>
-                  Дата начала: {project.startDate}
-                </span>
+                <span>Дата начала: {project.startDate}</span>
               </div>
 
-              <button
-                type="button"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <Icon
-                  icon={
-                    project.isLiked
-                      ? "ph:heart-fill"
-                      : "ph:heart"
-                  }
-                  className="text-2xl"
-                />
-              </button>
+              <Button variant="ghost" size="icon">
+                <Icon icon={project.isLiked ? "ph:heart-fill" : "ph:heart"} />
+              </Button>
             </div>
 
             {/* Заголовок */}
-            <h1 className="mb-4 text-4xl font-semibold">
+            <h1 className="mb-3 text-[26px] leading-[32px] font-bold tracking-normal">
               {project.title}
             </h1>
 
             {/* Навыки */}
-            <div className="mb-8 flex flex-wrap gap-2">
+            <div className="mb-6 flex flex-wrap gap-2">
               {project.skills.map((skill) => (
-                <Tag key={skill}>{skill}</Tag>
+                <Tag
+                  key={skill}
+                  variant="outline"
+                  className="text-[18px] leading-[150%] font-normal tracking-normal"
+                >
+                  {skill}
+                </Tag>
               ))}
             </div>
 
             {/* Описание */}
-            <p className="mb-12 max-w-4xl text-lg leading-relaxed">
+            <p className="mb-10 max-w-4xl text-[18px] leading-[130%] font-semibold">
               {project.description}
             </p>
 
             {/* Специализации */}
-            <div className="mb-16">
-              <div className="mb-4 text-2xl font-medium">
+            <div className="mb-10 flex flex-col gap-4 xl:flex-row xl:gap-6">
+              <div className="text-[18px] font-semibold xl:w-[210px] xl:shrink-0">
                 Приглашаем в команду:
               </div>
 
-              <div className="grid gap-y-4 md:grid-cols-2 md:gap-x-8">
+              <ul className="space-y-3">
                 {project.specializations.map((item) => (
-                  <div
+                  <li
                     key={item}
-                    className="flex items-start gap-3"
+                    className="flex gap-3 text-[18px] leading-[150%]"
                   >
                     <span>•</span>
                     <span>{item}</span>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
             {/* Нижняя часть */}
             <div className="mt-auto flex items-end justify-between">
               <div>
-                <div className="mb-3 text-lg">
+                <div className="mb-2 text-lg">
                   Участники ({project.participants.length})
                 </div>
 
@@ -181,9 +165,7 @@ function ProjectDetails() {
                       key={participant.id}
                       className="h-10 w-10 border-2 border-background"
                     >
-                      <AvatarImage
-                        src={participant.user.avatar}
-                      />
+                      <AvatarImage src={participant.user.avatar} />
 
                       <AvatarFallback>
                         {participant.user.firstName[0]}
@@ -197,21 +179,18 @@ function ProjectDetails() {
                 <div className="flex items-center gap-2">
                   <Icon
                     icon="ph:thumbs-up"
-                    className="text-xl"
+                    className="size-6 text-muted-foreground"
                   />
 
                   <span>{project.likesCount}</span>
                 </div>
 
-                <button
-                  type="button"
-                  className="transition-colors hover:text-foreground"
-                >
+                <Button variant="ghost" size="icon">
                   <Icon
                     icon="ph:copy-simple"
-                    className="text-xl"
+                    className="size-6 text-muted-foreground"
                   />
-                </button>
+                </Button>
               </div>
             </div>
           </CardContent>

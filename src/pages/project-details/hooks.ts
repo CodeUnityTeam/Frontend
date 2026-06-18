@@ -8,7 +8,7 @@ export const useProject = () => {
   const { id } = useParams<{ id: string }>();
 
   return useQuery<Project, ApiError>({
-    queryKey: ["project", id],
+    queryKey: ["project-details", id],
     queryFn: () => fetchProject(id!),
     enabled: !!id,
   });
