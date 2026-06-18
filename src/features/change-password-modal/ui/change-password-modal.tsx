@@ -13,10 +13,10 @@ import {
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import {
-  changePasswordSchema,
   type ChangePasswordFormValues,
-} from "../model/change-password-schema";
-import { useChangePasswordMutation } from "@/features/change-password-modal/model/use-change-password-mutation.ts";
+  changePasswordSchema,
+} from "@/features/change-password-modal/model/change-password-schema";
+import { useChangePasswordMutation } from "@/features/change-password-modal/model/use-change-password-mutation";
 import { toast } from "sonner";
 
 interface ChangePasswordModalProps {
@@ -30,7 +30,7 @@ export function ChangePasswordModal({
 }: ChangePasswordModalProps) {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
-  const {mutate, isPending} = useChangePasswordMutation()
+  const { mutate, isPending } = useChangePasswordMutation();
   const {
     register,
     handleSubmit,
@@ -67,10 +67,10 @@ export function ChangePasswordModal({
         <DialogHeader className="flex flex-col items-center gap-2">
           <Icon icon="ph:password" height="64" />
           <div className="flex flex-col gap-1 text-center">
-            <DialogTitle className="text-[26px] font-bold leading-8">
+            <DialogTitle className="text-[26px] leading-8 font-bold">
               Изменить пароль
             </DialogTitle>
-            <DialogDescription className="text-base text-foreground text-center">
+            <DialogDescription className="text-center text-base text-foreground">
               После смены пароля вам потребуется заново войти в аккаунт на всех
               ваших устройствах
             </DialogDescription>
@@ -85,7 +85,11 @@ export function ChangePasswordModal({
               type={showCurrentPassword ? "text" : "password"}
               className="h-14"
               {...register("currentPassword")}
-              error={(touchedFields.currentPassword || isSubmitted) ? errors.currentPassword?.message : undefined}
+              error={
+                touchedFields.currentPassword || isSubmitted
+                  ? errors.currentPassword?.message
+                  : undefined
+              }
               rightElement={
                 <button
                   type="button"
@@ -108,7 +112,11 @@ export function ChangePasswordModal({
               type={showNewPassword ? "text" : "password"}
               className="h-14"
               {...register("newPassword")}
-              error={(touchedFields.newPassword || isSubmitted) ? errors.newPassword?.message : undefined}
+              error={
+                touchedFields.newPassword || isSubmitted
+                  ? errors.newPassword?.message
+                  : undefined
+              }
               rightElement={
                 <button
                   type="button"

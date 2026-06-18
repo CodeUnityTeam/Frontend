@@ -13,10 +13,10 @@ import {
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import {
-  changeEmailSchema,
   type ChangeEmailFormValues,
-} from "../model/change-email-schema";
-import { useChangeEmailMutation } from "../model/use-change-email-mutation.ts";
+  changeEmailSchema,
+} from "@/features/change-email-modal/model/change-email-schema";
+import { useChangeEmailMutation } from "@/features/change-email-modal/model/use-change-email-mutation";
 
 interface ChangeEmailModalProps {
   open: boolean;
@@ -32,7 +32,7 @@ export function ChangeEmailModal({
     register,
     handleSubmit,
     reset,
-    formState: { errors, touchedFields, isSubmitted, isValid }
+    formState: { errors, touchedFields, isSubmitted, isValid },
   } = useForm<ChangeEmailFormValues>({
     resolver: zodResolver(changeEmailSchema),
     mode: "onTouched",
@@ -55,15 +55,15 @@ export function ChangeEmailModal({
       <DialogContent
         showCloseButton={false}
         className="flex w-full max-w-88.25 flex-col gap-5 rounded-lg px-8 pt-6 pb-5 sm:rounded-lg"
-        onOpenAutoFocus={e => e.preventDefault()}
+        onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <DialogHeader className="flex flex-col items-center gap-2">
           <Icon icon="ph:envelope-simple" height="64" />
           <div className="flex flex-col gap-1 text-center">
-            <DialogTitle className="text-[26px] font-bold leading-8">
+            <DialogTitle className="text-[26px] leading-8 font-bold">
               Изменить E-mail
             </DialogTitle>
-            <DialogDescription className="text-base text-foreground text-center">
+            <DialogDescription className="text-center text-base text-foreground">
               Новый адрес станет вашим логином для входа в аккаунт
             </DialogDescription>
           </div>

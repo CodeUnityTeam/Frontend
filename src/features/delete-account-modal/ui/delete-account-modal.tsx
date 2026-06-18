@@ -1,5 +1,5 @@
 import { ConfirmModal } from "@/features/confirm-modal";
-import { useDeleteAccount } from "@/features/delete-account-modal/model/delete-account-mutation.ts";
+import { useDeleteAccount } from "@/features/delete-account-modal/model/delete-account-mutation";
 import { toast } from "sonner";
 
 type DeleteAccountModalProps = {
@@ -10,9 +10,9 @@ type DeleteAccountModalProps = {
 
 export function DeleteAccountModal({
   open,
-  onOpenChange
+  onOpenChange,
 }: DeleteAccountModalProps) {
-  const {mutate, } = useDeleteAccount();
+  const { mutate } = useDeleteAccount();
 
   return (
     <ConfirmModal
