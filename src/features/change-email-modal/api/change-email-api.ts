@@ -1,7 +1,11 @@
 import { apiClient } from "@/shared/api";
 
-export async function changeEmailApi(email: string): Promise<void> {
-  await apiClient.post("user/profile/email-change/", {
+type ChangeEmailResponse = {
+  detail: string;
+};
+export async function changeEmailApi(email: string): Promise<ChangeEmailResponse> {
+  const {data} = await apiClient.post("user/profile/email-change/", {
     new_email: email,
   });
+  return data
 }

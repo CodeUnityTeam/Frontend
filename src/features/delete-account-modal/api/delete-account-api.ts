@@ -1,5 +1,9 @@
 import { apiClient } from "@/shared/api";
 
-export async function deleteAccountApi() {
-  await apiClient.delete("/user/profile/me/");
+type DeleteAccountResponse = {
+  detail: string
+}
+export async function deleteAccountApi(): Promise<DeleteAccountResponse> {
+  const {data} = await apiClient.delete("/user/profile/me/");
+  return data
 }

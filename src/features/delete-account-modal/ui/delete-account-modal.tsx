@@ -1,11 +1,13 @@
+import { useNavigate } from "react-router";
 import { ConfirmModal } from "@/features/confirm-modal";
 import { useDeleteAccount } from "@/features/delete-account-modal/model/delete-account-mutation";
+import { clearTokens } from "@/shared/lib/auth";
+import { ROUTES } from "@/shared/model/routes";
 import { toast } from "sonner";
 
 type DeleteAccountModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm: () => void;
 };
 
 export function DeleteAccountModal({
@@ -13,6 +15,7 @@ export function DeleteAccountModal({
   onOpenChange,
 }: DeleteAccountModalProps) {
   const { mutate } = useDeleteAccount();
+  const navigate = useNavigate();
 
   return (
     <ConfirmModal
@@ -27,8 +30,10 @@ export function DeleteAccountModal({
       closeOnOutsideClick
       onConfirm={() => {
         mutate(undefined, {
-          onSuccess: () => {
-            alert("Удаление аккаунта в разработке");
+          onSuccess: (info) => {
+            clearTokens();
+            navigate(ROUTES.HOME);
+            toast.success(info.detail)
           },
           onError: (error) => toast.error(error.message),
         });

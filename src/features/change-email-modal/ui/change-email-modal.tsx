@@ -45,7 +45,10 @@ export function ChangeEmailModal({
 
   const onSubmit = (values: ChangeEmailFormValues) => {
     mutate(values.newEmail, {
-      onSuccess: () => handleOpenChange(false),
+      onSuccess: (info) => {
+        handleOpenChange(false)
+        toast.success(info.detail)
+      },
       onError: (error) => toast.error(error.message),
     });
   };

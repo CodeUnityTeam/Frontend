@@ -1,7 +1,13 @@
 import { apiClient } from "@/shared/api";
 
-export async function changePasswordApi(newPassword: string): Promise<void> {
-  await apiClient.post("user/auth/password/change/", {
-    new_password: newPassword,
+type ChangePasswordResponse = {
+  detail: string
+}
+export async function changePasswordApi(
+  newPassword: string,
+): Promise<ChangePasswordResponse> {
+  const {data} = await apiClient.post("user/auth/password/change/", {
+    password: newPassword,
   });
+  return data
 }

@@ -52,7 +52,10 @@ export function ChangePasswordModal({
 
   const onSubmit = (values: ChangePasswordFormValues) => {
     mutate(values.newPassword, {
-      onSuccess: () => handleOpenChange(false),
+      onSuccess: (info) => {
+        handleOpenChange(false);
+        toast.success(info.detail)
+      },
       onError: (error) => toast.error(error.message),
     });
   };
