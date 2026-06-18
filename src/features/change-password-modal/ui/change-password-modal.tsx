@@ -91,8 +91,9 @@ export function ChangePasswordModal({
                   : undefined
               }
               rightElement={
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
                   aria-label={
                     showCurrentPassword ? "Скрыть пароль" : "Показать пароль"
                   }
@@ -103,7 +104,7 @@ export function ChangePasswordModal({
                     icon={showCurrentPassword ? "ph:eye-slash" : "ph:eye"}
                     height={24}
                   />
-                </button>
+                </Button>
               }
             />
             <Input
@@ -118,8 +119,9 @@ export function ChangePasswordModal({
                   : undefined
               }
               rightElement={
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
                   aria-label={
                     showNewPassword ? "Скрыть пароль" : "Показать пароль"
                   }
@@ -130,7 +132,7 @@ export function ChangePasswordModal({
                     icon={showNewPassword ? "ph:eye-slash" : "ph:eye"}
                     height={24}
                   />
-                </button>
+                </Button>
               }
             />
           </div>
