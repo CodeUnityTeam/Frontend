@@ -34,14 +34,15 @@ export const mockProject: ProjectDetails = {
     { format_id: "2", name: "Гибрид" },
   ],
   author: {
-    user_id: "1",
-    username: "Alex888",
-    email: "alex.designer@ya.ru",
-    first_name: "Алексей",
-    last_name: "Смирнов",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80",
-    phone: "+7 (999) 123-45-67",
-  },
+  user_id: "1",
+  username: "Alex888",
+  email: "alex.designer@ya.ru",
+  first_name: "Алексей",
+  last_name: "Смирнов",
+  avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80",
+  phone: "+7 (999) 123-45-67",
+  last_activity_at: "2026-06-19T20:51:10.735691+03:00", // ✅ добавляем
+},
   participants: [
     {
       participant_id: "1",

@@ -34,7 +34,9 @@ function ProjectDetails() {
               <div className="flex items-start gap-3">
                 <Avatar className="h-14 w-14">
                   <AvatarImage src={project.author.avatar} />
-                  <AvatarFallback>{project.author.first_name[0]}</AvatarFallback>
+                  <AvatarFallback>
+                    {project.author.first_name[0]}
+                  </AvatarFallback>
                 </Avatar>
 
                 <div>
@@ -46,12 +48,18 @@ function ProjectDetails() {
                   </div>
 
                   <div className="text-sm text-muted-foreground">
-                    был(а) • 5 марта
+                    {project.author.last_activity_at
+                      ? `был(а) • ${new Date(
+                          project.author.last_activity_at,
+                        ).toLocaleDateString("ru-RU", {
+                          day: "numeric",
+                          month: "long",
+                        })}`
+                      : "недавно"}
                   </div>
                 </div>
               </div>
 
-              
               <div className="mt-3 space-y-3">
                 <div className="flex items-center gap-3">
                   <Icon
@@ -92,10 +100,8 @@ function ProjectDetails() {
           </CardContent>
         </Card>
 
-        
         <Card className="rounded-[24px]">
           <CardContent className="flex flex-col p-8 pt-10 pb-8 xl:max-h-[655px]">
-            
             <div className="mb-5 flex items-center justify-between">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Icon icon="ph:calendar" className="size-7 text-lg" />
@@ -104,16 +110,16 @@ function ProjectDetails() {
               </div>
 
               <Button variant="ghost" size="icon">
-                <Icon icon={project.is_liked_by_me ? "ph:heart-fill" : "ph:heart"} />
+                <Icon
+                  icon={project.is_liked_by_me ? "ph:heart-fill" : "ph:heart"}
+                />
               </Button>
             </div>
 
-           
             <h1 className="mb-3 text-[26px] leading-[32px] font-bold tracking-normal">
               {project.title}
             </h1>
 
-            
             <div className="mb-6 flex flex-wrap gap-2">
               {project.skills.map((skill) => (
                 <Tag
@@ -126,12 +132,10 @@ function ProjectDetails() {
               ))}
             </div>
 
-            
             <p className="mb-10 max-w-4xl text-[18px] leading-[130%] font-semibold">
               {project.full_desc || project.short_desc}
             </p>
 
-            
             <div className="mb-10 flex flex-col gap-4 xl:flex-row xl:gap-6">
               <div className="text-[18px] font-semibold xl:w-[210px] xl:shrink-0">
                 Приглашаем в команду:
@@ -150,7 +154,6 @@ function ProjectDetails() {
               </ul>
             </div>
 
-            
             <div className="mt-auto flex items-end justify-between">
               <div>
                 <div className="mb-2 text-lg">

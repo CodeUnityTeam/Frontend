@@ -53,6 +53,7 @@ export interface Author {
   last_name?: string;
   avatar?: string;
   phone?: string;
+  last_activity_at?: string | null;
 }
 
 export interface Participant {
