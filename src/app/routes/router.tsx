@@ -49,8 +49,20 @@ export const router = createBrowserRouter([
         lazy: () => import("@/pages/register/ui/verify-email-page"),
       },
       {
+        path: "403",
+        lazy: () => import("@/pages/error-pages/page-403"),
+      },
+      {
+        path: "404",
+        lazy: () => import("@/pages/error-pages/page-404"),
+      },
+      {
         path: ":key",
         lazy: () => import("@/pages/register/ui/verify-email-page"),
+      },
+      {
+        path: "*",
+        lazy: () => import("@/pages/error-pages/page-404"),
       },
     ],
   },
