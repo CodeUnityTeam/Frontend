@@ -1,15 +1,3 @@
-export type FilterOption = {
-  value: string;
-  label: string;
-  count?: number;
-};
-
-export type FilterSection = {
-  id: string;
-  title: string;
-  options: FilterOption[];
-};
-
 export type SortOption = {
   value: string;
   label: string;
