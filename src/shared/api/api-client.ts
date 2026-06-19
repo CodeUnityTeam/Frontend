@@ -63,26 +63,26 @@ apiClient.interceptors.response.use(undefined, async (error: unknown) => {
   const config = error.config as RetriableConfig | undefined;
   const isAuthUrl = AUTH_URLS.some((url) => config?.url?.includes(url));
 
-  if (
-    config &&
-    error.response?.status === 401 &&
-    !config._retry &&
-    !isAuthUrl &&
-    getRefreshToken()
-  ) {
-    let access: string;
-
-    try {
-      access = await refreshAccessToken();
-    } catch {
-      clearTokens();
-      throw toApiError(error);
+  if (error.response?.status === 401 && !isAuthUrl) {
+    
+    if (getRefreshToken()) {
+      try {
+        const access = await refreshAccessToken();
+        config!._retry = true;
+        config!.headers.Authorization = `Bearer ${access}`;
+        return apiClient(config!);
+      } catch {
+        clearTokens();
+        
+        window.location.href = '/login';
+        throw toApiError(error);
+      }
     }
-
-    config._retry = true;
-    config.headers.Authorization = `Bearer ${access}`;
-
-    return apiClient(config);
+    
+  
+    clearTokens();
+    window.location.href = '/login';
+    throw toApiError(error);
   }
 
   throw toApiError(error);

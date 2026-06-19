@@ -12,6 +12,7 @@ import { SocialLogin } from "./social-login";
 interface LoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onOpenRegister?: () => void;
   onOpenResetPassword?: () => void;
 }
 
