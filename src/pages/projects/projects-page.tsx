@@ -13,6 +13,7 @@ import {
   DURATION_MAX,
 } from "@/widgets/filters";
 import { ProjectCard } from "@/widgets/project-card";
+import { ProjectsCatalog } from "@/widgets/projects-catalog";
 
 const PAGE_SIZE = 20;
 
@@ -165,7 +166,7 @@ function ProjectsPage() {
           <FiltersSidebar className="hidden md:block" />
 
           <div className="flex-1">
-            <ProjectsList />
+            <ProjectsCatalog catalog={<ProjectsList />} />
           </div>
         </div>
       </PageContainer>

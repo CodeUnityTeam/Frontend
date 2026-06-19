@@ -12,9 +12,14 @@ import { SocialLogin } from "./social-login";
 interface LoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onOpenResetPassword?: () => void;
 }
 
-export function LoginModal({ open, onOpenChange }: LoginModalProps) {
+export function LoginModal({
+  open,
+  onOpenChange,
+  onOpenResetPassword,
+}: LoginModalProps) {
   return (
     <Modal
       open={open}
@@ -40,7 +45,10 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           </DialogDescription>
         </div>
 
-        <LoginForm onSuccess={() => onOpenChange(false)} />
+        <LoginForm
+          onSuccess={() => onOpenChange(false)}
+          onOpenRegister={() => onOpenChange(false)}
+        />
 
         <SocialLogin />
 
@@ -48,7 +56,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           type="button"
           variant="ghost"
           size="sm"
-          onClick={() => alert("Раздел в разработке")}
+          onClick={() => onOpenResetPassword?.()}
           className="font-normal text-foreground"
         >
           Забыли пароль?
