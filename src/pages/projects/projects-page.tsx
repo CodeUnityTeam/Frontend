@@ -14,6 +14,7 @@ import {
 } from "@/widgets/filters";
 import { ProjectCard } from "@/widgets/project-card";
 import { ProjectsCatalog } from "@/widgets/projects-catalog";
+import { Search } from "@/widgets/search";
 
 const PAGE_SIZE = 20;
 
@@ -156,6 +157,8 @@ function ProjectsPage() {
   return (
     <FiltersProvider>
       <PageContainer className="py-8">
+        <Search />
+
         <div className="mb-6 flex items-center justify-between gap-4 md:hidden">
           <FiltersMobile />
           <SortMobile />
