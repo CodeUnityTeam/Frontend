@@ -1,1 +1,7 @@
-export type { Project, ProjectParticipant } from "./model/types";
+export { useProjects } from "./api/use-projects";
+export type {
+  Project,
+  ProjectSkill,
+  ProjectsPage,
+  GetProjectsParams,
+} from "./model/types";

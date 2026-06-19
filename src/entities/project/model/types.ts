@@ -1,42 +1,36 @@
-export interface UserShort {
-  id: number;
-  username: string;
-  email: string;
-  firstName: string;
-  lastName?: string;
-  avatar?: string;
-  phone?: string;
+export interface ProjectSkill {
+  skillId: string;
+  name: string;
 }
 
-export type ProjectAuthor = UserShort;
-
-export interface ProjectParticipant {
-  id: number;
-  role: "author" | "member";
-  user: UserShort;
-}
-
-export type ProjectStatus =
-  | "draft" 
-  | "published" 
-  | "recruiting_closed" 
-  | "archived" 
-  | "blocked"; 
-
- 
 export interface Project {
-  id: string;
+  projectId: string;
   title: string;
-  description: string;
-  location?: string;
-  startDate: string;
-  skills: string[];
-  specializations: string[];
-  workFormats?: string[];
-  participants: ProjectParticipant[];
-  likesCount: number;
-  isLiked: boolean;
-  isApplied: boolean;
-  status?: ProjectStatus;
-  author: ProjectAuthor;
+  shortDesc: string;
+  location: string;
+  status: string;
+  publishedAt: string;
+  participantsCount: number;
+  isLikedByMe: boolean;
+  skills: ProjectSkill[];
+}
+
+export interface ProjectsPage {
+  items: Project[];
+  total: number;
+  hasMore: boolean;
+}
+
+export interface GetProjectsParams {
+  page?: number;
+  pageSize?: number;
+  sortBy?: "like" | "published_at" | "relevance";
+  skillsId?: string[];
+  formatId?: string[];
+  specId?: string[];
+  duration?: {
+    operator: "less" | "greater" | "between";
+    min?: number;
+    max?: number;
+  };
 }
