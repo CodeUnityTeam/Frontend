@@ -28,22 +28,20 @@ function ProjectDetails() {
       </Button>
 
       <div className="grid gap-4 xl:grid-cols-[273px_1fr] xl:gap-13">
-        {/* Карточка автора */}
         <Card className="h-fit w-full rounded-2xl">
           <CardContent className="px-2 pt-5 pb-7">
             <div className="px-2">
-              {/* Аватар + имя */}
               <div className="flex items-start gap-3">
                 <Avatar className="h-14 w-14">
                   <AvatarImage src={project.author.avatar} />
-                  <AvatarFallback>{project.author.firstName[0]}</AvatarFallback>
+                  <AvatarFallback>{project.author.first_name[0]}</AvatarFallback>
                 </Avatar>
 
                 <div>
                   <div className="text-lg font-semibold">
-                    {project.author.firstName}
-                    {project.author.lastName
-                      ? ` ${project.author.lastName}`
+                    {project.author.first_name}
+                    {project.author.last_name
+                      ? ` ${project.author.last_name}`
                       : ""}
                   </div>
 
@@ -53,7 +51,7 @@ function ProjectDetails() {
                 </div>
               </div>
 
-              {/* Контакты */}
+              
               <div className="mt-3 space-y-3">
                 <div className="flex items-center gap-3">
                   <Icon
@@ -89,51 +87,51 @@ function ProjectDetails() {
             </div>
 
             <Button variant="outline" className="mt-6 h-10 w-full">
-              {project.isApplied ? "Отклик отправлен" : "Откликнуться"}
+              {project.is_applied ? "Отклик отправлен" : "Откликнуться"}
             </Button>
           </CardContent>
         </Card>
 
-        {/* Карточка проекта */}
+        
         <Card className="rounded-[24px]">
           <CardContent className="flex flex-col p-8 pt-10 pb-8 xl:max-h-[655px]">
-            {/* Верхняя панель */}
+            
             <div className="mb-5 flex items-center justify-between">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Icon icon="ph:calendar" className="size-7 text-lg" />
 
-                <span>Дата начала: {project.startDate}</span>
+                <span>Дата начала: {project.start_date}</span>
               </div>
 
               <Button variant="ghost" size="icon">
-                <Icon icon={project.isLiked ? "ph:heart-fill" : "ph:heart"} />
+                <Icon icon={project.is_liked_by_me ? "ph:heart-fill" : "ph:heart"} />
               </Button>
             </div>
 
-            {/* Заголовок */}
+           
             <h1 className="mb-3 text-[26px] leading-[32px] font-bold tracking-normal">
               {project.title}
             </h1>
 
-            {/* Навыки */}
+            
             <div className="mb-6 flex flex-wrap gap-2">
               {project.skills.map((skill) => (
                 <Tag
-                  key={skill}
+                  key={skill.skill_id}
                   variant="outline"
                   className="text-[18px] leading-[150%] font-normal tracking-normal"
                 >
-                  {skill}
+                  {skill.name}
                 </Tag>
               ))}
             </div>
 
-            {/* Описание */}
+            
             <p className="mb-10 max-w-4xl text-[18px] leading-[130%] font-semibold">
-              {project.description}
+              {project.full_desc || project.short_desc}
             </p>
 
-            {/* Специализации */}
+            
             <div className="mb-10 flex flex-col gap-4 xl:flex-row xl:gap-6">
               <div className="text-[18px] font-semibold xl:w-[210px] xl:shrink-0">
                 Приглашаем в команду:
@@ -142,17 +140,17 @@ function ProjectDetails() {
               <ul className="space-y-3">
                 {project.specializations.map((item) => (
                   <li
-                    key={item}
+                    key={item.spec_id}
                     className="flex gap-3 text-[18px] leading-[150%]"
                   >
                     <span>•</span>
-                    <span>{item}</span>
+                    <span>{item.name}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Нижняя часть */}
+            
             <div className="mt-auto flex items-end justify-between">
               <div>
                 <div className="mb-2 text-lg">
@@ -162,13 +160,13 @@ function ProjectDetails() {
                 <div className="flex -space-x-2">
                   {project.participants.map((participant) => (
                     <Avatar
-                      key={participant.id}
+                      key={participant.participant_id}
                       className="h-10 w-10 border-2 border-background"
                     >
                       <AvatarImage src={participant.user.avatar} />
 
                       <AvatarFallback>
-                        {participant.user.firstName[0]}
+                        {participant.user.first_name[0]}
                       </AvatarFallback>
                     </Avatar>
                   ))}
@@ -182,7 +180,7 @@ function ProjectDetails() {
                     className="size-6 text-muted-foreground"
                   />
 
-                  <span>{project.likesCount}</span>
+                  <span>{project.likes_count}</span>
                 </div>
 
                 <Button variant="ghost" size="icon">

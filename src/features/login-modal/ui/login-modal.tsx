@@ -13,6 +13,7 @@ interface LoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onOpenResetPassword?: () => void;
+  onOpenRegister?: () => void;       
 }
 
 export function LoginModal({

@@ -1,98 +1,98 @@
-import type { Project } from "./types";
+import type { ProjectDetails } from "./types";
 
-export const mockProject: Project = {
-  id: "1",
+export const mockProject: ProjectDetails = {
+  project_id: "1",
   title: "Чат-бот «CodeBuddy»",
-  description:
-    "Разрабатываем Telegram-бота, который отвечает на типовые вопросы по отладке, синтаксису и заданиям из курсов.",
-
-  startDate: "15 апреля, 2026",
-
+  short_desc: "Разрабатываем Telegram-бота, который отвечает на типовые вопросы по отладке, синтаксису и заданиям из курсов.",
+  full_desc: "Разрабатываем Telegram-бота, который отвечает на типовые вопросы по отладке, синтаксису и заданиям из курсов. В проекте участвуют 4 разработчика.",
+  location: "Москва (удаленно)",
+  status_project: "published",
+  published_at: "2026-03-15T10:30:00Z",
+  start_date: "2026-04-15",
+  end_date: "2026-04-15",
+  participants_count: 4,
+  is_liked_by_me: false,
+  is_applied: false,
+  likes_count: 10,
   skills: [
-    "Python",
-    "Flask/FastAPI",
-    "SQLite",
-    "Telegram Bot API",
-    "Figma",
+    { skill_id: "1", name: "Python" },
+    { skill_id: "2", name: "Flask/FastAPI" },
+    { skill_id: "3", name: "SQLite" },
+    { skill_id: "4", name: "Telegram Bot API" },
+    { skill_id: "5", name: "Figma" },
   ],
-
   specializations: [
-    "Разработчиков (backend, frontend, fullstack)",
-    "DevOps-инженеров, системных администраторов",
-    "UX/UI дизайнеров",
-    "Аналитиков данных и Data Scientists",
-    "Тестировщиков и QA-специалистов",
-    "Менеджеров IT-проектов",
+    { spec_id: "1", name: "Разработчиков (backend, frontend, fullstack)" },
+    { spec_id: "2", name: "DevOps-инженеров, системных администраторов" },
+    { spec_id: "3", name: "UX/UI дизайнеров" },
+    { spec_id: "4", name: "Аналитиков данных и Data Scientists" },
+    { spec_id: "5", name: "Тестировщиков и QA-специалистов" },
+    { spec_id: "6", name: "Менеджеров IT-проектов" },
   ],
-
-  status: "published",
-
+  project_format: [
+    { format_id: "1", name: "Удаленно" },
+    { format_id: "2", name: "Гибрид" },
+  ],
   author: {
-    id: 1,
+    user_id: "1",
     username: "Alex888",
     email: "alex.designer@ya.ru",
-    firstName: "Алексей",
-    avatar:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80",
+    first_name: "Алексей",
+    last_name: "Смирнов",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80",
+    phone: "+7 (999) 123-45-67",
   },
-
   participants: [
     {
-      id: 1,
+      participant_id: "1",
       role: "author",
       user: {
-        id: 1,
+        user_id: "1",
         username: "Alex888",
         email: "alex.designer@ya.ru",
-        firstName: "Алексей",
-        avatar:
-          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80",
+        first_name: "Алексей",
+        last_name: "Смирнов",
+        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80",
         phone: "+7 (999) 123-45-67",
       },
     },
     {
-      id: 2,
+      participant_id: "2",
       role: "member",
       user: {
-        id: 2,
+        user_id: "2",
         username: "ivan_dev",
         email: "ivan@example.com",
-        firstName: "Иван",
-        avatar:
-          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80",
+        first_name: "Иван",
+        last_name: "Петров",
+        avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80",
       },
     },
     {
-      id: 3,
+      participant_id: "3",
       role: "member",
       user: {
-        id: 3,
+        user_id: "3",
         username: "anna_ui",
         email: "anna@example.com",
-        firstName: "Анна",
-        avatar:
-          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80",
+        first_name: "Анна",
+        last_name: "Иванова",
+        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80",
       },
     },
     {
-      id: 4,
+      participant_id: "4",
       role: "member",
       user: {
-        id: 4,
+        user_id: "4",
         username: "max_qa",
         email: "max@example.com",
-        firstName: "Максим",
-        avatar:
-          "https://images.unsplash.com/photo-1504593811423-6dd665756598?w=200&q=80",
+        first_name: "Максим",
+        last_name: "Сидоров",
+        avatar: "https://images.unsplash.com/photo-1504593811423-6dd665756598?w=200&q=80",
       },
     },
   ],
-
-  likesCount: 10,
-
-  isLiked: false,
-
-  isApplied: false,
 };
 
-export const mockProjects: Project[] = [mockProject];
+export const mockProjects: ProjectDetails[] = [mockProject];

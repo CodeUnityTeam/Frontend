@@ -8,6 +8,7 @@ import { toast } from "sonner";
 type DeleteAccountModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onConfirm?: () => void;
 };
 
 export function DeleteAccountModal({
