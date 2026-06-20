@@ -15,6 +15,7 @@ export const ROUTES = {
   REGISTER_CHECK_EMAIL: "/register/check-email",
   REGISTER_VERIFY_EMAIL: "/register/verify-email/:key",
   REGISTER_VERIFY_EMAIL_FALLBACK: "/:key",
+  RESET_PASSWORD_CONFIRM: "/password-reset/confirm/:key",
 
   QA: "/qa",
   QA_CREATE: "/qa/create",
@@ -46,6 +47,9 @@ export type PathParams = {
   [ROUTES.QA_EDIT]: {
     id: string;
   };
+  [ROUTES.RESET_PASSWORD_CONFIRM]: {
+    key: string;
+  }
 };
 
 declare module "react-router" {
