@@ -19,6 +19,7 @@ import { FilterTabs } from "@/widgets/filter-tabs";
 import { projectTabs } from "@/widgets/filter-tabs/model/tabs-data";
 import { useState } from "react";
 
+
 const PAGE_SIZE = 20;
 
 const SORT_MAP: Record<string, GetProjectsParams["sortBy"]> = {
@@ -34,7 +35,6 @@ const dateFormatter = new Intl.DateTimeFormat("ru", {
 });
 
 function formatDate(iso: string | null): string {
-  const [tab, setTab] = useState("catalog");
 
   if (!iso) {
     return "";
@@ -159,6 +159,7 @@ function ProjectsList() {
 }
 
 function ProjectsPage() {
+  const [tab, setTab] = useState("catalog");
   return (
     <FiltersProvider>
       <PageContainer className="py-8">
