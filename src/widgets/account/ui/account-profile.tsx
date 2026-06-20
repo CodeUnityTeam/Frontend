@@ -4,7 +4,8 @@ import { Icon } from "@iconify/react";
 import { EmptyState } from "@/widgets/account/ui/empty-state";
 import avatarImg from "@/shared/assets/images/account-avatar.jpg";
 import { accountData } from "@/widgets/account/model/account-data";
-import type { AccountProfileProps } from "@/widgets/account/model/types";
+import type { AccountProfileProps, SkillsFormData } from "@/widgets/account/model/types";
+import { SetSkillsModal } from "@/widgets/set-skills-modal";
 
 import { ExperienceModal } from "@/widgets/account/ui/experience-modal";
 
@@ -16,6 +17,7 @@ export const AccountProfile = ({
   experience,
 }: AccountProfileProps) => {
   const [tab, setTab] = React.useState<"profile" | "experience">("profile");
+  const [isSkillsModalOpen, setSkillsModalOpen] = React.useState<boolean>(false);
 
   const [isExperienceModalOpen, setIsExperienceModalOpen] =
     React.useState(false);
@@ -38,6 +40,32 @@ export const AccountProfile = ({
 
   const hasProfileData =
     skillsData.length > 0 || qualitiesData.length > 0 || Boolean(aboutData);
+
+  // данные и хендлеры для SetSkillsModal
+  const [skillsFormData, setSkillsFormData] = React.useState<SkillsFormData>({
+    skills: skillsData || [],
+    qualities: qualitiesData || [],
+    about: aboutData || ""
+  });
+
+  const handleSkillsFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    alert("В разработке");
+  }
+
+  const handleSkillsChange = (newSkills: string[]) => {
+    setSkillsFormData(prev => ({ ...prev, skills: newSkills }));
+  }
+
+  const handleQualitiesChange = (newQualities: string[]) => {
+    setSkillsFormData(prev => ({ ...prev, qualities: newQualities }));
+  }
+
+  const handleAboutChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSkillsFormData(prev => ({ ...prev, about: e.target.value}));
+  }
 
   return (
     <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[413px_1fr]">
@@ -125,6 +153,15 @@ export const AccountProfile = ({
             </button>
           </div>
 
+          <SetSkillsModal
+            open={isSkillsModalOpen}
+            onOpenChange={setSkillsModalOpen}
+            formData={skillsFormData}
+            onSubmit={handleSkillsFormSubmit}
+            onSkillsChange={handleSkillsChange}
+            onQualitiesChange={handleQualitiesChange}
+            onAboutChange={handleAboutChange}
+            />
           {tab === "experience" && (
             <Button
               variant="ghost"
@@ -140,7 +177,7 @@ export const AccountProfile = ({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => alert("В разработке")}
+              onClick={() => setSkillsModalOpen(!isSkillsModalOpen)}
               className="text-foreground hover:text-foreground"
             >
               <Icon icon="ph:pencil-simple-line" className="h-5 w-5" />

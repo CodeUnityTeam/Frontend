@@ -10,7 +10,11 @@ import "react-router";
 export const ROUTES = {
   HOME: "/",
   NOT_FOUND: "/404",
+  FORBIDDEN: "/403",
   REGISTER: "/register",
+  REGISTER_CHECK_EMAIL: "/register/check-email",
+  REGISTER_VERIFY_EMAIL: "/register/verify-email/:key",
+  REGISTER_VERIFY_EMAIL_FALLBACK: "/:key",
 
   QA: "/qa",
   QA_CREATE: "/qa/create",
@@ -30,6 +34,12 @@ export const ROUTES = {
 } as const;
 
 export type PathParams = {
+  [ROUTES.REGISTER_VERIFY_EMAIL]: {
+    key: string;
+  };
+  [ROUTES.REGISTER_VERIFY_EMAIL_FALLBACK]: {
+    key: string;
+  };
   [ROUTES.NAME_PAGE_1]: {
     id: string;
   };
