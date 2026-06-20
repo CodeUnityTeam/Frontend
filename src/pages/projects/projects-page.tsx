@@ -173,8 +173,8 @@ function ProjectsPage() {
           
         <div className="md:flex md:items-start md:gap-5">
           <FiltersSidebar className="hidden md:block" />
-            <FilterTabs items={projectTabs} value={tab} onValueChange={setTab} />
           <div className="flex-1">
+            <FilterTabs items={projectTabs} value={tab} onValueChange={setTab} />
             <ProjectsCatalog catalog={<ProjectsList />} />
           </div>
         </div>
