@@ -37,8 +37,6 @@ export const router = createBrowserRouter([
       { path: "account", lazy: () => import("@/pages/account/account-page") },
       { path: "account-settings", lazy: () => import("@/pages/account-settings/account-settings-page") },
       { path: "register", lazy: () => import("@/pages/register/ui/register-page") },
-    
-
       {
         path: "account-settings",
         lazy: () => import("@/pages/account-settings/account-settings-page"),
@@ -58,6 +56,10 @@ export const router = createBrowserRouter([
       {
         path: ":key",
         lazy: () => import("@/pages/register/ui/verify-email-page"),
+      },
+      {
+        path: "my-questions/:id",
+        lazy: () => import("@/pages/my-questions/my-questions-page")
       },
     ],
   },
