@@ -1,4 +1,5 @@
 import { ChatbotWrapper } from "@/widgets/chatbot-content/ui/chatbot-wrapper";
+import { openAuthLogin } from "@/widgets/registration/model/auth-modal-actions";
 
 export function ChatbotCards() {
   return (
@@ -10,11 +11,9 @@ export function ChatbotCards() {
       }}
     >
       <ChatbotWrapper
-        onPrev={() => console.log("prev")}
-        onNext={() => console.log("next")}
         title="Не знаешь, с чего начать?"
         buttonText="Авторизоваться"
-        onButtonClick={() => alert("в разработке")}
+        onButtonClick={openAuthLogin}
       />
     </section>
   );
