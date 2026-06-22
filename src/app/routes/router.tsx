@@ -35,7 +35,10 @@ export const router = createBrowserRouter([
         lazy: () => import("@/pages/settings/settings-page"),
       },
       { path: "account", lazy: () => import("@/pages/account/account-page") },
-      { path: "register", lazy: () => import("@/pages/register/ui/register-page") },
+      {
+        path: "register",
+        lazy: () => import("@/pages/register/ui/register-page"),
+      },
       {
         path: "register",
         lazy: () => import("@/pages/register/ui/register-page"),
@@ -55,6 +58,10 @@ export const router = createBrowserRouter([
       {
         path: "404",
         lazy: () => import("@/pages/error-pages/page-404"),
+      },
+      {
+        path: "500",
+        lazy: () => import("@/pages/error-pages/page-500"),
       },
       {
         path: ":key",
