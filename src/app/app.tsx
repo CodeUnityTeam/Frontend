@@ -12,7 +12,7 @@ export function App() {
         <Header />
         <main className="flex flex-1 flex-col">
           <Outlet />
-        </main>
+          </main>
         <Footer />
       </div>
     </Providers>

@@ -14,6 +14,7 @@ type DeleteAccountModalProps = {
 export function DeleteAccountModal({
   open,
   onOpenChange,
+  onConfirm,
 }: DeleteAccountModalProps) {
   const { mutate } = useDeleteAccount();
   const navigate = useNavigate();
@@ -30,11 +31,12 @@ export function DeleteAccountModal({
       icon="ph:trash"
       closeOnOutsideClick
       onConfirm={() => {
+        onConfirm?.();
         mutate(undefined, {
           onSuccess: (info) => {
             clearTokens();
             navigate(ROUTES.HOME);
-            toast.success(info.detail)
+            toast.success(info.detail);
           },
           onError: (error) => toast.error(error.message),
         });
