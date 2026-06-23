@@ -15,6 +15,10 @@ import {
 import { ProjectCard } from "@/widgets/project-card";
 import { ProjectsCatalog } from "@/widgets/projects-catalog";
 import { Search } from "@/widgets/search";
+import { FilterTabs } from "@/widgets/filter-tabs";
+import { projectTabs } from "@/widgets/filter-tabs/model/tabs-data";
+import { useState } from "react";
+
 
 const PAGE_SIZE = 20;
 
@@ -31,6 +35,7 @@ const dateFormatter = new Intl.DateTimeFormat("ru", {
 });
 
 function formatDate(iso: string | null): string {
+
   if (!iso) {
     return "";
   }
@@ -154,6 +159,7 @@ function ProjectsList() {
 }
 
 function ProjectsPage() {
+  const [tab, setTab] = useState("catalog");
   return (
     <FiltersProvider>
       <PageContainer className="py-8">
@@ -164,11 +170,11 @@ function ProjectsPage() {
           <SortMobile />
         </div>
         <FiltersBar className="mb-6 hidden md:flex" />
-
+          
         <div className="md:flex md:items-start md:gap-5">
           <FiltersSidebar className="hidden md:block" />
-
           <div className="flex-1">
+            <FilterTabs items={projectTabs} value={tab} onValueChange={setTab} />
             <ProjectsCatalog catalog={<ProjectsList />} />
           </div>
         </div>
