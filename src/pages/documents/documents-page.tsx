@@ -1,5 +1,5 @@
 const DocumentsPage = () => {
-  return <div>Documents page</div>;
+  return <></>;
 }
 
 export const Component = DocumentsPage; 

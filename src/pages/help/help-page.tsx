@@ -1,5 +1,5 @@
 const HelpPage = () => {
-  return <div>Help page</div>;
+  return <></>;
 }
 
 export const Component = HelpPage;
