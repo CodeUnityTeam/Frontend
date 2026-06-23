@@ -22,3 +22,9 @@ export type AccountProfileProps = {
   about?: string;
   experience?: ExperienceItem[];
 };
+
+export type SkillsFormData = {
+  skills: string[];
+  qualities: string[];
+  about: string;
+}

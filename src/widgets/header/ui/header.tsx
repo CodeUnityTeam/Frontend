@@ -9,11 +9,13 @@ import { useModal } from "@/shared/lib/hooks";
 import { useIsAuthed } from "@/shared/lib/auth";
 import { LoginModal } from "@/features/login-modal";
 import { ProfileMenu } from "./profile-menu";
+import { ResetPasswordModal } from "@/features/reset-password";
 import { openAuthRegister } from "@/widgets/registration/model/auth-modal-actions";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const loginModal = useModal();
+  const resetPasswordModal = useModal();
   const authed = useIsAuthed();
 
   useEffect(() => {
@@ -96,6 +98,18 @@ export function Header() {
         open={loginModal.open}
         onOpenChange={loginModal.setOpen}
         onOpenRegister={openAuthRegister}
+        onOpenResetPassword={() => {
+          loginModal.closeModal();
+          resetPasswordModal.openModal();
+        }}
+      />
+      <ResetPasswordModal
+        open={resetPasswordModal.open}
+        onClose={resetPasswordModal.closeModal}
+        onBack={() => {
+          resetPasswordModal.closeModal();
+          loginModal.openModal()
+        }}
       />
     </header>
   );

@@ -8,6 +8,7 @@ import { useFilters } from "../model/filters-context";
 import {
   DURATION_FROM_LABEL,
   DURATION_MAX,
+  DURATION_MIN,
   DURATION_TITLE,
   DURATION_TO_LABEL,
 } from "../model/filters-data";
@@ -43,12 +44,15 @@ export function DurationSlider() {
               {DURATION_FROM_LABEL}
             </span>
             <span className="rounded-lg bg-background px-3 py-1 text-base font-semibold text-muted-foreground">
-              {DURATION_TO_LABEL}
+              {duration >= DURATION_MAX
+                ? DURATION_TO_LABEL
+                : `до ${duration} дн.`}
             </span>
           </div>
           <Slider
             value={[duration]}
             onValueChange={(values) => setDuration(values[0])}
+            min={DURATION_MIN}
             max={DURATION_MAX}
             step={1}
             aria-label={DURATION_TITLE}
