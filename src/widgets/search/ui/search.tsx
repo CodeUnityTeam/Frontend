@@ -30,7 +30,7 @@ export function Search() {
   };
 
   return (
-    <div className="my-8.5 flex flex-col justify-start px-20 py-4 max-md:px-5">
+    <div className="my-8.5 flex flex-col justify-start py-4 max-md:px-5">
       <InputGroup
         className={isMobile ? "h-14 rounded-[28px]" : "h-18 rounded-[28px]"}
       >

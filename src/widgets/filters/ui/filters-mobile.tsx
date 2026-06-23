@@ -26,14 +26,12 @@ export function FiltersMobile({ className }: FiltersMobileProps) {
         <button
           type="button"
           className={cn(
-            "flex h-12 w-full items-center justify-between rounded-md border border-input bg-background px-4 text-base font-semibold text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            "flex items-center gap-2 text-base font-semibold text-foreground outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-ring",
             className,
           )}
         >
-          <span className="flex items-center gap-2">
-            <Icon icon="lucide:sliders-horizontal" className="size-5" />
-            Фильтры
-          </span>
+          <Icon icon="ph:funnel" className="size-6" />
+          Фильтры
           {selectedCount > 0 && (
             <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-primary px-1.5 text-sm font-semibold text-primary-foreground">
               {selectedCount}

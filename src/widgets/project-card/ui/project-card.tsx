@@ -3,8 +3,9 @@ import { useState, useCallback } from "react";
 
 import { useIsAuthed } from "@/shared/lib/auth";
 import { Button } from "@/shared/ui/button";
+import { Tag } from "@/shared/ui/tag";
 
-type TChatBotCard = {
+type ProjectCardProps = {
   title: string;
   description: string;
   tags: string[];
@@ -12,13 +13,13 @@ type TChatBotCard = {
   location: string;
 };
 
-export function ChatBotCard({
+export function ProjectCard({
   title,
   description,
   tags,
   date,
   location,
-}: TChatBotCard) {
+}: ProjectCardProps) {
   const isAuthed = useIsAuthed();
   const [isLike, setIsLike] = useState(false);
 
@@ -31,35 +32,33 @@ export function ChatBotCard({
   }, []);
 
   return (
-    <div className="flex h-full w-[273px] flex-col rounded-lg border border-border bg-card p-4">
-      <div className="flex justify-end">
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label="Добавить в избранное"
-          type="button"
-          onClick={handleLike}
-          aria-pressed={isLike}
-        >
-          <Icon icon="ph:heart-straight" className="text-xl" />
-        </Button>
-      </div>
+    <div className="flex h-full w-full flex-col rounded-lg border border-border p-4">
+      {isAuthed && (
+        <div className="mb-3 flex justify-end">
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Добавить в избранное"
+            type="button"
+            onClick={handleLike}
+            aria-pressed={isLike}
+          >
+            <Icon icon="ph:heart-straight" className="text-xl" />
+          </Button>
+        </div>
+      )}
 
-      <h2 className="leading-1.3 mt-3 text-[18px] font-semibold">{title}</h2>
+      <h2 className="leading-1.3 text-[18px] font-semibold">{title}</h2>
 
-      <p className="leading-1.4 mt-1 line-clamp-3 text-[14px] font-normal">
-        {description}
-      </p>
+      <p className="leading-1.4 mt-1 text-[14px] font-normal">{description}</p>
 
       <div className="mt-2 flex flex-wrap gap-1">
         {tags.map((tag) => (
-          <span
+          <Tag
             key={tag}
-            className="rounded-2xl px-3 py-1 text-[13px] font-normal"
-            style={{ backgroundColor: "var(--secondary-button)" }}
-          >
-            {tag}
-          </span>
+            label={tag}
+            className="rounded-2xl bg-(--secondary-button) text-[13px] font-normal"
+          />
         ))}
       </div>
 

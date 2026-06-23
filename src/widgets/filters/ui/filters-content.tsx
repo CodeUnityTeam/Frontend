@@ -2,22 +2,21 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/shared/lib/utils";
 
-import { filterSections } from "../model/filters-data";
 import { DurationSlider } from "./duration-slider";
-import { FilterSection } from "./filter-section";
+import { FormatFilterSection } from "./format-filter-section";
+import { PositionFilterSection } from "./position-filter-section";
+import { TagsFilterSection } from "./tags-filter-section";
 
 type FiltersContentProps = {
   className?: string;
 };
 
 export function FiltersContent({ className }: FiltersContentProps) {
-  const [format, position, tags] = filterSections;
-
   const blocks: { id: string; node: ReactNode }[] = [
-    { id: format.id, node: <FilterSection section={format} /> },
-    { id: position.id, node: <FilterSection section={position} /> },
+    { id: "format", node: <FormatFilterSection /> },
+    { id: "position", node: <PositionFilterSection /> },
     { id: "duration", node: <DurationSlider /> },
-    { id: tags.id, node: <FilterSection section={tags} /> },
+    { id: "tags", node: <TagsFilterSection /> },
   ];
 
   return (
