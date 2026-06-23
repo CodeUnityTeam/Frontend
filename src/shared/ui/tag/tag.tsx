@@ -8,6 +8,7 @@ type TagProps = {
   label?: string;
   variant?: TagVariant;
   className?: string;
+  onRemove?: (e: React.MouseEvent) => void;
 };
 
 export const Tag = ({
