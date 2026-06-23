@@ -39,7 +39,7 @@ function mapProject(dto: ProjectDto): Project {
     participantsCount: dto.participants_count,
     isLikedByMe: dto.is_liked_by_me,
     skills: dto.skills.map((skill) => ({
-      skillId: skill.skill_id,
+      skill_id: skill.skill_id,
       name: skill.name,
     })),
   };
