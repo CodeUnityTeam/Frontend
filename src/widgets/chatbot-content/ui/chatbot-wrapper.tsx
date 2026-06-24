@@ -1,10 +1,12 @@
 import { useState } from "react";
 
-import { useProjects } from "@/entities/project";
+import { useProjects, useRecommendations } from "@/entities/project";
+import type { Project } from "@/entities/project";
 import type { TChatbotWrapper } from "@/entities/review/model/types";
+import { useIsAuthed } from "@/shared/lib/auth";
 import { Button } from "@/shared/ui/button";
 import type { CarouselApi } from "@/shared/ui/carousel";
-import { ChatBotCard } from "@/widgets/project-card";
+import { ProjectCard } from "@/widgets/project-card";
 import { ChatbotTabs } from "./chatbot-tabs";
 import { ChatbotNavigate } from "./chatbot-navigate";
 import { ChatbotBtn } from "./chatbot-btn";
@@ -12,7 +14,7 @@ import { ChatbotRender } from "./chatbot-render";
 
 export type TTabId = "popular" | "recommended" | "profile";
 
-const POPULAR_PAGE_SIZE = 10;
+const CAROUSEL_PAGE_SIZE = 10;
 
 const TABS: { id: TTabId; label: string }[] = [
   { id: "popular", label: "Популярное" },
@@ -34,12 +36,12 @@ function formatDate(iso: string | null): string {
   return Number.isNaN(date.getTime()) ? "" : dateFormatter.format(date);
 }
 
-function PopularSkeleton() {
+function ProjectsSkeleton() {
   return (
     <div className="flex gap-4 overflow-hidden">
       {Array.from({ length: 4 }).map((_, index) => (
         <div
-          key={`popular-skeleton-${index}`}
+          key={`projects-skeleton-${index}`}
           className="h-[300px] w-[273px] shrink-0 animate-pulse rounded-[var(--radius-lg)] bg-muted"
         />
       ))}
@@ -47,7 +49,7 @@ function PopularSkeleton() {
   );
 }
 
-function PopularError({ onRetry }: { onRetry: () => void }) {
+function ProjectsError({ onRetry }: { onRetry: () => void }) {
   return (
     <div className="flex flex-col items-center gap-4 py-12 text-center">
       <p className="text-muted-foreground">
@@ -68,6 +70,51 @@ function ChatbotMessage({ text }: { text: string }) {
   );
 }
 
+type ProjectsCarouselProps = {
+  isPending: boolean;
+  isError: boolean;
+  refetch: () => void;
+  projects: Project[];
+  emptyText: string;
+  onApi: (api: CarouselApi) => void;
+};
+
+function ProjectsCarousel({
+  isPending,
+  isError,
+  refetch,
+  projects,
+  emptyText,
+  onApi,
+}: ProjectsCarouselProps) {
+  if (isPending) {
+    return <ProjectsSkeleton />;
+  }
+  if (isError) {
+    return <ProjectsError onRetry={refetch} />;
+  }
+  if (projects.length === 0) {
+    return <ChatbotMessage text={emptyText} />;
+  }
+
+  const items = projects.map((project) => ({
+    id: project.projectId,
+    card: (
+      <div className="w-[273px]">
+        <ProjectCard
+          title={project.title}
+          description={project.shortDesc}
+          tags={project.skills.map((skill) => skill.name)}
+          date={formatDate(project.publishedAt)}
+          location={project.location}
+        />
+      </div>
+    ),
+  }));
+
+  return <ChatbotRender items={items} api={onApi} />;
+}
+
 export function ChatbotWrapper({
   onTabChange,
   title,
@@ -76,10 +123,16 @@ export function ChatbotWrapper({
 }: TChatbotWrapper) {
   const [activeTab, setActiveTab] = useState<TTabId>("popular");
   const [api, setApi] = useState<CarouselApi>();
+  const isAuthed = useIsAuthed();
 
-  const { data, isPending, isError, refetch } = useProjects({
+  const popularQuery = useProjects({
     sortBy: "like",
-    pageSize: POPULAR_PAGE_SIZE,
+    pageSize: CAROUSEL_PAGE_SIZE,
+  });
+
+  const recommendationsQuery = useRecommendations({
+    limit: CAROUSEL_PAGE_SIZE,
+    enabled: isAuthed,
   });
 
   const handleTabChange = (tabId: string) => {
@@ -87,33 +140,41 @@ export function ChatbotWrapper({
     onTabChange?.(tabId);
   };
 
-  const renderPopular = () => {
-    if (isPending) {
-      return <PopularSkeleton />;
-    }
-    if (isError) {
-      return <PopularError onRetry={() => refetch()} />;
-    }
-
-    const projects = data.pages.flatMap((page) => page.items);
-    if (projects.length === 0) {
-      return <ChatbotMessage text="Пока нет проектов" />;
-    }
-
-    const items = projects.map((project) => ({
-      id: project.projectId,
-      card: (
-        <ChatBotCard
-          title={project.title}
-          description={project.shortDesc}
-          tags={project.skills.map((skill) => skill.name)}
-          date={formatDate(project.publishedAt)}
-          location={project.location}
+  const renderTab = () => {
+    if (activeTab === "popular") {
+      return (
+        <ProjectsCarousel
+          isPending={popularQuery.isPending}
+          isError={popularQuery.isError}
+          refetch={() => popularQuery.refetch()}
+          projects={
+            popularQuery.data?.pages.flatMap((page) => page.items) ?? []
+          }
+          emptyText="Пока нет проектов"
+          onApi={setApi}
         />
-      ),
-    }));
+      );
+    }
 
-    return <ChatbotRender items={items} api={setApi} />;
+    if (activeTab === "recommended") {
+      if (!isAuthed) {
+        return (
+          <ChatbotMessage text="Войдите, чтобы увидеть персональные рекомендации" />
+        );
+      }
+      return (
+        <ProjectsCarousel
+          isPending={recommendationsQuery.isPending}
+          isError={recommendationsQuery.isError}
+          refetch={() => recommendationsQuery.refetch()}
+          projects={recommendationsQuery.data?.items ?? []}
+          emptyText="Пока нет рекомендаций"
+          onApi={setApi}
+        />
+      );
+    }
+
+    return <ChatbotMessage text="Раздел скоро появится" />;
   };
 
   return (
@@ -131,11 +192,7 @@ export function ChatbotWrapper({
         />
       </div>
 
-      {activeTab === "popular" ? (
-        renderPopular()
-      ) : (
-        <ChatbotMessage text="Раздел скоро появится" />
-      )}
+      {renderTab()}
 
       <ChatbotBtn
         buttonTitle={title}
