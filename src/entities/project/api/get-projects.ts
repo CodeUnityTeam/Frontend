@@ -1,49 +1,12 @@
 import { apiClient } from "@/shared/api";
 import type {
   GetProjectsParams,
-  Project,
   ProjectsPage,
 } from "@/entities/project/model/types";
-
-interface ProjectSkillDto {
-  skill_id: string;
-  name: string;
-}
-
-interface ProjectDto {
-  project_id: string;
-  title: string;
-  short_desc: string;
-  location: string;
-  status_project: string;
-  published_at: string;
-  participants_count: number;
-  is_liked_by_me: boolean;
-  skills: ProjectSkillDto[];
-}
-
-interface ProjectsResponseDto {
-  items: ProjectDto[];
-  total: number;
-  has_more: boolean;
-}
-
-function mapProject(dto: ProjectDto): Project {
-  return {
-    projectId: dto.project_id,
-    title: dto.title,
-    shortDesc: dto.short_desc,
-    location: dto.location,
-    status: dto.status_project,
-    publishedAt: dto.published_at,
-    participantsCount: dto.participants_count,
-    isLikedByMe: dto.is_liked_by_me,
-    skills: dto.skills.map((skill) => ({
-      skill_id: skill.skill_id,
-      name: skill.name,
-    })),
-  };
-}
+import {
+  mapProject,
+  type ProjectsResponseDto,
+} from "@/entities/project/api/project-mapper";
 
 export async function getProjects(
   params: GetProjectsParams = {},
@@ -56,6 +19,7 @@ export async function getProjects(
     formatId,
     specId,
     duration,
+    favourites,
   } = params;
 
   const query: Record<string, string | number> = {
@@ -83,6 +47,9 @@ export async function getProjects(
     if (duration.max != null) {
       query.duration_max = duration.max;
     }
+  }
+  if (favourites) {
+    query.favourites = "true";
   }
 
   const { data } = await apiClient.get<ProjectsResponseDto>("/projects/", {
