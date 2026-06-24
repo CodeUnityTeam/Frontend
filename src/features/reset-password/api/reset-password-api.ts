@@ -1,8 +1,7 @@
 import { apiClient } from "@/shared/api";
 
 type ResetPasswordConfirmData = {
-  new_password1: string;
-  new_password2: string;
+  new_password: string;
   token: string;
   uid: string;
 };

@@ -52,7 +52,7 @@ export const router = createBrowserRouter([
         lazy: () => import("@/pages/register/ui/verify-email-page"),
       },
       {
-        path: "password-reset/confirm/:key",
+        path: "password-reset/confirm/:uid/:token",
         lazy: () =>
           import("@/pages/reset-password/reset-password-confirm-page"),
       },

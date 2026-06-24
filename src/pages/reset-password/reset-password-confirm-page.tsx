@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -25,17 +25,14 @@ import { toast } from "sonner";
 type PageStatus = "form" | "error";
 
 function ResetPasswordConfirmPage() {
-  const { key } = useParams();
-// TODO уточнить у бэка формат данных
-  const idx = (key ?? "").indexOf("-");
-  const uid = idx === -1 ? "" : key!.slice(0, idx);
-  const token = idx === -1 ? (key ?? "") : key!.slice(idx + 1);
-
   const [pageStatus, setPageStatus] = useState<PageStatus>("form");
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const { mutate, isPending } = useResetPasswordConfirm();
+  const navigate = useNavigate();
+
+  const { uid, token } = useParams();
+
   const {
     register,
     handleSubmit,
@@ -45,17 +42,24 @@ function ResetPasswordConfirmPage() {
     mode: "onTouched",
   });
 
+  if( !uid || !token) {
+    return
+  }
+
   const onSubmit = (values: ResetPasswordConfirmValues) => {
     mutate(
-      { uid, token, new_password1: values.password, new_password2: values.password },
+      { uid, token, new_password: values.new_password },
       {
-        onSuccess: (data) => toast.success(data.detail),
+        onSuccess: (data) => {
+          toast.success(data.detail);
+          navigate(ROUTES.HOME)
+        },
         onError: (error) => {
           setErrorMessage(
-            "Не удалось изменить пароль. Попробуйте запросить новую ссылку.",
+            "Попробуйте запросить новую ссылку или повторите попытку.",
           );
           setPageStatus("error");
-          toast.error(error.message)
+          toast.error(error.message);
         },
       },
     );
@@ -103,12 +107,12 @@ function ResetPasswordConfirmPage() {
         <h1 className="text-4xl font-semibold">Новый пароль</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
           <Input
-            {...register("password")}
+            {...register("new_password")}
             label="Введите новый пароль"
             placeholder="Пароль"
             type={showPassword ? "text" : "password"}
             className="h-14 rounded-lg"
-            error={errors.password?.message}
+            error={errors.new_password?.message}
             rightElement={
               <Button
                 type="button"
