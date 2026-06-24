@@ -28,6 +28,7 @@ function ResetPasswordConfirmPage() {
   const [pageStatus, setPageStatus] = useState<PageStatus>("form");
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { mutate, isPending } = useResetPasswordConfirm();
   const navigate = useNavigate();
 
@@ -119,10 +120,34 @@ function ResetPasswordConfirmPage() {
                 variant="ghost"
                 aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
                 onClick={() => setShowPassword((v) => !v)}
-                className="flex cursor-pointer text-gray transition-colors hover:text-foreground"
+                className="text-gray flex cursor-pointer transition-colors hover:text-foreground"
               >
                 <Icon
                   icon={showPassword ? "ph:eye-slash" : "ph:eye"}
+                  height={24}
+                />
+              </Button>
+            }
+          />
+          <Input
+            {...register("new_password_confirm")}
+            label="Повторите новый пароль"
+            placeholder="Пароль"
+            type={showConfirmPassword ? "text" : "password"}
+            className="h-14 rounded-lg"
+            error={errors.new_password_confirm?.message}
+            rightElement={
+              <Button
+                type="button"
+                variant="ghost"
+                aria-label={
+                  showConfirmPassword ? "Скрыть пароль" : "Показать пароль"
+                }
+                onClick={() => setShowConfirmPassword((v) => !v)}
+                className="text-gray flex cursor-pointer transition-colors hover:text-foreground"
+              >
+                <Icon
+                  icon={showConfirmPassword ? "ph:eye-slash" : "ph:eye"}
                   height={24}
                 />
               </Button>
