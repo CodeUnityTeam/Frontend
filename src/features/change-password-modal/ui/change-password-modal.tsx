@@ -51,7 +51,7 @@ export function ChangePasswordModal({
   };
 
   const onSubmit = (values: ChangePasswordFormValues) => {
-    mutate(values.newPassword, {
+    mutate(values, {
       onSuccess: (info) => {
         handleOpenChange(false);
         toast.success(info.detail)
@@ -87,10 +87,10 @@ export function ChangePasswordModal({
               placeholder="Введите пароль"
               type={showCurrentPassword ? "text" : "password"}
               className="h-14"
-              {...register("currentPassword")}
+              {...register("old_password")}
               error={
-                touchedFields.currentPassword || isSubmitted
-                  ? errors.currentPassword?.message
+                touchedFields.old_password || isSubmitted
+                  ? errors.old_password?.message
                   : undefined
               }
               rightElement={
@@ -115,10 +115,10 @@ export function ChangePasswordModal({
               placeholder="Введите новый пароль"
               type={showNewPassword ? "text" : "password"}
               className="h-14"
-              {...register("newPassword")}
+              {...register("new_password")}
               error={
-                touchedFields.newPassword || isSubmitted
-                  ? errors.newPassword?.message
+                touchedFields.new_password || isSubmitted
+                  ? errors.new_password?.message
                   : undefined
               }
               rightElement={
