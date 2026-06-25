@@ -20,16 +20,6 @@ export function SocialLogin() {
           <Icon name="yandex" size={32} />
         </Button>
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          aria-label="Войти через Почту"
-          onClick={() => alert("Раздел в разработке")}
-          className="p-0 transition-opacity hover:opacity-80 [&_svg]:size-8"
-        >
-          <Icon name="mail-ru" size={32} />
-        </Button>
       </div>
     </div>
   );

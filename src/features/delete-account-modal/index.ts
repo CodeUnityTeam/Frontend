@@ -1,0 +1,1 @@
+export {DeleteAccountModal} from "@/features/delete-account-modal/ui/delete-account-modal"

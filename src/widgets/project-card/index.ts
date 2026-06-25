@@ -1,1 +1,1 @@
-export { ChatBotCard } from "./ui/project-card";
+export { ProjectCard } from "./ui/project-card";

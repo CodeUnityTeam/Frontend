@@ -1,0 +1,1 @@
+export { ChangePasswordModal } from "@/features/change-password-modal/ui/change-password-modal"
