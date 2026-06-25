@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 
-import { getTagLabels, questionTags } from "@/entities/question";
 import type { QuestionTag } from "@/entities/question";
 import { cn } from "@/shared/lib/utils";
+import { useSkills } from "@/entities/question/api/use-skills";
 
 type TagsSelectProps = {
   selectedTags: QuestionTag[];
@@ -16,9 +16,14 @@ export function TagsSelect({
   onToggle,
   isSelected,
 }: TagsSelectProps) {
+  const { data: skills, isPending } = useSkills();
   const [open, setOpen] = useState(false);
 
-  const summary = getTagLabels(selectedTags).join(", ") || "Подберите теги";
+  const summary =
+    selectedTags
+      .map((id) => skills?.find((s) => s.skillId === id)?.name)
+      .filter(Boolean)
+      .join(", ") || "Подберите теги";
 
   return (
     <section className="flex flex-col gap-6">
@@ -42,20 +47,23 @@ export function TagsSelect({
 
       {open && (
         <div className="flex flex-wrap gap-2">
-          {questionTags.map((tag) => (
+          {isPending && (
+            <p className="animate-pulse p-4">Загрузка списка тегов...</p>
+          )}
+          {skills?.map((tag) => (
             <button
-              key={tag.value}
+              key={tag.skillId}
               type="button"
-              onClick={() => onToggle(tag.value)}
-              aria-pressed={isSelected(tag.value)}
+              onClick={() => onToggle(tag.skillId)}
+              aria-pressed={isSelected(tag.skillId)}
               className={cn(
                 "cursor-pointer rounded-full border px-4 py-2 text-base transition-colors",
-                isSelected(tag.value)
+                isSelected(tag.skillId)
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-input text-foreground hover:bg-secondary-hover",
               )}
             >
-              {tag.label}
+              {tag.name}
             </button>
           ))}
         </div>
