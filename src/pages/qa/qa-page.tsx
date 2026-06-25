@@ -14,7 +14,7 @@ const QAPage = () => {
   const [tab, setTab] = useState("new");
   return (
     <PageContainer className="py-8">
-      <Search />
+      <Search onSearch={() => console.log('Поиск по QA в разработке')}/>
       <div className="md:grid md:grid-cols-[217px_minmax(0,1fr)] lg:gap-[106px]">
         <h1 className="text-[26px] leading-[32px] font-bold mb-4 md:hidden">Q&A</h1>
         <aside>

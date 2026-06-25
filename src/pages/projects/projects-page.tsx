@@ -83,7 +83,7 @@ function ProjectsEmpty() {
   );
 }
 
-function ProjectsList() {
+function ProjectsList({search}:{search:string}) {
   const { sort, selected, duration } = useFilters();
 
   const durationParam: GetProjectsParams["duration"] =
@@ -103,6 +103,7 @@ function ProjectsList() {
     formatId: selected.format,
     specId: selected.position,
     duration: durationParam,
+    search
   });
 
   if (isPending) {
@@ -160,10 +161,11 @@ function ProjectsList() {
 
 function ProjectsPage() {
   const [tab, setTab] = useState("catalog");
+  const [search, setSearch] = useState("");
   return (
     <FiltersProvider>
       <PageContainer className="py-8">
-        <Search />
+        <Search onSearch={setSearch} />
 
         <div className="mb-6 flex items-center justify-between gap-4 md:hidden">
           <FiltersMobile />
@@ -175,7 +177,7 @@ function ProjectsPage() {
           <FiltersSidebar className="hidden md:block" />
           <div className="flex-1">
             <FilterTabs items={projectTabs} value={tab} onValueChange={setTab} />
-            <ProjectsCatalog catalog={<ProjectsList />} />
+            <ProjectsCatalog catalog={<ProjectsList search={search}/>} />
           </div>
         </div>
       </PageContainer>

@@ -43,6 +43,7 @@ export interface GetProjectsParams {
     min?: number;
     max?: number;
   };
+  search?: string;
 }
 
 export interface GetRecommendationsParams {
