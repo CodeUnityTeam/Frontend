@@ -50,7 +50,7 @@ export type PathParams = {
   };
   [ROUTES.RESET_PASSWORD_CONFIRM]: {
     uid: string;
-    key: string;
+    token: string;
   }
 };
 

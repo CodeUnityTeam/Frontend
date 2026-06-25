@@ -42,14 +42,6 @@ export const router = createBrowserRouter([
 
       { path: "register", lazy: () => import("@/pages/register/ui/register-page") },
       {
-        path: "register",
-        lazy: () => import("@/pages/register/ui/register-page"),
-      },
-      {
-        path: "register",
-        lazy: () => import("@/pages/register/ui/register-page"),
-      },
-      {
         path: "register/check-email",
         lazy: () => import("@/pages/register/ui/check-email-page"),
       },
