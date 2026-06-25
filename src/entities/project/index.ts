@@ -1,4 +1,8 @@
 export { useProjects } from "./api/use-projects";
+export { createProject } from "./api/create-project";
+export { updateProject } from "./api/update-project";
+export type { CreateProjectDto, ProjectStatus } from "./api/create-project";
+export type { UpdateProjectDto } from "./api/update-project";
 export { useRecommendations } from "./api/use-recommendations";
 export {
   type Project,
