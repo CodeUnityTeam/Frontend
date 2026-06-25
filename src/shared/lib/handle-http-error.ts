@@ -1,29 +1,51 @@
-// src/shared/lib/handle-http-error.ts
+import { AxiosError } from "axios";
 import { ROUTES } from "@/shared/model/routes";
 
-export function handleHttpError(error: unknown, navigate: (to: string, options?: { replace?: boolean }) => void): boolean {
-  // Проверяем, что error - объект с response
-  if (error && typeof error === 'object' && 'response' in error) {
-    const response = (error as any).response;
-    const status = response?.status;
+interface HandleErrorOptions {
+  navigate: (to: string, options?: { replace?: boolean }) => void;
+  openLoginModal?: () => void;
+}
+
+export function handleHttpError(
+  error: unknown,
+  options: HandleErrorOptions
+): boolean {
+  const { navigate, openLoginModal } = options;
+  
+  if (isAxiosError(error)) {
+    const status = error.response?.status;
     
     if (status === 401) {
       localStorage.removeItem("ku_access");
       localStorage.removeItem("ku_refresh");
-      navigate(ROUTES.LOGIN, { replace: true });
+      
+      if (openLoginModal) {
+        openLoginModal();
+      } else {
+        navigate(ROUTES.LOGIN, { replace: true });
+      }
       return true;
     }
     
     if (status === 403) {
-      navigate("/403", { replace: true });
+      navigate(ROUTES.FORBIDDEN, { replace: true });
       return true;
     }
     
     if (status === 500) {
-      navigate("/500", { replace: true });
+      navigate(ROUTES.SERVER_ERROR, { replace: true });
       return true;
     }
   }
   
   return false;
+}
+
+function isAxiosError(error: unknown): error is AxiosError {
+  return (
+    error !== null &&
+    typeof error === "object" &&
+    "isAxiosError" in error &&
+    (error as AxiosError).isAxiosError === true
+  );
 }

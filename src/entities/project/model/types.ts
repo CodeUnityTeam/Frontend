@@ -92,3 +92,11 @@ export interface ProjectDetails {
   participants: Participant[];
 }
 
+export type ProjectRole = "employer" | "worker";
+
+export interface UserProfile {
+  pk: string;
+  email: string;
+  role: string;
+  projects_relation: "employer" | "worker";
+}
