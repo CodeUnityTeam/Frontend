@@ -1,6 +1,4 @@
-import type { questionTags } from "./question-tags";
-
-export type QuestionTag = (typeof questionTags)[number]["value"];
+export type QuestionTag = string;
 
 export type Question = {
   id: string;
@@ -14,3 +12,8 @@ export type QuestionFormValues = {
   details: string;
   tags: QuestionTag[];
 };
+
+export interface Skill {
+  skillId: string;
+  name: string;
+}

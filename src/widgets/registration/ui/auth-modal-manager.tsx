@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useModal } from "@/shared/lib/hooks/use-modal";
 import RegistrationModal from "./registration-modal";
 import { LoginModal } from "@/features/login-modal";
+import { ResetPasswordModal } from "@/features/reset-password";
 import {
   type AuthAction,
   subscribeAuthModalActions,
@@ -16,25 +17,29 @@ export function AuthModalManager({
 }: AuthModalManagerProps) {
   const register = useModal(initialOpen);
   const login = useModal(false);
+  const resetPassword = useModal(false);
 
   useEffect(() => {
     const handler = (action: AuthAction) => {
       if (action === "openRegister") {
         login.closeModal();
+        resetPassword.closeModal();
         register.openModal();
       }
       if (action === "openLogin") {
         register.closeModal();
+        resetPassword.closeModal();
         login.openModal();
       }
       if (action === "closeAll") {
         register.closeModal();
         login.closeModal();
+        resetPassword.closeModal();
       }
     };
 
     return subscribeAuthModalActions(handler);
-  }, [register, login]);
+  }, [register, login, resetPassword]);
 
   const openLoginFromRegister = () => {
     register.closeModal();
@@ -44,6 +49,16 @@ export function AuthModalManager({
   const openRegisterFromLogin = () => {
     login.closeModal();
     register.openModal();
+  };
+
+  const openResetPasswordFromLogin = () => {
+    login.closeModal();
+    resetPassword.openModal();
+  };
+
+  const returnToLoginFromResetPassword = () => {
+    resetPassword.closeModal();
+    login.openModal();
   };
 
   return (
@@ -58,6 +73,13 @@ export function AuthModalManager({
         open={login.open}
         onOpenChange={(v: boolean) => login.setOpen(v)}
         onOpenRegister={openRegisterFromLogin}
+        onOpenResetPassword={openResetPasswordFromLogin}
+      />
+
+      <ResetPasswordModal
+        open={resetPassword.open}
+        onClose={resetPassword.closeModal}
+        onBack={returnToLoginFromResetPassword}
       />
     </>
   );

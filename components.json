@@ -15,6 +15,7 @@
     "components": "@/shared",
     "ui": "@/shared/ui",
     "lib": "@/shared/lib",
-    "hooks": "@/shared/hooks"
+    "hooks": "@/shared/hooks",
+    "entities": "@/entities" 
   }
 }

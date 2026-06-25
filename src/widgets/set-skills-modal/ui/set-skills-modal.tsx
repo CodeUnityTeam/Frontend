@@ -1,4 +1,3 @@
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Button } from "@/shared/ui/button";
 import {
   Dialog,
@@ -34,12 +33,10 @@ export function SetSkillsModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogOverlay />
       <DialogContent className="mx-auto p-4 pbs-12 md:max-w-[714px] md:p-8 md:pbs-16">
-        <VisuallyHidden>
-          <DialogTitle>Форма навыков</DialogTitle>
-          <DialogDescription>
-            Форма заполнения навыков, личных качеств и информации о себе
-          </DialogDescription>
-        </VisuallyHidden>
+        <DialogTitle className="sr-only">Форма навыков</DialogTitle>
+        <DialogDescription className="sr-only">
+          Форма заполнения навыков, личных качеств и информации о себе
+        </DialogDescription>
         <form onSubmit={onSubmit} className="flex flex-col gap-4 md:gap-6">
           <TagInput
             label="Навыки и инструменты"

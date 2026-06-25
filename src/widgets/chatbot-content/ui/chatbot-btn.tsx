@@ -18,7 +18,7 @@ export function ChatbotBtn({
       <Button
         type="button"
         onClick={onButtonClick}
-        className="mt-6 rounded-[var(--radius-lg)] px-[136px] py-4 text-[18px] font-semibold"
+        className="mt-6 w-full rounded-[var(--radius-lg)] py-4 text-[18px] font-semibold md:w-auto md:px-[136px]"
       >
         {buttonText}
       </Button>

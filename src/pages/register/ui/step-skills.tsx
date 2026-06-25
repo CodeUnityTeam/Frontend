@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 
 import { Button } from "@/shared/ui/button";
-import { registerTag as RegisterTag } from "@/shared/ui/tag";
+import { Tag } from "@/shared/ui/tag";
 import { SKILLS_SUGGESTIONS } from "../model/skills";
 import type { RegisterFormData } from "../model/use-register-form";
 
@@ -95,7 +95,7 @@ export function OnboardingStep2({ data, onNext, onBack, onPatch }: StepSkillsPro
           >
             {/* Existing tags */}
             {skills.map((skill) => (
-              <RegisterTag
+              <Tag
                 key={skill}
                 label={skill}
                 onRemove={(e) => {

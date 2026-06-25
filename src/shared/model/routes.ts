@@ -11,6 +11,7 @@ export const ROUTES = {
   HOME: "/",
   NOT_FOUND: "/404",
   FORBIDDEN: "/403",
+  ERROR_500: "/500",
   REGISTER: "/register",
   REGISTER_CHECK_EMAIL: "/register/check-email",
   REGISTER_VERIFY_EMAIL: "/register/verify-email/:key",

@@ -1,5 +1,5 @@
-export interface ProjectSkill {
-  skillId: string;
+export interface Skill {
+  skill_id: string;
   name: string;
 }
 
@@ -12,13 +12,23 @@ export interface Project {
   publishedAt: string;
   participantsCount: number;
   isLikedByMe: boolean;
-  skills: ProjectSkill[];
+  skills: Skill[];
 }
 
 export interface ProjectsPage {
   items: Project[];
   total: number;
   hasMore: boolean;
+}
+
+export interface Specialization {
+  spec_id: string;
+  name: string;
+}
+
+export interface ProjectFormat {
+  format_id: string;
+  name: string;
 }
 
 export interface GetProjectsParams {
@@ -34,3 +44,51 @@ export interface GetProjectsParams {
     max?: number;
   };
 }
+
+export interface Author {
+  user_id: string;
+  username: string;
+  email: string;
+  first_name: string;
+  last_name?: string;
+  avatar?: string;
+  phone?: string;
+  last_activity_at?: string | null;
+}
+
+export interface Participant {
+  participant_id: string;
+  user: {
+    user_id: string;
+    username: string;
+    email: string;
+    first_name: string;
+    last_name?: string;
+    avatar?: string;
+    phone?: string;
+  };
+  role: 'author' | 'member';
+}
+
+
+export interface ProjectDetails {
+  project_id: string;
+  title: string;
+  short_desc: string;
+  full_desc: string;
+  location: string;
+  status_project: 'draft' | 'published' | 'recruiting_closed' | 'archived' | 'blocked';
+  published_at: string;
+  start_date: string;
+  end_date: string;
+  participants_count: number;
+  is_liked_by_me: boolean;
+  is_applied: boolean;
+  likes_count: number;
+  skills: Skill[];
+  specializations: Specialization[];
+  project_format: ProjectFormat[];
+  author: Author;
+  participants: Participant[];
+}
+
