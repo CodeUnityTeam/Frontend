@@ -310,16 +310,16 @@ export function ProjectModal({
 
             <Field className="gap-2">
               <FieldLabel>Формат</FieldLabel>
-              <div className="flex flex-wrap gap-4">
-                {formats.map((f) => (
-                  <label
-                    key={f.id}
-                    className="flex cursor-pointer items-center gap-2"
-                  >
-                    <Controller
-                      control={control}
-                      name="formatId"
-                      render={({ field }) => (
+              <Controller
+                control={control}
+                name="formatId"
+                render={({ field }) => (
+                  <div className="flex flex-wrap gap-4">
+                    {formats.map((f) => (
+                      <label
+                        key={f.id}
+                        className="flex cursor-pointer items-center gap-2"
+                      >
                         <input
                           type="radio"
                           className="accent-primary"
@@ -327,12 +327,12 @@ export function ProjectModal({
                           checked={field.value === f.id}
                           onChange={() => field.onChange(f.id)}
                         />
-                      )}
-                    />
-                    <span className="text-sm">{f.name}</span>
-                  </label>
-                ))}
-              </div>
+                        <span className="text-sm">{f.name}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              />
               {errors.formatId && (
                 <FieldError>{errors.formatId.message}</FieldError>
               )}
