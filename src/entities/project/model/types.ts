@@ -45,6 +45,11 @@ export interface GetProjectsParams {
   };
 }
 
+export interface GetRecommendationsParams {
+  page?: number;
+  limit?: number;
+}
+
 export interface Author {
   user_id: string;
   username: string;
