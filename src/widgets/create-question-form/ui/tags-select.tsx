@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Icon } from "@iconify/react";
 
 import { cn } from "@/shared/lib/utils";
-import { questionTags } from "../model/question-tags";
+import { useSkills } from "@/entities/question/api/use-skills";
 
 type TagsSelectProps = {
   onToggle: (value: string) => void;
@@ -12,6 +12,7 @@ type TagsSelectProps = {
 
 export function TagsSelect({ onToggle, isSelected }: TagsSelectProps) {
   const [open, setOpen] = useState(false);
+  const { data: skills, isPending } = useSkills();
 
   return (
     <section className="flex flex-col gap-6">
@@ -35,20 +36,23 @@ export function TagsSelect({ onToggle, isSelected }: TagsSelectProps) {
 
       {open && (
         <div className="flex flex-wrap gap-2">
-          {questionTags.map((tag) => (
+          {isPending && (
+            <p className="animate-pulse p-4">Загрузка списка тегов...</p>
+          )}
+          {skills?.map((tag) => (
             <button
-              key={tag.value}
+              key={tag.skillId}
               type="button"
-              onClick={() => onToggle(tag.value)}
-              aria-pressed={isSelected(tag.value)}
+              onClick={() => onToggle(tag.skillId)}
+              aria-pressed={isSelected(tag.skillId)}
               className={cn(
                 "cursor-pointer rounded-full border px-4 py-2 text-base transition-colors",
-                isSelected(tag.value)
+                isSelected(tag.skillId)
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-input text-foreground hover:bg-secondary-hover",
               )}
             >
-              {tag.label}
+              {tag.name}
             </button>
           ))}
         </div>

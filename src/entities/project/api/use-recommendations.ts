@@ -5,8 +5,7 @@ import type { GetRecommendationsParams } from "@/entities/project/model/types";
 
 const DEFAULT_LIMIT = 20;
 
-export const RECOMMENDATIONS_QUERY_KEY =
-  "entities/project/recommendations" as const;
+const RECOMMENDATIONS_QUERY_KEY = "entities/project/recommendations" as const;
 
 interface UseRecommendationsOptions extends GetRecommendationsParams {
   enabled?: boolean;

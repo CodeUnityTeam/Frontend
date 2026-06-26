@@ -1,6 +1,8 @@
+import { Icon } from "@iconify/react";
 import { useState, type ReactNode } from "react";
 
 import { employmentRole } from "@/shared/config/mock-config";
+import { Button } from "@/shared/ui/button";
 
 type Tab = "catalog" | "favorites" | "responses" | "my";
 
@@ -22,9 +24,11 @@ type ProjectsCatalogProps = {
 export function ProjectsCatalog({ catalog }: ProjectsCatalogProps) {
   const [activeTab, setActiveTab] = useState<Tab>("catalog");
 
+  const handleCreateProject = () => {};
+
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap gap-4 border-b border-border">
+      <div className="flex flex-wrap items-center gap-4">
         {TABS.map((tab) => (
           <button
             key={tab.id}
@@ -39,6 +43,17 @@ export function ProjectsCatalog({ catalog }: ProjectsCatalogProps) {
             {tab.label}
           </button>
         ))}
+
+        {activeTab === "my" && (
+          <Button
+            variant="ghost"
+            onClick={handleCreateProject}
+            className="ml-auto hidden h-auto p-0 pb-2 text-[18px] font-semibold md:flex"
+          >
+            Создать проект
+            <Icon icon="ph:plus-circle" />
+          </Button>
+        )}
       </div>
 
       {activeTab === "catalog" && catalog}

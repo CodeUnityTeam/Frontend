@@ -57,6 +57,11 @@ export interface GetRecommendationsParams {
   limit?: number;
 }
 
+export interface GetRecommendationsParams {
+  page?: number;
+  limit?: number;
+}
+
 export interface Author {
   user_id: string;
   username: string;
@@ -106,4 +111,13 @@ export interface ProjectDetails {
   project_format: ProjectFormat[];
   author: Author;
   participants: Participant[];
+}
+
+export type ProjectRole = "employer" | "worker";
+
+export interface UserProfile {
+  pk: string;
+  email: string;
+  role: string;
+  projects_relation: "employer" | "worker";
 }
