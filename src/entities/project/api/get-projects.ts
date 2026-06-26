@@ -19,6 +19,7 @@ export async function getProjects(
     formatId,
     specId,
     duration,
+    favourites,
   } = params;
 
   const query: Record<string, string | number> = {
@@ -46,6 +47,9 @@ export async function getProjects(
     if (duration.max != null) {
       query.duration_max = duration.max;
     }
+  }
+  if (favourites) {
+    query.favourites = "true";
   }
 
   const { data } = await apiClient.get<ProjectsResponseDto>("/projects/", {

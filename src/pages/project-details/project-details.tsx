@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import { Icon } from "@iconify/react";
 import { useProject } from "./hooks";
+import { useLikeProject } from "@/entities/project";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar/avatar";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent } from "@/shared/ui/card/card";
@@ -11,10 +12,18 @@ function ProjectDetails() {
   const navigate = useNavigate();
 
   const { data: project } = useProject();
+  const { mutate: toggleLike } = useLikeProject();
 
   if (!project) {
     return null;
   }
+
+  const handleLike = () => {
+    toggleLike({
+      projectId: project.project_id,
+      liked: !project.is_liked_by_me,
+    });
+  };
 
   return (
     <PageContainer className="py-4">
@@ -109,9 +118,21 @@ function ProjectDetails() {
                 <span>Дата начала: {project.start_date}</span>
               </div>
 
-              <Button variant="ghost" size="icon">
+              <Button
+                variant="ghost"
+                size="icon"
+                type="button"
+                aria-label={
+                  project.is_liked_by_me
+                    ? "Убрать из избранного"
+                    : "Добавить в избранное"
+                }
+                aria-pressed={project.is_liked_by_me}
+                onClick={handleLike}
+              >
                 <Icon
                   icon={project.is_liked_by_me ? "ph:heart-fill" : "ph:heart"}
+                  className={project.is_liked_by_me ? "text-primary" : undefined}
                 />
               </Button>
             </div>

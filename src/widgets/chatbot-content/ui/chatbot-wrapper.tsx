@@ -102,11 +102,13 @@ function ProjectsCarousel({
     card: (
       <div className="w-[273px]">
         <ProjectCard
+          projectId={project.projectId}
           title={project.title}
           description={project.shortDesc}
           tags={project.skills.map((skill) => skill.name)}
           date={formatDate(project.publishedAt)}
           location={project.location}
+          isLikedByMe={project.isLikedByMe}
         />
       </div>
     ),
