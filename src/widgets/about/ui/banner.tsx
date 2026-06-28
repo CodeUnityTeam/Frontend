@@ -1,5 +1,6 @@
 import { isAuth } from "@/shared/config/mock-config";
 import { Button } from "@/shared/ui/button";
+import { openAuthRegister } from "@/widgets/registration/model/auth-modal-actions";
 
 export function Banner() {
   return (
@@ -31,7 +32,7 @@ export function Banner() {
           </div>
         </div>
         {!isAuth ? (
-          <Button onClick={() => alert("В разработке")} size="lg" className="mbs-10 w-full px-10 md:mbs-16 md:w-auto">
+          <Button onClick={openAuthRegister} size="lg" className="mbs-10 w-full px-10 md:mbs-16 md:w-auto">
             Зарегистрироваться
           </Button>
         ) : null}

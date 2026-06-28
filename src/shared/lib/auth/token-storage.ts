@@ -45,6 +45,8 @@ export function setTokens({ access, refresh }: TokenPair): void {
   } catch {
     // localStorage может быть недоступен (приватный режим)
   }
+
+  notifyAuthChanged();
 }
 
 export function setAccessToken(access: string): void {
@@ -53,6 +55,8 @@ export function setAccessToken(access: string): void {
   } catch {
     // localStorage недоступен (приватный режим)
   }
+
+  notifyAuthChanged();
 }
 
 export function clearTokens(): void {

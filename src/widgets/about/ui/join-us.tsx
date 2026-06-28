@@ -1,9 +1,6 @@
 import { isAuth } from "@/shared/config/mock-config";
 import { Button } from "@/shared/ui/button";
-
-function handleRegisterClick() {
-  alert("В разработке");
-}
+import { openAuthRegister } from "@/widgets/registration/model/auth-modal-actions";
 
 export function JoinUs() {
   if (isAuth !== false) {
@@ -19,7 +16,7 @@ export function JoinUs() {
           Зарегистрируйся и начни строить свою IT‑карьеру уже сегодня.
         </p>
         <Button
-          onClick={handleRegisterClick}
+          onClick={openAuthRegister}
           size="lg"
           className="mbs-8 w-full px-10 md:mbs-9 md:w-auto"
         >
