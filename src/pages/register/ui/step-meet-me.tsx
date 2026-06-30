@@ -3,7 +3,6 @@ import { useRef, useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-// Checkbox removed: replaced by radio group
 import type { RegisterFormData } from "../model/use-register-form";
 import { COUNTRY_MAP } from "../model/country-map";
 import pictureSvg from "@/shared/assets/icons/picture.svg";
@@ -17,7 +16,6 @@ interface StepMeetMeProps {
 interface FormErrors {
   name?: string;
   surname?: string;
-  email?: string;
 }
 
 export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
@@ -28,7 +26,6 @@ export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
   const [photoPreview, setPhotoPreview] = useState<string | null>(
     data.photo ? URL.createObjectURL(data.photo) : null,
   );
-  const [email, setEmail] = useState<string>(data.email ?? "");
   const [employmentRole, setEmploymentRole] = useState<"worker" | "employer">(
     (data.employmentRole as "worker" | "employer") ?? "worker",
   );
@@ -53,7 +50,7 @@ export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
       if (prev) URL.revokeObjectURL(prev);
       return next;
     });
-    // persist photo immediately
+
     onPatch?.({ photo: file });
   };
 
@@ -61,9 +58,6 @@ export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
     const next: FormErrors = {};
     if (!name.trim()) next.name = "Имя обязательно для заполнения";
     if (!surname.trim()) next.surname = "Фамилия обязательна для заполнения";
-    const emailTrim = email.trim();
-    if (!emailTrim) next.email = "Email обязателен для заполнения";
-    else if (!emailTrim.includes("@")) next.email = "Email должен содержать символ @";
     setErrors(next);
     return Object.keys(next).length === 0;
   };
@@ -76,7 +70,6 @@ export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
       surname: surname.trim(),
       position: position.trim(),
       photo,
-      email: email.trim(),
       employmentRole,
       format,
       country,
@@ -86,270 +79,248 @@ export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>
-      <div className="max-w-3xl mx-auto w-full">
-        {/* Intro card (outlined white) */}
-        <div className="mx-auto border border-border bg-background rounded-[18px] px-6 py-5 sm:px-12 sm:py-6">
-          <h1 className="text-3xl sm:text-2xl font-semibold pl-12 sm:pl-16">Познакомимся</h1>
-          <p className="mt-2 text-muted-foreground pl-12 sm:pl-16">Это ваш первый шаг к новым проектам и возможностям.</p>
+      <div className="mx-auto w-full max-w-3xl">
+        {}
+        <div className="mx-auto rounded-[20px] border border-border bg-background px-6 py-5 sm:px-12 sm:py-6">
+          <h1 className="text-3xl font-semibold sm:text-2xl">Познакомимся</h1>
+          <p className="mt-2 text-muted-foreground">
+            Это ваш первый шаг к новым проектам и возможностям
+          </p>
         </div>
 
-        {/* Avatar + form fields */}
-        <div className="mt-8">
-          <div className="flex flex-col sm:flex-row gap-6 items-start">
-            <div className="shrink-0 flex flex-col items-center sm:items-start gap-3 w-full sm:w-44">
-              <div className="relative">
-                <Avatar
-                  className="text-2xl cursor-pointer hover:shadow-sm transition-shadow w-52.5 h-52.5 sm:w-33.5 sm:h-33.5"
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => fileInputRef.current?.click()}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click();
-                  }}
-                  aria-label="Загрузить фото"
-                >
-                  {photoPreview ? (
-                    <AvatarImage src={photoPreview} alt="Аватар" />
-                  ) : (
-                    <AvatarFallback className="bg-[#DDE1E6]">
-                      {(() => {
-                        const a = name?.[0] ?? "";
-                        const b = surname?.[0] ?? "";
-                        const initials = (a + b).toUpperCase();
-                        if (initials) return initials;
-                        return (
-                          <img
-                            src={pictureSvg}
-                            alt="placeholder"
-                            className="w-full h-full object-contain"
-                            aria-hidden
-                          />
-                        );
-                      })()}
-                    </AvatarFallback>
-                  )}
-                </Avatar>
-              </div>
-              <div className="flex flex-col items-center sm:items-start gap-2">
-                <div className="text-sm text-muted-foreground">Загрузите фото (JPG, PNG, WEBP)</div>
+        {}
+        <div className="mt-8 flex flex-col items-start gap-6 sm:flex-row">
+          <div className="shrink-0 self-center sm:self-start">
+            <Avatar
+              className="h-52.5 w-52.5 cursor-pointer text-2xl transition-shadow hover:shadow-sm sm:h-33.5 sm:w-33.5"
+              role="button"
+              tabIndex={0}
+              onClick={() => fileInputRef.current?.click()}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ")
+                  fileInputRef.current?.click();
+              }}
+              aria-label="Загрузить фото"
+            >
+              {photoPreview ? (
+                <AvatarImage src={photoPreview} alt="Аватар" />
+              ) : (
+                <AvatarFallback className="bg-[#DDE1E6]">
+                  {(() => {
+                    const a = name?.[0] ?? "";
+                    const b = surname?.[0] ?? "";
+                    const initials = (a + b).toUpperCase();
+                    if (initials) return initials;
+                    return (
+                      <img
+                        src={pictureSvg}
+                        alt="placeholder"
+                        className="h-full w-full object-contain"
+                        aria-hidden
+                      />
+                    );
+                  })()}
+                </AvatarFallback>
+              )}
+            </Avatar>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={handlePhotoChange}
+            />
+          </div>
+
+          <div className="grid w-full flex-1 grid-cols-1 gap-4 sm:grid-cols-2">
+            <Input
+              placeholder="Имя"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (errors.name)
+                  setErrors((prev) => ({ ...prev, name: undefined }));
+                onPatch?.({ name: e.target.value });
+              }}
+              error={errors.name}
+              autoFocus
+              className="h-14 rounded-[16px]"
+            />
+
+            <Input
+              placeholder="Фамилия"
+              value={surname}
+              onChange={(e) => {
+                setSurname(e.target.value);
+                if (errors.surname)
+                  setErrors((prev) => ({ ...prev, surname: undefined }));
+                onPatch?.({ surname: e.target.value });
+              }}
+              error={errors.surname}
+              className="h-14 rounded-[16px]"
+            />
+
+            <div className="sm:col-span-2">
+              <Input
+                placeholder="Занимаемая должность"
+                value={position}
+                onChange={(e) => {
+                  setposition(e.target.value);
+                  onPatch?.({ position: e.target.value });
+                }}
+                className="h-14 rounded-[16px]"
+              />
+            </div>
+          </div>
+        </div>
+
+        {}
+        <div className="mt-6 flex flex-col gap-6">
+          <div className="flex flex-col gap-3">
+            <span className="text-[20px] font-semibold text-foreground">
+              Роль
+            </span>
+            <div className="flex flex-wrap items-center gap-4">
+              <label className="inline-flex cursor-pointer items-center gap-2">
                 <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  className="hidden"
-                  onChange={handlePhotoChange}
+                  type="radio"
+                  name="employmentRole"
+                  value="worker"
+                  checked={employmentRole === "worker"}
+                  onChange={() => {
+                    setEmploymentRole("worker");
+                    onPatch?.({ employmentRole: "worker" });
+                  }}
+                  className="h-5 w-5 shrink-0 cursor-pointer accent-primary"
                 />
-              </div>
-            </div>
+                <span className="text-base text-foreground">Сотрудник</span>
+              </label>
 
-            <div className="flex-1 w-full">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <Input
-                    label="Имя"
-                    placeholder="Имя"
-                    value={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                      if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }));
-                      onPatch?.({ name: e.target.value });
-                    }}
-                    error={errors.name}
-                    autoFocus
-                    className="h-14 rounded-[14px]"
-                  />
-                </div>
-
-                <div>
-                  <Input
-                    label="Фамилия"
-                    placeholder="Фамилия"
-                    value={surname}
-                    onChange={(e) => {
-                      setSurname(e.target.value);
-                      if (errors.surname)
-                        setErrors((prev) => ({ ...prev, surname: undefined }));
-                      onPatch?.({ surname: e.target.value });
-                    }}
-                    error={errors.surname}
-                    className="h-14 rounded-[14px]"
-                  />
-                </div>
-
-                <div className="sm:col-span-2">
-                  <Input
-                    label="Должность"
-                    placeholder="Занимаемая должность"
-                    value={position}
-                    onChange={(e) => {
-                      setposition(e.target.value);
-                      onPatch?.({ position: e.target.value });
-                    }}
-                    className="h-14 rounded-[14px]"
-                  />
-                </div>
-
-                <div className="sm:col-span-2">
-                  <Input
-                    label="Email"
-                    placeholder="your@email.com"
-                    type="email"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
-                      onPatch?.({ email: e.target.value });
-                    }}
-                    error={errors.email}
-                    className="h-14 rounded-[14px]"
-                  />
-                </div>
-
-                <div className="sm:col-span-2">
-                  <div className="mb-2 text-sm font-medium">Я хочу</div>
-                  <div className="flex items-center gap-4">
-                    <label
-                      className={`inline-flex items-center gap-2 cursor-pointer rounded-md px-2 py-2 flex-1 min-w-0 ${
-                        employmentRole === "worker" ? "ring-2 ring-primary" : ""
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="employmentRole"
-                        value="worker"
-                        checked={employmentRole === "worker"}
-                        onChange={() => {
-                          setEmploymentRole("worker");
-                          onPatch?.({ employmentRole: "worker" });
-                        }}
-                        className="h-4 w-4 align-middle shrink-0"
-                      />
-                      <span className="text-sm sm:text-base font-medium tracking-tight leading-none truncate">Найти работу</span>
-                    </label>
-
-                    <label
-                      className={`inline-flex items-center gap-2 cursor-pointer rounded-md px-2 py-2 flex-1 min-w-0 ${
-                        employmentRole === "employer" ? "ring-2 ring-primary" : ""
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="employmentRole"
-                        value="employer"
-                        checked={employmentRole === "employer"}
-                        onChange={() => {
-                          setEmploymentRole("employer");
-                          onPatch?.({ employmentRole: "employer" });
-                        }}
-                        className="h-4 w-4 align-middle shrink-0"
-                      />
-                      <span className="text-sm sm:text-base font-medium tracking-tight leading-none truncate">Найти сотрудников</span>
-                    </label>
-                  </div>
-                </div>
-
-                <div className="sm:col-span-2">
-                  <div className="mb-2 text-sm font-medium">Формат</div>
-                  <div className="flex items-center gap-4">
-                    <label className="inline-flex items-center gap-2 cursor-pointer rounded-md px-2 py-2 flex-1 min-w-0">
-                      <input
-                        type="radio"
-                        name="format"
-                        value="remote"
-                        checked={format === "remote"}
-                        onChange={() => {
-                          setFormat("remote");
-                          onPatch?.({ format: "remote" });
-                        }}
-                        className="h-4 w-4 align-middle shrink-0"
-                      />
-                      <span className="text-sm sm:text-base font-medium tracking-tight leading-none truncate">Удалённо</span>
-                    </label>
-
-                    <label className="inline-flex items-center gap-2 cursor-pointer rounded-md px-2 py-2 flex-1 min-w-0">
-                      <input
-                        type="radio"
-                        name="format"
-                        value="hybrid"
-                        checked={format === "hybrid"}
-                        onChange={() => {
-                          setFormat("hybrid");
-                          onPatch?.({ format: "hybrid" });
-                        }}
-                        className="h-4 w-4 align-middle shrink-0"
-                      />
-                      <span className="text-sm sm:text-base font-medium tracking-tight leading-none truncate">Гибрид</span>
-                    </label>
-
-                    <label className="inline-flex items-center gap-2 cursor-pointer rounded-md px-2 py-2 flex-1 min-w-0">
-                      <input
-                        type="radio"
-                        name="format"
-                        value="office"
-                        checked={format === "office"}
-                        onChange={() => {
-                          setFormat("office");
-                          onPatch?.({ format: "office" });
-                        }}
-                        className="h-4 w-4 align-middle shrink-0"
-                      />
-                      <span className="text-sm sm:text-base font-medium tracking-tight leading-none truncate">В офисе</span>
-                    </label>
-                  </div>
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="text-sm font-medium mb-1 block">Страна</label>
-                  <select
-                    value={country}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setCountry(val);
-                      // reset city when country changes
-                      const nextCities = COUNTRY_MAP[val] ?? [];
-                      const nextCity = nextCities[0] ?? "";
-                      setCity(nextCity);
-                      onPatch?.({ country: val, city: nextCity });
-                    }}
-                    className="w-full rounded-[14px] border border-border px-4 py-3 bg-background text-foreground h-14"
-                  >
-                    <option value="">Выберите страну</option>
-                    {Object.keys(COUNTRY_MAP).map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="text-sm font-medium mb-1 block">Город</label>
-                  <select
-                    value={city}
-                    onChange={(e) => {
-                      setCity(e.target.value);
-                      onPatch?.({ city: e.target.value });
-                    }}
-                    disabled={!country}
-                    className="w-full rounded-[14px] border border-border px-4 py-3 bg-background text-foreground h-14"
-                  >
-                    <option value="">Выберите город</option>
-                    {(COUNTRY_MAP[country] ?? []).map((ct) => (
-                      <option key={ct} value={ct}>
-                        {ct}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
+              <label className="inline-flex cursor-pointer items-center gap-2">
+                <input
+                  type="radio"
+                  name="employmentRole"
+                  value="employer"
+                  checked={employmentRole === "employer"}
+                  onChange={() => {
+                    setEmploymentRole("employer");
+                    onPatch?.({ employmentRole: "employer" });
+                  }}
+                  className="h-5 w-5 shrink-0 cursor-pointer accent-primary"
+                />
+                <span className="text-base text-foreground">Работодатель</span>
+              </label>
             </div>
           </div>
 
-          <div className="mt-6 flex justify-stretch sm:justify-end">
-            <Button type="submit" size="lg" className="w-full sm:w-auto">
-              Следующий шаг
-            </Button>
+          <div className="flex flex-col gap-1">
+            <label className="text-[20px] font-semibold text-foreground">
+              Страна
+            </label>
+            <select
+              value={country}
+              onChange={(e) => {
+                const val = e.target.value;
+                setCountry(val);
+
+                const nextCities = COUNTRY_MAP[val] ?? [];
+                const nextCity = nextCities[0] ?? "";
+                setCity(nextCity);
+                onPatch?.({ country: val, city: nextCity });
+              }}
+              className={`h-14 w-full rounded-[16px] border border-input bg-background px-4 py-3 ${
+                country ? "text-foreground" : "text-muted-foreground"
+              }`}
+            >
+              <option value="">Страна проживания</option>
+              {Object.keys(COUNTRY_MAP).map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
           </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-[20px] font-semibold text-foreground">
+              Город
+            </label>
+            <select
+              value={city}
+              onChange={(e) => {
+                setCity(e.target.value);
+                onPatch?.({ city: e.target.value });
+              }}
+              className={`h-14 w-full rounded-[16px] border border-input bg-background px-4 py-3 ${
+                city ? "text-foreground" : "text-muted-foreground"
+              }`}
+            >
+              <option value="">Город проживания</option>
+              {(COUNTRY_MAP[country] ?? []).map((ct) => (
+                <option key={ct} value={ct}>
+                  {ct}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <span className="text-[20px] font-semibold text-foreground">
+              Формат
+            </span>
+            <div className="flex flex-wrap items-center gap-4">
+              <label className="inline-flex cursor-pointer items-center gap-2">
+                <input
+                  type="radio"
+                  name="format"
+                  value="remote"
+                  checked={format === "remote"}
+                  onChange={() => {
+                    setFormat("remote");
+                    onPatch?.({ format: "remote" });
+                  }}
+                  className="h-5 w-5 shrink-0 cursor-pointer accent-primary"
+                />
+                <span className="text-base text-foreground">Удалённо</span>
+              </label>
+
+              <label className="inline-flex cursor-pointer items-center gap-2">
+                <input
+                  type="radio"
+                  name="format"
+                  value="hybrid"
+                  checked={format === "hybrid"}
+                  onChange={() => {
+                    setFormat("hybrid");
+                    onPatch?.({ format: "hybrid" });
+                  }}
+                  className="h-5 w-5 shrink-0 cursor-pointer accent-primary"
+                />
+                <span className="text-base text-foreground">Гибрид</span>
+              </label>
+
+              <label className="inline-flex cursor-pointer items-center gap-2">
+                <input
+                  type="radio"
+                  name="format"
+                  value="office"
+                  checked={format === "office"}
+                  onChange={() => {
+                    setFormat("office");
+                    onPatch?.({ format: "office" });
+                  }}
+                  className="h-5 w-5 shrink-0 cursor-pointer accent-primary"
+                />
+                <span className="text-base text-foreground">В офисе</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 flex justify-stretch sm:justify-end">
+          <Button type="submit" size="lg" className="w-full sm:w-auto">
+            Следующий шаг
+          </Button>
         </div>
       </div>
     </form>

@@ -4,11 +4,14 @@ import { Footer } from "@/widgets/footer";
 import { Providers } from "./providers";
 import AuthModalManager from "@/widgets/registration/ui/auth-modal-manager";
 import { Suspense, useEffect } from "react";
+import { useIsAuthed } from "@/shared/lib/auth";
 import { useAuthModalStore } from "@/shared/store/auth-modal-store";
 import { LoginModal } from "@/features/login-modal/ui/login-modal";
+import { openAuthRegister } from "@/widgets/registration/model/auth-modal-actions";
 
 export function App() {
   const { isOpen, closeModal, openModal, redirectPath, clearRedirectPath } = useAuthModalStore();
+  const isAuthed = useIsAuthed();
   const navigate = useNavigate();
 
   // Обработчик 401 ошибок
@@ -24,18 +27,16 @@ export function App() {
     };
   }, [openModal]);
 
-  const handleOpenRegister = () => {
-    navigate("/register");
-  };
+  useEffect(() => {
+    if (!isOpen && isAuthed && redirectPath) {
+      navigate(redirectPath, { replace: true });
+      clearRedirectPath();
+    }
+  }, [clearRedirectPath, isAuthed, isOpen, navigate, redirectPath]);
 
   const handleModalClose = (open: boolean) => {
     if (!open) {
       closeModal();
-      // Если есть сохраненный путь, редирект на него
-      if (redirectPath) {
-        navigate(redirectPath, { replace: true });
-        clearRedirectPath();
-      }
     }
   };
 
@@ -45,7 +46,7 @@ export function App() {
       <LoginModal
         open={isOpen}
         onOpenChange={handleModalClose}
-        onOpenRegister={handleOpenRegister}
+        onOpenRegister={openAuthRegister}
       />
       <div className="flex min-h-svh flex-col">
         <Header />
