@@ -14,11 +14,11 @@ import {
 } from "@/widgets/filters";
 import { ProjectCard } from "@/widgets/project-card";
 import { ProjectsCatalog } from "@/widgets/projects-catalog";
+import { ProjectsEmpty } from "@/widgets/projects-catalog/ui/projects-empty";
 import { Search } from "@/widgets/search";
-import { FilterTabs } from "@/widgets/filter-tabs";
-import { projectTabs } from "@/widgets/filter-tabs/model/tabs-data";
-import { useState } from "react";
-
+//import { FilterTabs } from "@/widgets/filter-tabs";
+//import { projectTabs } from "@/widgets/filter-tabs/model/tabs-data";
+//import { useState } from "react";
 
 const PAGE_SIZE = 20;
 
@@ -35,7 +35,6 @@ const dateFormatter = new Intl.DateTimeFormat("ru", {
 });
 
 function formatDate(iso: string | null): string {
-
   if (!iso) {
     return "";
   }
@@ -58,26 +57,23 @@ function ProjectsGridSkeleton() {
 
 function ProjectsError({ onRetry }: { onRetry: () => void }) {
   return (
-    <div className="flex flex-col items-center gap-4 py-16 text-center">
-      <p className="text-muted-foreground">
-        Не удалось загрузить проекты. Попробуйте ещё раз.
-      </p>
-      <Button type="button" onClick={onRetry}>
-        Повторить
-      </Button>
-    </div>
-  );
-}
-
-function ProjectsEmpty() {
-  return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-2xl bg-muted px-6 py-16 text-center">
-      <Icon icon="ph:folder-dashed" className="size-12 text-muted-foreground" />
-      <h3 className="text-xl font-semibold text-foreground">
-        Пока нет проектов
+    <div className="flex flex-col items-center gap-2 py-5 text-center">
+      <span
+        className="flex h-20 w-20 items-center justify-center rounded-[var(--radius-lg)]"
+        style={{ backgroundColor: "var(--color-light-gray-200)" }}
+      >
+        <Icon
+          icon="ph:warning-circle"
+          className="h-16 w-16 text-xl text-muted-foreground"
+        />
+      </span>
+      <h3 className="flex text-[20px] leading-[130%] font-semibold text-foreground">
+        Не удалось загрузить проекты и профили.
       </h3>
-      <p className="max-w-md text-sm text-muted-foreground">
-        Здесь появятся проекты, как только их опубликуют. Загляните чуть позже.
+      <p className="max-w-md text-[18px] leading-[150%] text-muted-foreground">
+        Пожалуйста, перезагрузите страницу
+        <br />
+        или попробуйте зайти чуть позже.
       </p>
     </div>
   );
@@ -159,7 +155,7 @@ function ProjectsList() {
 }
 
 function ProjectsPage() {
-  const [tab, setTab] = useState("catalog");
+  //const [tab, setTab] = useState("catalog");
   return (
     <FiltersProvider>
       <PageContainer className="py-8">
@@ -170,11 +166,11 @@ function ProjectsPage() {
           <SortMobile />
         </div>
         <FiltersBar className="mb-6 hidden md:flex" />
-          
+
         <div className="md:flex md:items-start md:gap-5">
           <FiltersSidebar className="hidden md:block" />
           <div className="flex-1">
-            <FilterTabs items={projectTabs} value={tab} onValueChange={setTab} />
+            {/*<FilterTabs items={projectTabs} value={tab} onValueChange={setTab} />*/}
             <ProjectsCatalog catalog={<ProjectsList />} />
           </div>
         </div>
