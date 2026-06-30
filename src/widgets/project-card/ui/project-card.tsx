@@ -1,31 +1,37 @@
 import { Icon } from "@iconify/react";
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 
+import { useLikeProject } from "@/entities/project";
 import { useIsAuthed } from "@/shared/lib/auth";
+import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Tag } from "@/shared/ui/tag";
 
 type ProjectCardProps = {
+  projectId: string;
   title: string;
   description: string;
   tags: string[];
   date: string;
   location: string;
+  isLikedByMe: boolean;
 };
 
 export function ProjectCard({
+  projectId,
   title,
   description,
   tags,
   date,
   location,
+  isLikedByMe,
 }: ProjectCardProps) {
   const isAuthed = useIsAuthed();
-  const [isLike, setIsLike] = useState(false);
+  const { mutate: toggleLike } = useLikeProject();
 
   const handleLike = useCallback(() => {
-    setIsLike((prev) => !prev);
-  }, []);
+    toggleLike({ projectId, liked: !isLikedByMe });
+  }, [toggleLike, projectId, isLikedByMe]);
 
   const handleApply = useCallback(() => {
     console.log("Откликнуться");
@@ -38,12 +44,17 @@ export function ProjectCard({
           <Button
             variant="ghost"
             size="icon"
-            aria-label="Добавить в избранное"
+            aria-label={
+              isLikedByMe ? "Убрать из избранного" : "Добавить в избранное"
+            }
             type="button"
             onClick={handleLike}
-            aria-pressed={isLike}
+            aria-pressed={isLikedByMe}
           >
-            <Icon icon="ph:heart-straight" className="text-xl" />
+            <Icon
+              icon={isLikedByMe ? "ph:heart-straight-fill" : "ph:heart-straight"}
+              className={cn("text-xl", isLikedByMe && "text-primary")}
+            />
           </Button>
         </div>
       )}

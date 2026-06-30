@@ -9,29 +9,25 @@ import "react-router";
  */
 export const ROUTES = {
   HOME: "/",
-  NOT_FOUND: "/404",
-  FORBIDDEN: "/403",
-  ERROR_500: "/500",
+  LOGIN: "/login",
   REGISTER: "/register",
   REGISTER_CHECK_EMAIL: "/register/check-email",
   REGISTER_VERIFY_EMAIL: "/register/verify-email/:key",
   REGISTER_VERIFY_EMAIL_FALLBACK: "/:key",
+  PROJECTS: "/projects",
   RESET_PASSWORD_CONFIRM: "/password-reset/confirm/:uid/:token",
-
   QA: "/qa",
   QA_CREATE: "/qa/create",
   QA_EDIT: "/qa/:id/edit",
-
+  ABOUT: "/about",
+  HELP: "/help",
+  DOCUMENTS: "/documents",
   PROFILE: "/profile",
   SETTINGS: "/settings",
-
-  /*
-   * пример: путь с параметром
-   * ROUTES.NAME_PAGE_1: "/name_page_1/:id"
-   *
-   * в PathParams ниже добавь
-   * [ROUTES.NAME_PAGE_1]: { id: string }
-   * */
+  ACCOUNT: "/account",
+  FORBIDDEN: "/403",
+  NOT_FOUND: "/404",
+  SERVER_ERROR: "/500",
   NAME_PAGE_1: "/name_page_1/:id",
 } as const;
 

@@ -21,6 +21,11 @@ export interface ProjectsPage {
   hasMore: boolean;
 }
 
+export interface ProjectLikeResponse {
+  liked: boolean;
+  likesCount: number;
+}
+
 export interface Specialization {
   spec_id: string;
   name: string;
@@ -43,6 +48,18 @@ export interface GetProjectsParams {
     min?: number;
     max?: number;
   };
+
+  favourites?: boolean;
+}
+
+export interface GetRecommendationsParams {
+  page?: number;
+  limit?: number;
+}
+
+export interface GetRecommendationsParams {
+  page?: number;
+  limit?: number;
 }
 
 export interface Author {
@@ -67,9 +84,8 @@ export interface Participant {
     avatar?: string;
     phone?: string;
   };
-  role: 'author' | 'member';
+  role: "author" | "member";
 }
-
 
 export interface ProjectDetails {
   project_id: string;
@@ -77,7 +93,12 @@ export interface ProjectDetails {
   short_desc: string;
   full_desc: string;
   location: string;
-  status_project: 'draft' | 'published' | 'recruiting_closed' | 'archived' | 'blocked';
+  status_project:
+    | "draft"
+    | "published"
+    | "recruiting_closed"
+    | "archived"
+    | "blocked";
   published_at: string;
   start_date: string;
   end_date: string;
@@ -92,3 +113,11 @@ export interface ProjectDetails {
   participants: Participant[];
 }
 
+export type ProjectRole = "employer" | "worker";
+
+export interface UserProfile {
+  pk: string;
+  email: string;
+  role: string;
+  projects_relation: "employer" | "worker";
+}
