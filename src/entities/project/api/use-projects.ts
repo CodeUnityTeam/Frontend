@@ -5,7 +5,7 @@ import type { GetProjectsParams } from "@/entities/project/model/types";
 
 const DEFAULT_PAGE_SIZE = 20;
 
-const PROJECTS_QUERY_KEY = "entities/project/list" as const;
+export const PROJECTS_QUERY_KEY = "entities/project/list" as const;
 
 export function useProjects(params: GetProjectsParams = {}) {
   const pageSize = params.pageSize ?? DEFAULT_PAGE_SIZE;

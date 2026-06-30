@@ -19,6 +19,7 @@ export async function getProjects(
     formatId,
     specId,
     duration,
+    favourites,
     search
   } = params;
 
@@ -47,6 +48,9 @@ export async function getProjects(
     if (duration.max != null) {
       query.duration_max = duration.max;
     }
+  }
+  if (favourites) {
+    query.favourites = "true";
   }
   if(search?.trim()) {
     query.search = search.trim()
