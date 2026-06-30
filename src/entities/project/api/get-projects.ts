@@ -20,6 +20,7 @@ export async function getProjects(
     specId,
     duration,
     favourites,
+    search
   } = params;
 
   const query: Record<string, string | number> = {
@@ -50,6 +51,9 @@ export async function getProjects(
   }
   if (favourites) {
     query.favourites = "true";
+  }
+  if(search?.trim()) {
+    query.search = search.trim()
   }
 
   const { data } = await apiClient.get<ProjectsResponseDto>("/projects/", {

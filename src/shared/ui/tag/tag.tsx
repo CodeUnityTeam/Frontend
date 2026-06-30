@@ -9,6 +9,7 @@ type TagProps = {
   variant?: TagVariant;
   className?: string;
   onRemove?: (e: React.MouseEvent) => void;
+  onClick?: (e: React.MouseEvent) => void;
 };
 
 export const Tag = ({
@@ -16,6 +17,7 @@ export const Tag = ({
   label,
   variant = "default",
   className,
+  onClick,
 }: TagProps) => {
   const base =
     "inline-flex items-center rounded-full px-3 py-1 text-sm font-medium";
@@ -28,7 +30,7 @@ export const Tag = ({
   };
 
   return (
-    <span className={cn(base, variants[variant], className)}>
+    <span className={cn(base, variants[variant], className)} onClick={onClick}>
       {children ?? label}
     </span>
   );

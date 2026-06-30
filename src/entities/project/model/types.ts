@@ -48,13 +48,8 @@ export interface GetProjectsParams {
     min?: number;
     max?: number;
   };
-
+  search?: string;
   favourites?: boolean;
-}
-
-export interface GetRecommendationsParams {
-  page?: number;
-  limit?: number;
 }
 
 export interface GetRecommendationsParams {

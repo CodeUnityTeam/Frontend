@@ -48,7 +48,7 @@ const QAPage = () => {
 
   return (
     <PageContainer className="py-8">
-      <Search />
+      <Search onSearch={() => console.log('Поиск по QA в разработке')}/>
       <div className="md:grid md:grid-cols-[217px_minmax(0,1fr)] lg:gap-26.5">
         <h1 className="mb-4 text-[26px] leading-8 font-bold md:hidden">
           Q&A
