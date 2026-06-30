@@ -49,13 +49,7 @@ export interface GetProjectsParams {
     max?: number;
   };
   search?: string;
-
   favourites?: boolean;
-}
-
-export interface GetRecommendationsParams {
-  page?: number;
-  limit?: number;
 }
 
 export interface GetRecommendationsParams {
