@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+export type { Review as ApiReview } from "@/shared/api/reviews";
+
 export interface Review {
   id: string;
   author: {
