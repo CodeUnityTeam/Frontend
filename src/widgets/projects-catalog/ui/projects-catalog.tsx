@@ -52,8 +52,8 @@ export function ProjectsCatalog({ catalog }: ProjectsCatalogProps) {
   }
 
   const visibleTabs = isAuthorized
-  ? TABS
-  : TABS.filter((tab) => tab.id === "catalog");
+    ? TABS
+    : TABS.filter((tab) => tab.id === "catalog");
 
   return (
     <div className="flex flex-col gap-6">
@@ -76,13 +76,15 @@ export function ProjectsCatalog({ catalog }: ProjectsCatalogProps) {
         </div>
 
         {isAuthorized && activeTab === "my" && (
-          <button
-            type="button"
-            className="flex items-center gap-1 text-[18px] leading-[100%] font-semibold"
-          >
-            Создать проект
-            <Icon icon="ph:plus-circle" className="text-xl leading-none" />
-          </button>
+          <div className="flex flex-wrap items-center gap-4">
+            <button
+              type="button"
+              className="flex items-center gap-1 text-[18px] leading-[100%] font-semibold"
+            >
+              Создать проект
+              <Icon icon="ph:plus-circle" className="text-xl" />
+            </button>
+          </div>
         )}
       </div>
 

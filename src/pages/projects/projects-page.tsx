@@ -16,9 +16,6 @@ import { ProjectCard } from "@/widgets/project-card";
 import { ProjectsCatalog } from "@/widgets/projects-catalog";
 import { ProjectsEmpty } from "@/widgets/projects-catalog/ui/projects-empty";
 import { Search } from "@/widgets/search";
-//import { FilterTabs } from "@/widgets/filter-tabs";
-//import { projectTabs } from "@/widgets/filter-tabs/model/tabs-data";
-//import { useState } from "react";
 
 const PAGE_SIZE = 20;
 
@@ -55,7 +52,7 @@ function ProjectsGridSkeleton() {
   );
 }
 
-function ProjectsError({ onRetry }: { onRetry: () => void }) {
+function ProjectsError() {
   return (
     <div className="flex flex-col items-center gap-2 py-5 text-center">
       <span
@@ -90,8 +87,7 @@ function ProjectsList() {
     isError,
     isFetchingNextPage,
     hasNextPage,
-    fetchNextPage,
-    refetch,
+    fetchNextPage
   } = useProjects({
     pageSize: PAGE_SIZE,
     sortBy: SORT_MAP[sort],
@@ -106,7 +102,7 @@ function ProjectsList() {
   }
 
   if (isError) {
-    return <ProjectsError onRetry={() => refetch()} />;
+    return <ProjectsError />;
   }
 
   const projects = data.pages.flatMap((page) => page.items);
@@ -124,11 +120,13 @@ function ProjectsList() {
         {projects.map((project) => (
           <li key={project.projectId}>
             <ProjectCard
+              projectId={project.projectId}
               title={project.title}
               description={project.shortDesc}
               tags={project.skills.map((skill) => skill.name)}
               date={formatDate(project.publishedAt)}
               location={project.location}
+              isLikedByMe={project.isLikedByMe}
             />
           </li>
         ))}
@@ -155,7 +153,6 @@ function ProjectsList() {
 }
 
 function ProjectsPage() {
-  //const [tab, setTab] = useState("catalog");
   return (
     <FiltersProvider>
       <PageContainer className="py-8">
@@ -170,7 +167,6 @@ function ProjectsPage() {
         <div className="md:flex md:items-start md:gap-5">
           <FiltersSidebar className="hidden md:block" />
           <div className="flex-1">
-            {/*<FilterTabs items={projectTabs} value={tab} onValueChange={setTab} />*/}
             <ProjectsCatalog catalog={<ProjectsList />} />
           </div>
         </div>

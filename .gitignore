@@ -40,3 +40,4 @@ oxlint.config.cjs
 oxlint.config.mjs
 oxlint.config.ts
 .env
+reports/*

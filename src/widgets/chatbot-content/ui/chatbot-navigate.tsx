@@ -9,7 +9,7 @@ type TChatbotNavigate = {
 export function ChatbotNavigate({ onPrev, onNext }: TChatbotNavigate) {
   return (
     <>
-      <div className="flex items-center justify-end gap-3 pr-8">
+      <div className="flex items-center justify-end gap-3 pr-8 max-md:hidden">
         <Button
           type="button"
           size="icon_lg"

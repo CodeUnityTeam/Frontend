@@ -12,7 +12,7 @@ export async function fetchSkillCatalog(): Promise<SkillCatalogItem[]> {
     skillCatalogPromise = (async () => {
       const { data } = await apiClient.get<unknown>("/qna/tags/");
 
-      const rawItems = Array.isArray(data)
+      const rawItems: Record<string, unknown>[] = Array.isArray(data)
         ? data
         : Array.isArray((data as { results?: unknown })?.results)
           ? (data as { results: unknown[] }).results
@@ -24,8 +24,8 @@ export async function fetchSkillCatalog(): Promise<SkillCatalogItem[]> {
             return null;
           }
 
-          const id = "id" in item ? (item as { id?: unknown }).id : undefined;
-          const name = "name" in item ? (item as { name?: unknown }).name : undefined;
+          const id = item.skill_id ?? item.id;
+          const name = item.name;
 
           if (typeof id !== "string" || typeof name !== "string") {
             return null;

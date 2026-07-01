@@ -15,7 +15,7 @@ export const emailRules: RegisterOptions<LoginCredentials, "email"> = {
 export const passwordRules: RegisterOptions<LoginCredentials, "password"> = {
   required: "Введите пароль",
   minLength: {
-    value: 8,
-    message: "Пароль должен быть не менее 8 символов",
+    value: 5,
+    message: "Пароль должен быть не менее 5 символов",
   },
 };

@@ -11,9 +11,9 @@ export function OnboardingLayout({ step, children }: OnboardingLayoutProps) {
   return (
     <div className="flex flex-col">
       {/* Progress bar */}
-      <div className="hidden sm:block border-b px-4 py-3 sm:px-6">
+      <div className="hidden px-4 py-3 sm:block sm:px-6">
         <div className="mx-auto flex max-w-2xl items-center gap-4">
-          <span className="shrink-0 text-xs sm:text-sm text-muted-foreground">
+          <span className="shrink-0 text-xs text-muted-foreground sm:text-sm">
             {step} / {TOTAL_STEPS}
           </span>
           <div className="flex flex-1 gap-1">
