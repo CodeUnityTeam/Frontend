@@ -42,17 +42,19 @@ function QaListError() {
 const QAPage = () => {
   const navigate = useNavigate();
   const [tab, setTab] = useState("new");
+  const [search, setSearch] = useState("");
 
-  const {data, isLoading, isError} = useQuestions({filter: TAB_TO_FILTER[tab]});
+  const { data, isLoading, isError } = useQuestions({
+    filter: TAB_TO_FILTER[tab],
+    search,
+  });
   const questions = data?.pages.flatMap((page) => page.items.map(mapQuestion)) ?? [];
 
   return (
     <PageContainer className="py-8">
-      <Search onSearch={() => console.log('Поиск по QA в разработке')}/>
+      <Search onSearch={setSearch} placeholder="Поиск вопросов" />
       <div className="md:grid md:grid-cols-[217px_minmax(0,1fr)] lg:gap-26.5">
-        <h1 className="mb-4 text-[26px] leading-8 font-bold md:hidden">
-          Q&A
-        </h1>
+        <h1 className="mb-4 text-[26px] leading-8 font-bold md:hidden">Q&A</h1>
         <aside>
           <TagsList />
         </aside>

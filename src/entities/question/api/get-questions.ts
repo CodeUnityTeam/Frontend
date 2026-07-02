@@ -14,7 +14,7 @@ export async function getQuestions(
   const query: Record<string, string | number> = {limit, offset};
 
   if(filter) query.filter = filter;
-  if(search) query.search = search;
+  if(search?.trim()) query.search = search.trim();
   if(tags && tags.length > 0) query.tags = tags.join(",")
 
   const {data} = await apiClient.get<GetQuestionsResponse>('qna/questions/', {params:query});

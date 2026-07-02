@@ -13,9 +13,10 @@ const SEARCH_TAGS_LIMIT = 10;
 
 interface SearchProps {
   onSearch: (value: string) => void;
+  placeholder?: string;
 }
 
-export function Search({ onSearch }: SearchProps) {
+export function Search({ onSearch, placeholder = 'Поиск' }: SearchProps) {
   const [searchValue, setSearchValue] = useState<string>("");
   const [searchTag, setSearchTag] = useState<string[]>(mockTags);
   const isMobile = window.innerWidth < 768;
@@ -64,7 +65,7 @@ export function Search({ onSearch }: SearchProps) {
               handleSearch();
             }
           }}
-          placeholder={isMobile ? "Поиск" : "Поиск проектов и команд"}
+          placeholder={isMobile ? "Поиск" : placeholder}
         />
         <InputGroupAddon align="inline-end">
           {isMobile ? (

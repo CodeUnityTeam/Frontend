@@ -167,19 +167,23 @@ function ProjectsPage() {
   return (
     <FiltersProvider>
       <PageContainer className="py-8">
-        <Search onSearch={setSearch} />
+        <Search onSearch={setSearch} placeholder="Поиск проектов и команд" />
 
         <div className="mb-6 flex items-center justify-between gap-4 md:hidden">
           <FiltersMobile />
           <SortMobile />
         </div>
         <FiltersBar className="mb-6 hidden md:flex" />
-          
+
         <div className="md:flex md:items-start md:gap-5">
           <FiltersSidebar className="hidden md:block" />
           <div className="flex-1">
-            <FilterTabs items={projectTabs} value={tab} onValueChange={setTab} />
-            <ProjectsCatalog catalog={<ProjectsList search={search}/>} />
+            <FilterTabs
+              items={projectTabs}
+              value={tab}
+              onValueChange={setTab}
+            />
+            <ProjectsCatalog catalog={<ProjectsList search={search} />} />
           </div>
         </div>
       </PageContainer>
