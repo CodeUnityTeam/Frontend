@@ -43,10 +43,12 @@ const QAPage = () => {
   const navigate = useNavigate();
   const [tab, setTab] = useState("new");
   const [search, setSearch] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const { data, isLoading, isError } = useQuestions({
     filter: TAB_TO_FILTER[tab],
     search,
+    tags: selectedTags
   });
   const questions = data?.pages.flatMap((page) => page.items.map(mapQuestion)) ?? [];
 
@@ -56,7 +58,7 @@ const QAPage = () => {
       <div className="md:grid md:grid-cols-[217px_minmax(0,1fr)] lg:gap-26.5">
         <h1 className="mb-4 text-[26px] leading-8 font-bold md:hidden">Q&A</h1>
         <aside>
-          <TagsList />
+          <TagsList selectedTags={selectedTags} onTagsChange={setSelectedTags}/>
         </aside>
         <main className="flex flex-col md:gap-8.5">
           <div className="flex justify-between">

@@ -1,5 +1,4 @@
 import { Icon } from "@iconify/react";
-import { useTags } from "@/widgets/tags/model/use-tags";
 import { tags } from "@/widgets/tags/model/tags";
 import { Checkbox } from "@/shared/ui/checkbox";
 import {
@@ -8,8 +7,14 @@ import {
   DropdownMenuContent,
 } from "@/shared/ui/dropdown-menu";
 
-export function TagsMobile() {
-  const { toggleTag, isTagChecked } = useTags();
+interface TagsProps {
+  selectedTags: string[];
+  onToggle: (value: string) => void;
+}
+
+export function TagsMobile({ selectedTags, onToggle }: TagsProps) {
+  const isTagChecked = (v: string) =>
+    v === "all" ? selectedTags.length === 0 : selectedTags.includes(v);
 
   return (
     <div className="block md:hidden">
@@ -29,7 +34,7 @@ export function TagsMobile() {
         >
           {tags.map((tag) => (
             <label key={tag.value} className="flex cursor-pointer items-center gap-3">
-              <Checkbox className="size-5 [&_svg]:size-3.5" checked={isTagChecked(tag.value)} onCheckedChange={() => toggleTag(tag.value)} />
+              <Checkbox className="size-5 [&_svg]:size-3.5" checked={isTagChecked(tag.value)} onCheckedChange={() => onToggle(tag.value)} />
               <span className="text-base text-neutral-700">{tag.label}</span>
             </label>
           ))}
