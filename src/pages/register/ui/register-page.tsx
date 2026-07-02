@@ -1,10 +1,14 @@
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
+import { toast } from "sonner";
 
+import { useFormats } from "@/entities/reference";
+import { useSkills } from "@/entities/skill";
+import { ROUTES } from "@/shared/model/routes";
 import {
   useRegisterForm,
   type RegisterFormData,
-} from "../model/use-register-form";
-import { tags } from "@/widgets/tags/model/tags";
+} from "@/pages/register/model/use-register-form";
+import { useFinishOnboarding } from "@/pages/register/model/use-finish-onboarding";
 import { OnboardingLayout } from "./register-layout";
 import { OnboardingStep1 } from "./step-meet-me";
 import { OnboardingStep2 } from "./step-skills";
@@ -17,6 +21,7 @@ type RegisterLocationState = {
 
 function RegisterPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const stateData = (location.state as RegisterLocationState | null | undefined)?.prefill;
   const { state, next, back, patch } = useRegisterForm({
     name: stateData?.name ?? "",
@@ -24,27 +29,33 @@ function RegisterPage() {
     email: stateData?.email ?? "",
   });
 
-  const handleFinish = (patch: Parameters<typeof next>[0]) => {
-   
-    const finalData = { ...state.data, ...patch };
+  const skillsQuery = useSkills();
+  const formatsQuery = useFormats();
+  const finishOnboarding = useFinishOnboarding();
 
-    
-    const labelToValue = new Map(tags.map((t) => [t.label, t.value]));
-    const skillsValues = (finalData.skills || []).map(
-      (s) => labelToValue.get(s) ?? s,
+  const handleFinish = (finishPatch: Partial<RegisterFormData>) => {
+    if (finishOnboarding.isPending) {
+      return;
+    }
+
+    finishOnboarding.mutate(
+      {
+        data: { ...state.data, ...finishPatch },
+        catalogs: {
+          skills: skillsQuery.data ?? [],
+          formats: formatsQuery.data ?? [],
+        },
+      },
+      {
+        onSuccess: () => {
+          toast.success("Профиль заполнен");
+          navigate(ROUTES.PROFILE);
+        },
+        onError: (error) => {
+          toast.error(error.message);
+        },
+      },
     );
-
-    const payload = {
-      ...finalData,
-      role: finalData.employmentRole,
-      
-      skills: skillsValues,
-      skillsLabels: finalData.skills,
-    };
-
-    // TODO real API call куда передать эти данные??
-
-    console.log("Registration complete", payload);
   };
 
   return (
@@ -74,6 +85,7 @@ function RegisterPage() {
           onNext={handleFinish}
           onBack={back}
           onPatch={patch}
+          isSubmitting={finishOnboarding.isPending}
         />
       )}
     </OnboardingLayout>

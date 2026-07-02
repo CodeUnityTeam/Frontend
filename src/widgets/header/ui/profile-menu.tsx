@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 
 import Avatar from "@/shared/assets/images/avatar.png";
 import { ROUTES } from "@/shared/model/routes";
-import { currentUser } from "@/shared/config/mock-config";
+import { useCurrentProfile } from "@/entities/profile";
 import { clearTokens } from "@/shared/lib/auth";
 import {
   DropdownMenu,
@@ -24,12 +24,18 @@ export function ProfileMenu() {
   const deleteModal = useModal();
   const changePasswordModal = useModal();
   const changeEmailModal = useModal();
+  const profileQuery = useCurrentProfile();
+
+  const profile = profileQuery.data;
+  const fullName = profile
+    ? [profile.first_name, profile.last_name].filter(Boolean).join(" ")
+    : "";
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex cursor-pointer items-center gap-2 outline-none">
         <img
-          src={Avatar}
+          src={profile?.avatar_url || Avatar}
           alt="avatar"
           className="h-8 w-8 rounded-full object-cover md:h-10 md:w-10"
         />
@@ -43,7 +49,7 @@ export function ProfileMenu() {
         className="flex w-60 flex-col gap-2 rounded-md p-2 max-md:w-70"
       >
         <DropdownMenuLabel className="py-1 pl-10">
-          {currentUser.name}
+          {fullName || "Профиль"}
         </DropdownMenuLabel>
 
         <DropdownMenuItem asChild className={itemClass}>

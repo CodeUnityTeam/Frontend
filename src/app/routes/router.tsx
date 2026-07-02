@@ -31,7 +31,7 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: ROUTES.REGISTER, element: <RegisterPage /> },
+      { path: ROUTES.REGISTER, element: <ProtectedRoute><RegisterPage /></ProtectedRoute> },
       { path: ROUTES.REGISTER_CHECK_EMAIL, element: <CheckEmailPage /> },
       { path: ROUTES.REGISTER_VERIFY_EMAIL, element: <VerifyEmailPage /> },
       { path: ROUTES.REGISTER_VERIFY_EMAIL_FALLBACK, element: <VerifyEmailPage /> },

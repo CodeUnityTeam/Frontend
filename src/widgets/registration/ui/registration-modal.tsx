@@ -123,6 +123,8 @@ export function RegistrationModal({
               surname: values.lastName,
               email: values.email,
             },
+
+            password: values.password,
           },
         });
       },
@@ -313,7 +315,7 @@ export function RegistrationModal({
         {form}
 
         <div className="mt-6">
-          <div className="mb-4 text-center text-xl text-muted-foreground"> 
+          <div className="mb-4 text-center text-xl text-muted-foreground">
             Зарегистрироваться через
           </div>
           {providersButtons}

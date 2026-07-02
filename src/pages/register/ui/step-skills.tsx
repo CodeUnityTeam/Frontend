@@ -1,9 +1,9 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
+import { useSkills } from "@/entities/skill";
 import { Button } from "@/shared/ui/button";
 import { Tag } from "@/shared/ui/tag";
-import { SKILLS_SUGGESTIONS } from "../model/skills";
-import type { RegisterFormData } from "../model/use-register-form";
+import type { RegisterFormData } from "@/pages/register/model/use-register-form";
 
 interface StepSkillsProps {
   data: RegisterFormData;
@@ -12,11 +12,27 @@ interface StepSkillsProps {
   onPatch: (patch: Partial<RegisterFormData>) => void;
 }
 
-export function OnboardingStep2({ data, onNext, onBack, onPatch }: StepSkillsProps) {
+export function OnboardingStep2({
+  data,
+  onNext,
+  onBack,
+  onPatch,
+}: StepSkillsProps) {
   const [skills, setSkills] = useState<string[]>(data.skills);
   const [inputValue, setInputValue] = useState<string>(data.skillsDraft ?? "");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const skillsQuery = useSkills();
+  const catalogNames = useMemo(
+    () => (skillsQuery.data ?? []).map((skill) => skill.name),
+    [skillsQuery.data],
+  );
+
+  const findCatalogName = (value: string): string | undefined => {
+    const needle = value.trim().toLowerCase();
+    return catalogNames.find((name) => name.toLowerCase() === needle);
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -24,10 +40,9 @@ export function OnboardingStep2({ data, onNext, onBack, onPatch }: StepSkillsPro
     onPatch?.({ skillsDraft: value });
 
     if (value.trim()) {
-      const filtered = SKILLS_SUGGESTIONS.filter(
+      const filtered = catalogNames.filter(
         (s) =>
-          s.toLowerCase().includes(value.toLowerCase()) &&
-          !skills.includes(s),
+          s.toLowerCase().includes(value.toLowerCase()) && !skills.includes(s),
       );
       setSuggestions(filtered.slice(0, 6));
     } else {
@@ -36,9 +51,9 @@ export function OnboardingStep2({ data, onNext, onBack, onPatch }: StepSkillsPro
   };
 
   const addSkill = (skill: string) => {
-    const trimmed = skill.trim();
-    if (!trimmed || skills.includes(trimmed)) return;
-    const next = [...skills, trimmed];
+    const catalogName = findCatalogName(skill);
+    if (!catalogName || skills.includes(catalogName)) return;
+    const next = [...skills, catalogName];
     setSkills(next);
     setInputValue("");
     setSuggestions([]);
@@ -72,11 +87,13 @@ export function OnboardingStep2({ data, onNext, onBack, onPatch }: StepSkillsPro
   };
 
   return (
-    <div className="max-w-3xl mx-auto w-full py-8">
+    <div className="mx-auto w-full max-w-3xl py-8">
       {/* Hero / Info card (outlined white) */}
-      <div className="mx-auto border border-border bg-background rounded-[18px] px-6 py-5 sm:px-8 sm:py-6">
-        <h1 className="text-3xl sm:text-2xl font-semibold pl-12 sm:pl-16">Ваши навыки</h1>
-        <p className="mt-2 text-muted-foreground leading-snug pl-12 sm:pl-16">
+      <div className="mx-auto rounded-[18px] border border-border bg-background px-6 py-5 sm:px-8 sm:py-6">
+        <h1 className="pl-12 text-3xl font-semibold sm:pl-16 sm:text-2xl">
+          Ваши навыки
+        </h1>
+        <p className="mt-2 pl-12 leading-snug text-muted-foreground sm:pl-16">
           Чем больше навыков, тем выше шанс найти интересные предложения
         </p>
       </div>
@@ -85,7 +102,9 @@ export function OnboardingStep2({ data, onNext, onBack, onPatch }: StepSkillsPro
       <div className="mt-12 sm:mt-20">
         <div>
           <label className="text-lg font-medium">Навыки и инструменты</label>
-          <p className="mt-1 text-sm text-muted-foreground">Выберите программы, которыми вы владеете</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Выберите программы, которыми вы владеете
+          </p>
         </div>
 
         <div className="mt-6">
@@ -112,13 +131,13 @@ export function OnboardingStep2({ data, onNext, onBack, onPatch }: StepSkillsPro
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               placeholder={skills.length === 0 ? "Начните вводить здесь" : ""}
-              className="min-w-35 basis-32 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
+              className="min-w-35 flex-1 basis-32 bg-transparent text-base outline-none placeholder:text-muted-foreground"
             />
           </div>
 
           {/* Autocomplete dropdown */}
           {suggestions.length > 0 && (
-            <ul className="mt-2 rounded-md border border-border bg-popover shadow-sm max-h-64 overflow-y-auto">
+            <ul className="mt-2 max-h-64 overflow-y-auto rounded-md border border-border bg-popover shadow-sm">
               {suggestions.map((s) => (
                 <li key={s}>
                   <button
@@ -137,16 +156,28 @@ export function OnboardingStep2({ data, onNext, onBack, onPatch }: StepSkillsPro
             </ul>
           )}
 
-          <p className="hidden sm:block text-xs text-muted-foreground mt-3">
-            Нажмите Enter, чтобы добавить · Backspace, чтобы удалить последний навык · Escape, чтобы закрыть подсказки
+          <p className="mt-3 hidden text-xs text-muted-foreground sm:block">
+            Нажмите Enter, чтобы добавить · Backspace, чтобы удалить последний
+            навык · Escape, чтобы закрыть подсказки
           </p>
         </div>
 
         <div className="mt-8 flex flex-col gap-3 sm:mt-12 sm:flex-row sm:justify-between">
-          <Button type="button" variant="outline" size="lg" onClick={onBack} className="w-full sm:w-auto">
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            onClick={onBack}
+            className="w-full sm:w-auto"
+          >
             Предыдущий шаг
           </Button>
-          <Button type="button" size="lg" onClick={() => onNext({ skills })} className="w-full sm:w-auto">
+          <Button
+            type="button"
+            size="lg"
+            onClick={() => onNext({ skills })}
+            className="w-full sm:w-auto"
+          >
             Следующий шаг
           </Button>
         </div>

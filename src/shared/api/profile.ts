@@ -50,32 +50,27 @@ export type OnboardingPrefill = {
   email: string;
 };
 
-export type ProfileSkillReference = {
-  skill_id: string;
-};
-
-export type ProfileSpecializationReference = {
-  spec_id: string;
-};
-
-export type ProfileWorkFormatReference = {
-  format_id: string;
-};
-
 export type ProfileUpdateRequest = {
-  first_name: string;
-  last_name: string;
-  projects_relation: "employer" | "worker";
-  phone_number: string;
-  additional_contact: string;
-  country: string;
-  city: string;
-  soft_skills: string;
-  about_me: string;
-  avatar_url: string;
-  skills: ProfileSkillReference[];
-  specializations: ProfileSpecializationReference[];
-  workformats: ProfileWorkFormatReference[];
+  first_name?: string;
+  last_name?: string;
+  projects_relation?: "employer" | "worker";
+  phone_number?: string;
+  additional_contact?: string;
+  country?: string;
+  city?: string;
+  soft_skills?: string;
+  about_me?: string;
+  skills?: string[];
+  specializations?: string[];
+  workformats?: string[];
+};
+
+export type ExperienceCreateRequest = {
+  company: string;
+  position: string;
+  responsibilities: string;
+  start_date: string;
+  end_date: string | null;
 };
 
 type ApiObject = Record<string, unknown>;
@@ -127,7 +122,18 @@ export function needsOnboarding(
 }
 
 export async function updateCurrentUserProfile(payload: ProfileUpdateRequest) {
-  const { data } = await apiClient.patch<ApiObject>("/user/profile/me/", payload);
+  const { data } = await apiClient.patch<ApiObject>(
+    "/user/profile/me/",
+    payload,
+  );
+  return data;
+}
+
+export async function createExperience(payload: ExperienceCreateRequest) {
+  const { data } = await apiClient.post<ApiObject>(
+    "/user/profile/me/experience/",
+    payload,
+  );
   return data;
 }
 
@@ -135,11 +141,15 @@ export async function uploadCurrentUserAvatar(file: File) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const { data } = await apiClient.post<unknown>("/user/profile/me/avatar/", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
+  const { data } = await apiClient.post<unknown>(
+    "/user/profile/me/avatar/",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     },
-  });
+  );
 
   if (typeof data === "object" && data !== null && "avatar_url" in data) {
     const avatarUrl = (data as { avatar_url?: unknown }).avatar_url;
