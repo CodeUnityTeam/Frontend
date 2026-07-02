@@ -1,15 +1,29 @@
-import type { GetQuestionsParams } from "@/entities/question/model/types";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { getQuestions } from "@/entities/question/api/get-questions";
+import { useQuery } from "@tanstack/react-query";
 
-const PAGE_SIZE = 20;
-export const QUESTIONS_QUERY_KEY = "entities/question/list" as const;
+import { getQuestions, type GetQuestionsParams } from "./get-questions";
 
-export function useQuestions(params: Omit<GetQuestionsParams, "offset" | "limit"> = {}) {
-  return useInfiniteQuery({
-    queryKey: [QUESTIONS_QUERY_KEY, params],
-    queryFn: ({pageParam}) => getQuestions({...params, offset: pageParam, limit: PAGE_SIZE}),
-    initialPageParam: 0,
-    getNextPageParam: (lastPage, allPages) => lastPage.hasMore ? allPages.length * PAGE_SIZE : undefined
-  })
+export const QUESTIONS_QUERY_KEY = "questions" as const;
+
+export function useQuestions(params: GetQuestionsParams = {}) {
+  const normalizedSearch = params.search?.trim();
+  const limit = params.limit ?? 50;
+  const offset = params.offset ?? 0;
+
+  return useQuery({
+    queryKey: [
+      QUESTIONS_QUERY_KEY,
+      params.filter ?? "all",
+      normalizedSearch ?? "",
+      params.tags?.join(",") ?? "",
+      limit,
+      offset,
+    ],
+    queryFn: () =>
+      getQuestions({
+        ...params,
+        search: normalizedSearch,
+        limit,
+        offset,
+      }),
+  });
 }

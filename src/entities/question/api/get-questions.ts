@@ -1,37 +1,62 @@
-import type {
-  GetQuestionsParams,
-  GetQuestionsResponse,
-  QuestionsPage,
-} from "@/entities/question/model/types.ts";
 import { apiClient } from "@/shared/api";
 
-const PAGE_SIZE = 20;
+export type QuestionListFilter = "popular" | "no_answers" | "my";
+
+export type QuestionListItemDto = {
+  question_id: string;
+  title: string;
+  description: string;
+  tags: string[];
+  author_name: string;
+  author_rating: number;
+  created_at: string;
+  likes_count: number;
+  answers_count: number;
+};
+
+export type QuestionsResponseDto = {
+  items: QuestionListItemDto[];
+  total: number;
+  has_more: boolean;
+};
+
+export type GetQuestionsParams = {
+  filter?: QuestionListFilter;
+  search?: string;
+  tags?: string[];
+  limit?: number;
+  offset?: number;
+};
+
+const DEFAULT_LIMIT = 50;
 
 export async function getQuestions(
-  params: GetQuestionsParams,
-): Promise<QuestionsPage> {
-  const {filter, limit = PAGE_SIZE, offset = 0, search, tags} = params;
-  const query: Record<string, string | number> = {limit, offset};
+  params: GetQuestionsParams = {},
+): Promise<QuestionsResponseDto> {
+  const searchParams = new URLSearchParams();
+  const search = params.search?.trim();
+  const limit = params.limit ?? DEFAULT_LIMIT;
+  const offset = params.offset ?? 0;
 
-  if(filter) query.filter = filter;
-  if(search) query.search = search;
-  if(tags && tags.length > 0) query.tags = tags.join(",")
+  if (params.filter) {
+    searchParams.set("filter", params.filter);
+  }
 
-  const {data} = await apiClient.get<GetQuestionsResponse>('qna/questions/', {params:query});
+  if (search) {
+    searchParams.set("search", search);
+  }
 
-  return {
-    items: data.items.map((dto) => ({
-      id: dto.question_id,
-      title: dto.title,
-      description: dto.description,
-      tags: dto.tags,
-      authorName: dto.author_name,
-      authorRating: dto.author_rating,
-      createdAt: dto.created_at,
-      likesCount: dto.likes_count,
-      answersCount: dto.answers_count,
-    })),
-    count: data.total,
-    hasMore: data.has_more,
-  };
+  if (params.tags?.length) {
+    searchParams.set("tags", params.tags.join(","));
+  }
+
+  searchParams.set("limit", String(limit));
+  searchParams.set("offset", String(offset));
+
+  const query = searchParams.toString();
+  const { data } = await apiClient.get<QuestionsResponseDto>(
+    `/qna/questions/${query ? `?${query}` : ""}`,
+  );
+
+  return data;
 }

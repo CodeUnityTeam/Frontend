@@ -1,3 +1,5 @@
+import type { QuestionListItemDto } from "@/entities/question";
+
 export interface UserData {
   firstName: string;
   avatarUrl: string;
@@ -5,16 +7,16 @@ export interface UserData {
 }
 
 export interface QuestionData {
-  id: string,
-  user: UserData,
+  id: string;
+  user: UserData;
   title: string;
   description: string;
-  skills: string[];   // question tags
+  skills: string[];
   createdAt: Date;
   likes: number;
   comments: number;
 }
 
 export interface QuestionCardProps {
-  question: QuestionData;
+  question: QuestionListItemDto;
 }
