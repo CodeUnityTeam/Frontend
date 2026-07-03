@@ -1,3 +1,5 @@
+import { Link } from "react-router";
+
 import {
   Card,
   CardHeader,
@@ -5,15 +7,17 @@ import {
   CardDescription,
   CardFooter,
 } from "@/shared/ui/card";
+import { ROUTES } from "@/shared/model/routes";
 import { Button } from "@/shared/ui/button";
-import { isAuth } from "@/shared/config/mock-config";
+import { useIsAuthed } from "@/shared/lib/auth";
 import { useModal } from "@/shared/lib/hooks";
 import { FeedbackModal } from "@/features/feedback-modal";
 
 export function SupportSection() {
   const { open, setOpen, openModal } = useModal(false);
+  const isAuthed = useIsAuthed();
 
-  if (!isAuth) {
+  if (!isAuthed) {
     return null;
   }
 
@@ -39,12 +43,12 @@ export function SupportSection() {
             Форма обратной связи
           </Button>
           <Button
-            onClick={() => alert("В разработке")}
+            asChild
             variant="outline"
             size="lg"
             className="w-[329px] px-0 sm:w-[291px]"
           >
-            Связаться в Telegram
+            <Link to={ROUTES.HELP}>Центр помощи</Link>
           </Button>
         </CardFooter>
       </Card>

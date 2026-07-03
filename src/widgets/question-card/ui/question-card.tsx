@@ -1,35 +1,48 @@
 import { Icon } from "@iconify/react";
+import { Link, generatePath } from "react-router";
+
+import AvatarPlaceholder from "@/shared/assets/images/avatar.png";
 import { formatRelativeDate } from "@/shared/lib/pluralize";
+import { ROUTES } from "@/shared/model/routes";
 import { Button } from "@/shared/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/shared/ui/card";
 import { Tag } from "@/shared/ui/tag";
+import { useQuestionCommentCount } from "@/shared/store/question-comments-store";
+import { QuestionLikeButton } from "@/entities/question";
 import type { QuestionCardProps } from "../model/types";
 
-export function QuestionCard({
-  question,
-  }: QuestionCardProps) {
+export function QuestionCard({ question }: QuestionCardProps) {
+  const pendingCommentCount = useQuestionCommentCount(question.id);
+  const detailHref = generatePath(ROUTES.QA_DETAILS, {
+    id: question.id,
+  });
+  const visibleCommentCount = question.comments + pendingCommentCount;
+  const avatarSrc = question.user.avatarUrl || AvatarPlaceholder;
+
   return (
     <Card className="h-fit border-muted-foreground">
-      <CardHeader className="flex flex-row justify-between items-start gap-4 p-6 pb-3">
-        <div className="flex flex-col gap-y-3 flex-1">
+      <CardHeader className="flex flex-row items-start justify-between gap-4 p-6 pb-3">
+        <div className="flex flex-1 flex-col gap-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Avatar>
-                <AvatarImage src={question.user.avatarUrl} alt="avatar" />
+                <AvatarImage src={avatarSrc} alt={question.user.firstName} />
                 <AvatarFallback>
                   <Icon icon="ph:user" className="size-6" />
                 </AvatarFallback>
               </Avatar>
-              <span className="text-xl font-semibold">{question.user.firstName}</span>
+              <span className="text-xl font-semibold">
+                {question.user.firstName}
+              </span>
               <div className="flex flex-row items-center gap-1">
-                <Button variant="ghost" className="p-0" onClick={() => alert("В разработке")}>
-                  <Icon icon={"ph:thumbs-up"} />
-                </Button>
-                <span className="text-lg align-middle">{question.user.rating}</span>
+                <Icon icon="ph:thumbs-up" className="size-6" />
+                <span className="text-lg align-middle">
+                  {question.user.rating}
+                </span>
               </div>
             </div>
-            <div className="text-sm text-muted-foreground whitespace-nowrap">
+            <div className="whitespace-nowrap text-sm text-muted-foreground">
               {formatRelativeDate(question.createdAt)}
             </div>
           </div>
@@ -37,40 +50,38 @@ export function QuestionCard({
             {question.title}
           </CardTitle>
           <div className="flex flex-wrap gap-2">
-            {question.skills.map((skill, index) => (
-              <Tag variant="outline" key={index}>
+            {question.skills.map((skill) => (
+              <Tag variant="outline" key={skill}>
                 {skill}
               </Tag>
             ))}
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="p-6 pt-0">
-        <CardDescription className="text-lg text-foreground line-clamp-2">
+        <CardDescription className="line-clamp-2 text-lg text-foreground">
           {question.description}
         </CardDescription>
       </CardContent>
-      
-      <CardFooter className="flex justify-between items-center p-6 pt-0">
-        <div className="flex gap-x-3 md:gap-x-5">
-          <div className="flex gap-x-1 md:gap-x-3 items-center">
-            <Button variant="ghost" className="p-0" onClick={() => alert("В разработке")}>
-              <Icon icon={"ph:heart-straight"} />
-            </Button>
-            <span>{question.likes}</span>
-          </div>
-          <div className="flex gap-x-1 md:gap-x-3 items-center">
-            <Button variant="ghost" className="p-0" onClick={() => alert("В разработке")}>
-              <Icon icon={"ph:chat-teardrop-dots"} />
-            </Button>
-            <span>{question.comments}</span>
+
+      <CardFooter className="flex flex-wrap items-center justify-between gap-4 p-6 pt-0">
+        <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
+          <QuestionLikeButton
+            questionId={question.id}
+            likesCount={question.likes}
+          />
+
+          <div className="flex items-center gap-2">
+            <Icon icon="ph:chat-teardrop-dots" className="size-6" />
+            <span>{visibleCommentCount}</span>
           </div>
         </div>
-        <Button variant="ghost" className="font-semibold" onClick={() => alert("В разработке")}>
-          Подробнее
+
+        <Button asChild variant="ghost" className="font-semibold">
+          <Link to={detailHref}>Подробнее</Link>
         </Button>
       </CardFooter>
     </Card>
-  )
-};
+  );
+}

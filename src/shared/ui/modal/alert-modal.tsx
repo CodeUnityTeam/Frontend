@@ -18,6 +18,7 @@ type AlertModalSlotProps = {
   className?: string;
   asChild?: boolean;
   onClick?: () => void;
+  disabled?: boolean;
   variant?: "default" | "destructive" | "outline" | "ghost";
 };
 
@@ -136,6 +137,7 @@ export const AlertModalAction = ({
 export const AlertModalCancel = ({
   children,
   className,
+  ...props
 }: AlertModalSlotProps) => (
   <AlertDialogCancel
     className={cn(
@@ -145,6 +147,7 @@ export const AlertModalCancel = ({
       }),
       className,
     )}
+    {...props}
   >
     {children}
   </AlertDialogCancel>

@@ -11,9 +11,20 @@ import { TagsSelect } from "./tags-select";
 
 type CreateQuestionFormProps = {
   className?: string;
+  onSubmit: (values: {
+    title: string;
+    details: string;
+    tags: string[];
+    anonymous: boolean;
+  }) => void;
+  isSubmitting?: boolean;
 };
 
-export function CreateQuestionForm({ className }: CreateQuestionFormProps) {
+export function CreateQuestionForm({
+  className,
+  onSubmit,
+  isSubmitting = false,
+}: CreateQuestionFormProps) {
   const navigate = useNavigate();
   const anonymousId = useId();
   const {
@@ -25,10 +36,12 @@ export function CreateQuestionForm({ className }: CreateQuestionFormProps) {
     isTagSelected,
     anonymous,
     setAnonymous,
+    getValues,
   } = useCreateQuestion();
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
+    onSubmit(getValues());
   };
 
   return (
@@ -79,12 +92,13 @@ export function CreateQuestionForm({ className }: CreateQuestionFormProps) {
           type="button"
           variant="outline"
           className="min-w-0 flex-1"
+          disabled={isSubmitting}
           onClick={() => navigate(-1)}
         >
           Отменить
         </Button>
-        <Button type="submit" className="min-w-0 flex-1">
-          Опубликовать
+        <Button type="submit" className="min-w-0 flex-1" disabled={isSubmitting}>
+          {isSubmitting ? "Публикация..." : "Опубликовать"}
         </Button>
       </div>
     </form>

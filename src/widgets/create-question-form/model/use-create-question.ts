@@ -15,6 +15,13 @@ export function useCreateQuestion() {
 
   const isTagSelected = (value: string) => selectedTags.includes(value);
 
+  const getValues = () => ({
+    title,
+    details,
+    tags: selectedTags,
+    anonymous,
+  });
+
   const reset = () => {
     setTitle("");
     setDetails("");
@@ -32,6 +39,7 @@ export function useCreateQuestion() {
     isTagSelected,
     anonymous,
     setAnonymous,
+    getValues,
     reset,
   };
 }
