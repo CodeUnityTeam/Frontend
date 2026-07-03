@@ -6,6 +6,7 @@ export type {
   QuestionItem,
   QuestionsPage,
   QuestionsFilter,
+  GetQuestionsParams,
 } from "./model/types";
 export {
   createQuestion,
@@ -26,14 +27,8 @@ export {
   type QuestionApiDto,
   type QuestionDetailDto,
 } from "./api/get-question";
-export {
-  getQuestions,
-  type GetQuestionsParams,
-  type QuestionListFilter,
-  type QuestionListItemDto,
-  type QuestionsResponseDto,
-} from "./api/get-questions";
-export { useQuestions } from "./api/use-questions";
+export { getQuestions } from "./api/get-questions";
+export { useQuestions, QUESTIONS_QUERY_KEY } from "./api/use-questions";
 export { useLikeQuestion } from "./api/use-like-question";
 export {
   updateQuestion,

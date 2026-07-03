@@ -5,18 +5,18 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { likeQuestion } from "@/entities/question/api/like-question";
-import { type QuestionDetailDto } from "@/entities/question/api/get-question";
-import {
-  type QuestionListItemDto,
-  type QuestionsResponseDto,
-} from "@/entities/question/api/get-questions";
-import { QUESTIONS_QUERY_KEY } from "@/entities/question/api/use-questions";
+import { likeQuestion } from "./like-question";
+import { type QuestionDetailDto } from "./get-question";
+import { QUESTIONS_QUERY_KEY } from "./use-questions";
+import type {
+  QuestionItem,
+  QuestionsPage,
+} from "@/entities/question/model/types";
 import { useQuestionLikesStore } from "@/shared/store/question-likes-store";
 
 const QUESTION_DETAILS_QUERY_KEY = "question-details" as const;
 
-type QuestionsListData = QuestionsResponseDto | InfiniteData<QuestionsResponseDto>;
+type QuestionsListData = QuestionsPage | InfiniteData<QuestionsPage>;
 
 interface LikeQuestionMutationVars {
   questionId: string;
@@ -35,14 +35,14 @@ function patchListLiked(
       return data;
     }
 
-    const patchPage = (page: QuestionsResponseDto): QuestionsResponseDto => ({
+    const patchPage = (page: QuestionsPage): QuestionsPage => ({
       ...page,
-      items: page.items.map((item: QuestionListItemDto) =>
-        item.question_id === questionId
+      items: page.items.map((item: QuestionItem) =>
+        item.id === questionId
           ? {
               ...item,
-              likes_count:
-                likesCount ?? Math.max(0, item.likes_count + (liked ? 1 : -1)),
+              likesCount:
+                likesCount ?? Math.max(0, item.likesCount + (liked ? 1 : -1)),
             }
           : item,
       ),
@@ -67,8 +67,7 @@ function patchDetailLiked(
       : {
           ...detail,
           likes_count:
-            likesCount ??
-            Math.max(0, detail.likes_count + (liked ? 1 : -1)),
+            likesCount ?? Math.max(0, detail.likes_count + (liked ? 1 : -1)),
         };
 }
 

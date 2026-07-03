@@ -7,19 +7,21 @@ import { toast } from "sonner";
 import {
   deleteQuestion,
   useQuestions,
-  type QuestionListItemDto,
 } from "@/entities/question";
 import { ConfirmModal } from "@/features/confirm-modal";
 import { ROUTES } from "@/shared/model/routes";
 import { PageContainer } from "@/shared/ui/page-container";
+import { Button } from "@/shared/ui/button";
 import { MyQuestionsCard } from "@/widgets/my-questions/ui/my-questions";
+import type { QuestionData } from "@/widgets/question-card";
+import { mapQuestion } from "@/pages/qa/model/question-mapper";
 
 export function MyQuestionsPage() {
   const navigate = useNavigate();
   const back = () => navigate(-1);
-  const [questionToDelete, setQuestionToDelete] = useState<QuestionListItemDto | null>(null);
+  const [questionToDelete, setQuestionToDelete] =
+    useState<QuestionData | null>(null);
   const questionsQuery = useQuestions({ filter: "my" });
-  const questions = questionsQuery.data?.items ?? [];
   const deleteMutation = useMutation({
     mutationFn: deleteQuestion,
     onSuccess: () => {
@@ -32,12 +34,18 @@ export function MyQuestionsPage() {
     },
   });
 
+  const questions =
+    questionsQuery.data?.pages.flatMap((page) => page.items.map(mapQuestion)) ??
+    [];
+  const totalQuestions = questionsQuery.data?.pages[0]?.count ?? questions.length;
+  const remainingQuestions = Math.max(totalQuestions - questions.length, 0);
+
   const handleConfirmDelete = () => {
     if (!questionToDelete) {
       return;
     }
 
-    deleteMutation.mutate(questionToDelete.question_id);
+    deleteMutation.mutate(questionToDelete.id);
   };
 
   return (
@@ -66,19 +74,41 @@ export function MyQuestionsPage() {
               Не удалось загрузить вопросы.
             </p>
           ) : questions.length > 0 ? (
-            questions.map((question) => (
-              <MyQuestionsCard
-                key={question.question_id}
-                question={question}
-                editHref={generatePath(ROUTES.QA_EDIT, {
-                  id: question.question_id,
-                })}
-                onDelete={() => setQuestionToDelete(question)}
-                isDeleting={deleteMutation.isPending}
-              />
-            ))
+            <>
+              {questions.map((question) => (
+                <MyQuestionsCard
+                  key={question.id}
+                  question={question}
+                  editHref={generatePath(ROUTES.QA_EDIT, {
+                    id: question.id,
+                  })}
+                  onDelete={() => setQuestionToDelete(question)}
+                  isDeleting={
+                    deleteMutation.isPending &&
+                    questionToDelete?.id === question.id
+                  }
+                />
+              ))}
+
+              {questionsQuery.hasNextPage && (
+                <div className="mt-6 flex justify-center">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => questionsQuery.fetchNextPage()}
+                    disabled={questionsQuery.isFetchingNextPage}
+                  >
+                    {questionsQuery.isFetchingNextPage
+                      ? "Загрузка..."
+                      : `Загрузить ещё ${remainingQuestions}`}
+                  </Button>
+                </div>
+              )}
+            </>
           ) : (
-            <p className="mt-5 text-base text-foreground">У вас пока нет вопросов.</p>
+            <p className="mt-5 text-base text-foreground">
+              У вас пока нет вопросов.
+            </p>
           )}
         </section>
       </div>

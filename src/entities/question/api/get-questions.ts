@@ -1,62 +1,66 @@
 import { apiClient } from "@/shared/api";
 
-export type QuestionListFilter = "popular" | "no_answers" | "my";
+import type {
+  GetQuestionsParams,
+  GetQuestionsResponse,
+  QuestionDto,
+  QuestionsPage,
+} from "@/entities/question/model/types";
 
-export type QuestionListItemDto = {
-  question_id: string;
-  title: string;
-  description: string;
-  tags: string[];
-  author_name: string;
-  author_rating: number;
-  created_at: string;
-  likes_count: number;
-  answers_count: number;
-};
+export const DEFAULT_QUESTIONS_PAGE_SIZE = 20;
 
-export type QuestionsResponseDto = {
-  items: QuestionListItemDto[];
-  total: number;
-  has_more: boolean;
-};
+export function normalizeQuestionSearch(search?: string): string | undefined {
+  const normalized = search?.trim();
+  return normalized ? normalized : undefined;
+}
 
-export type GetQuestionsParams = {
-  filter?: QuestionListFilter;
-  search?: string;
-  tags?: string[];
-  limit?: number;
-  offset?: number;
-};
-
-const DEFAULT_LIMIT = 50;
+function mapQuestionItem(dto: QuestionDto): QuestionsPage["items"][number] {
+  return {
+    id: dto.question_id,
+    title: dto.title,
+    description: dto.description,
+    tags: dto.tags,
+    authorName: dto.author_name,
+    authorRating: dto.author_rating,
+    createdAt: dto.created_at,
+    likesCount: dto.likes_count,
+    answersCount: dto.answers_count,
+  };
+}
 
 export async function getQuestions(
   params: GetQuestionsParams = {},
-): Promise<QuestionsResponseDto> {
-  const searchParams = new URLSearchParams();
-  const search = params.search?.trim();
-  const limit = params.limit ?? DEFAULT_LIMIT;
-  const offset = params.offset ?? 0;
+): Promise<QuestionsPage> {
+  const {
+    filter,
+    limit = DEFAULT_QUESTIONS_PAGE_SIZE,
+    offset = 0,
+    search,
+    tags,
+  } = params;
+  const normalizedSearch = normalizeQuestionSearch(search);
+  const query: Record<string, string | number> = { limit, offset };
 
-  if (params.filter) {
-    searchParams.set("filter", params.filter);
+  if (filter) {
+    query.filter = filter;
+  }
+  if (normalizedSearch) {
+    query.search = normalizedSearch;
+  }
+  if (tags && tags.length > 0) {
+    query.tags = tags.join(",");
   }
 
-  if (search) {
-    searchParams.set("search", search);
-  }
-
-  if (params.tags?.length) {
-    searchParams.set("tags", params.tags.join(","));
-  }
-
-  searchParams.set("limit", String(limit));
-  searchParams.set("offset", String(offset));
-
-  const query = searchParams.toString();
-  const { data } = await apiClient.get<QuestionsResponseDto>(
-    `/qna/questions/${query ? `?${query}` : ""}`,
+  const { data } = await apiClient.get<GetQuestionsResponse>(
+    "/qna/questions/",
+    {
+      params: query,
+    },
   );
 
-  return data;
+  return {
+    items: data.items.map(mapQuestionItem),
+    count: data.total,
+    hasMore: data.has_more,
+  };
 }

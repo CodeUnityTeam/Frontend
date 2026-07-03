@@ -6,21 +6,22 @@ import { toast } from "sonner";
 import {
   deleteQuestion,
   useQuestions,
-  type QuestionListFilter,
-  type QuestionListItemDto,
+  type GetQuestionsParams,
 } from "@/entities/question";
 import { ConfirmModal } from "@/features/confirm-modal";
-import { ROUTES } from "@/shared/model/routes";
 import { PageContainer } from "@/shared/ui/page-container";
 import { Button } from "@/shared/ui/button";
+import { ROUTES } from "@/shared/model/routes";
 import { FilterTabs } from "@/widgets/filter-tabs/ui/filter-tabs";
 import { qaTabs } from "@/widgets/filter-tabs/model/tabs-data";
 import { MyQuestionsCard } from "@/widgets/my-questions/ui/my-questions";
 import { QuestionCard } from "@/widgets/question-card";
 import { Search } from "@/widgets/search";
 import { TagsList } from "@/widgets/tags";
+import type { QuestionData } from "@/widgets/question-card";
+import { mapQuestion } from "./model/question-mapper";
 
-const QUESTION_FILTER_BY_TAB: Record<string, QuestionListFilter | undefined> = {
+const TAB_TO_FILTER: Record<string, GetQuestionsParams["filter"]> = {
   new: undefined,
   popular: "popular",
   unanswered: "no_answers",
@@ -56,13 +57,12 @@ const QAPage = () => {
   const [tab, setTab] = useState("new");
   const [search, setSearch] = useState("");
   const [questionToDelete, setQuestionToDelete] =
-    useState<QuestionListItemDto | null>(null);
+    useState<QuestionData | null>(null);
 
   const questionsQuery = useQuestions({
-    filter: QUESTION_FILTER_BY_TAB[tab],
+    filter: TAB_TO_FILTER[tab],
     search,
   });
-
   const deleteMutation = useMutation({
     mutationFn: deleteQuestion,
     onSuccess: () => {
@@ -75,15 +75,19 @@ const QAPage = () => {
     },
   });
 
-  const questions = questionsQuery.data?.items ?? [];
+  const questions =
+    questionsQuery.data?.pages.flatMap((page) => page.items.map(mapQuestion)) ??
+    [];
   const isMyQuestionsTab = tab === "my-questions";
+  const totalQuestions = questionsQuery.data?.pages[0]?.count ?? questions.length;
+  const remainingQuestions = Math.max(totalQuestions - questions.length, 0);
 
   const handleConfirmDelete = () => {
     if (!questionToDelete) {
       return;
     }
 
-    deleteMutation.mutate(questionToDelete.question_id);
+    deleteMutation.mutate(questionToDelete.id);
   };
 
   return (
@@ -122,24 +126,41 @@ const QAPage = () => {
           ) : questionsQuery.isError ? (
             <QaListError />
           ) : questions.length > 0 ? (
-            questions.map((question) =>
-              isMyQuestionsTab ? (
-                <MyQuestionsCard
-                  key={question.question_id}
-                  question={question}
-                  editHref={generatePath(ROUTES.QA_EDIT, {
-                    id: question.question_id,
-                  })}
-                  onDelete={() => setQuestionToDelete(question)}
-                  isDeleting={
-                    deleteMutation.isPending &&
-                    questionToDelete?.question_id === question.question_id
-                  }
-                />
-              ) : (
-                <QuestionCard key={question.question_id} question={question} />
-              ),
-            )
+            <>
+              {questions.map((question) =>
+                isMyQuestionsTab ? (
+                  <MyQuestionsCard
+                    key={question.id}
+                    question={question}
+                    editHref={generatePath(ROUTES.QA_EDIT, {
+                      id: question.id,
+                    })}
+                    onDelete={() => setQuestionToDelete(question)}
+                    isDeleting={
+                      deleteMutation.isPending &&
+                      questionToDelete?.id === question.id
+                    }
+                  />
+                ) : (
+                  <QuestionCard key={question.id} question={question} />
+                ),
+              )}
+
+              {questionsQuery.hasNextPage && (
+                <div className="flex justify-center pt-6">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => questionsQuery.fetchNextPage()}
+                    disabled={questionsQuery.isFetchingNextPage}
+                  >
+                    {questionsQuery.isFetchingNextPage
+                      ? "Загрузка..."
+                      : `Загрузить ещё ${remainingQuestions}`}
+                  </Button>
+                </div>
+              )}
+            </>
           ) : (
             <p className="text-base text-foreground">Вопросов пока нет.</p>
           )}

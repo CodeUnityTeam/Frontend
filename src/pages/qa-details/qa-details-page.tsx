@@ -10,6 +10,7 @@ import {
   deleteQuestion,
   getQuestion,
   QuestionLikeButton,
+  QUESTIONS_QUERY_KEY,
   useQuestions,
   type QuestionAnswerDto,
 } from "@/entities/question";
@@ -174,9 +175,9 @@ function QaDetailsPage() {
 
   const question = questionQuery.data;
   const isOwner = Boolean(
-    myQuestionsQuery.data?.items.some(
-      (item) => item.question_id === questionId,
-    ),
+    myQuestionsQuery.data?.pages
+      .flatMap((page) => page.items)
+      .some((item) => item.id === questionId),
   );
 
   const answers = useMemo(
@@ -215,7 +216,7 @@ function QaDetailsPage() {
       toast.success("Комментарий добавлен");
       setComment("");
       void questionQuery.refetch();
-      void queryClient.invalidateQueries({ queryKey: ["questions"] });
+      void queryClient.invalidateQueries({ queryKey: [QUESTIONS_QUERY_KEY] });
     },
     onError: (error: Error) => {
       toast.error(error.message);

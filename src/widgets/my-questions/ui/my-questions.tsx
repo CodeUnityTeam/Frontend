@@ -1,14 +1,14 @@
 import { Icon } from "@iconify/react";
 import { Link, generatePath } from "react-router";
 
-import type { QuestionListItemDto } from "@/entities/question";
 import AvatarPlaceholder from "@/shared/assets/images/avatar.png";
 import { formatRelativeDate } from "@/shared/lib/pluralize";
 import { ROUTES } from "@/shared/model/routes";
 import { Button } from "@/shared/ui/button";
+import type { QuestionData } from "@/widgets/question-card";
 
 type MyQuestionsCardProps = {
-  question: QuestionListItemDto;
+  question: QuestionData;
   editHref: string;
   onDelete: () => void;
   isDeleting?: boolean;
@@ -21,31 +21,32 @@ export function MyQuestionsCard({
   isDeleting = false,
 }: MyQuestionsCardProps) {
   const detailHref = generatePath(ROUTES.QA_DETAILS, {
-    id: question.question_id,
+    id: question.id,
   });
+  const avatarSrc = question.user.avatarUrl || AvatarPlaceholder;
 
   return (
     <article className="mt-5 w-full max-w-[955px] rounded-[var(--radius-lg)] border border-1 border-[var(--color-gray)] bg-[var(--color-white)] px-8 py-9">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
           <img
-            src={AvatarPlaceholder}
-            alt={question.author_name}
+            src={avatarSrc}
+            alt={question.user.firstName}
             className="h-10 w-10 rounded-full object-cover"
           />
           <div className="flex items-center gap-3">
             <span className="text-[20px] font-semibold text-[var(--color-black)]">
-              {question.author_name}
+              {question.user.firstName}
             </span>
             <div className="flex items-center gap-1 text-[var(--color-black)]">
               <Icon icon="ph:thumbs-up" className="h-5 w-5" />
-              <span className="text-[18px]">{question.likes_count}</span>
+              <span className="text-[18px]">{question.user.rating}</span>
             </div>
           </div>
         </div>
 
         <span className="pt-3 pb-3 text-[14px] text-[var(--color-black)]">
-          {formatRelativeDate(question.created_at)}
+          {formatRelativeDate(question.createdAt)}
         </span>
       </div>
 
@@ -54,7 +55,7 @@ export function MyQuestionsCard({
       </h2>
 
       <div className="mt-3 flex flex-wrap gap-2">
-        {question.tags.map((tag) => (
+        {question.skills.map((tag) => (
           <span
             key={tag}
             className="rounded-[var(--radius-lg)] border border-1 border-[var(--color-gray)] px-3 py-1 text-[18px] text-[var(--color-black)]"
@@ -64,7 +65,7 @@ export function MyQuestionsCard({
         ))}
       </div>
 
-      <div className="mt-7 leading-[1.5] font-[18px] font-normal text-[var(--color-black)]">
+      <div className="mt-7 leading-[1.5] text-[18px] font-normal text-[var(--color-black)]">
         {question.description.split("\n").map((paragraph, index) => (
           <p key={index}>{paragraph}</p>
         ))}
