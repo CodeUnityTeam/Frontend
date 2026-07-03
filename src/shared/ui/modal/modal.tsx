@@ -21,13 +21,25 @@ type ModalProps = {
   onOpenChange: (open: boolean) => void;
   children: ReactNode;
   className?: string;
+  closeOnOutsideClick?: boolean;
 };
 
-export function Modal({ open, onOpenChange, children, className }: ModalProps) {
+export function Modal({ 
+  open, 
+  onOpenChange, 
+  children, 
+  className,
+  closeOnOutsideClick = true,
+}: ModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
+        onPointerDownOutside={(e) => {
+          if (!closeOnOutsideClick) {
+            e.preventDefault();
+          }
+        }}
         className={cn(
           "flex max-h-[90vh] max-w-auto flex-col gap-0 overflow-hidden sm:p-8",
           className,
