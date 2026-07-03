@@ -20,6 +20,7 @@ export async function getProjects(
     specId,
     duration,
     favourites,
+    myProject,
     search
   } = params;
 
@@ -51,6 +52,9 @@ export async function getProjects(
   }
   if (favourites) {
     query.favourites = "true";
+  }
+  if (myProject) {
+    query.my_project = "true";
   }
   if(search?.trim()) {
     query.search = search.trim()

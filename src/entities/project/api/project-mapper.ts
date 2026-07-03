@@ -14,6 +14,7 @@ export interface ProjectDto {
   published_at: string;
   participants_count: number;
   is_liked_by_me: boolean;
+  is_favorite_by_me: boolean;
   skills: ProjectSkillDto[];
 }
 
@@ -33,6 +34,7 @@ export function mapProject(dto: ProjectDto): Project {
     publishedAt: dto.published_at,
     participantsCount: dto.participants_count,
     isLikedByMe: dto.is_liked_by_me,
+    isFavoriteByMe: dto.is_favorite_by_me,
     skills: dto.skills.map((skill) => ({
       skill_id: skill.skill_id,
       name: skill.name,
