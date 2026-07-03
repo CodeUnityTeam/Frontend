@@ -35,7 +35,7 @@ export function QuestionLikeButton({
       )}
     >
       <Icon
-        icon={isLikedByMe ? "ph:heart-fill" : "ph:heart"}
+        icon={isLikedByMe ? "ph:thumbs-up-fill" : "ph:thumbs-up"}
         className={cn("size-5", isLikedByMe && "text-primary")}
       />
       <span>{likesCount}</span>
