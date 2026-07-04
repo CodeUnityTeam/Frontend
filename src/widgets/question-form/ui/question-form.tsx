@@ -13,6 +13,7 @@ type QuestionFormProps = {
   onSubmit: (values: QuestionFormValues) => void;
   onDelete: () => void;
   className?: string;
+  isSubmitting?: boolean;
 };
 
 export function QuestionForm({
@@ -20,6 +21,7 @@ export function QuestionForm({
   onSubmit,
   onDelete,
   className,
+  isSubmitting = false,
 }: QuestionFormProps) {
   const {
     title,
@@ -72,12 +74,13 @@ export function QuestionForm({
           type="button"
           variant="outline"
           className="min-w-0 flex-1"
+          disabled={isSubmitting}
           onClick={onDelete}
         >
           Удалить
         </Button>
-        <Button type="submit" className="min-w-0 flex-1">
-          Сохранить
+        <Button type="submit" className="min-w-0 flex-1" disabled={isSubmitting}>
+          {isSubmitting ? "Сохранение..." : "Сохранить"}
         </Button>
       </div>
     </form>

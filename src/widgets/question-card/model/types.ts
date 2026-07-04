@@ -5,11 +5,11 @@ export interface UserData {
 }
 
 export interface QuestionData {
-  id: string,
-  user: UserData,
+  id: string;
+  user: UserData;
   title: string;
   description: string;
-  skills: string[];   // question tags
+  skills: string[];
   createdAt: Date;
   likes: number;
   comments: number;

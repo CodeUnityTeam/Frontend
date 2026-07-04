@@ -1,5 +1,3 @@
-export const isAuth: boolean = false;
-
 export const employmentRole: "worker" | "employer" = "worker";
 
 /** Мок текущего пользователя (имя выводится в попапе профиля). */
