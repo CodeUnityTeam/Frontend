@@ -15,9 +15,10 @@ import { FiltersContent } from "./filters-content";
 
 type FiltersMobileProps = {
   className?: string;
+  children?: React.ReactNode
 };
 
-export function FiltersMobile({ className }: FiltersMobileProps) {
+export function FiltersMobile({ className, children }: FiltersMobileProps) {
   const { reset, selectedCount } = useFilters();
 
   return (
@@ -62,7 +63,11 @@ export function FiltersMobile({ className }: FiltersMobileProps) {
         </header>
 
         <div className="flex-1 overflow-y-auto">
-          <FiltersContent className="px-4 [&>*:first-child]:pt-4" />
+          {children ? (
+            <div className="px-4 pt-4">{children}</div>
+          ) : (
+            <FiltersContent className="px-4 [&>*:first-child]:pt-4" />
+          )}
         </div>
 
         <footer className="border-t border-(--color-light-gray-200) p-4">

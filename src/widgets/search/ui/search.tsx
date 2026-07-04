@@ -48,7 +48,7 @@ export function Search({ onSearch, placeholder = 'Поиск' }: SearchProps) {
   }
 
   return (
-    <div className="my-8.5 flex flex-col justify-start py-4 max-md:px-5">
+    <div className="my-2 md:my-8.5 flex flex-col justify-start py-4">
       <InputGroup
         className={isMobile ? "h-14 rounded-[28px]" : "h-18 rounded-[28px]"}
       >
@@ -82,18 +82,20 @@ export function Search({ onSearch, placeholder = 'Поиск' }: SearchProps) {
           )}
         </InputGroupAddon>
       </InputGroup>
-      <div className="mt-3 flex flex-wrap gap-2">
-        {searchTag.map((tag) => (
-          <Tag
-            className="cursor-pointer text-sm"
-            variant="outline"
-            key={tag}
-            onClick={() => handleTagClick(tag)}
-          >
-            {tag}
-          </Tag>
-        ))}
-      </div>
+      {
+        !isMobile && (<div className="mt-3 flex flex-wrap gap-2">
+          {searchTag.map((tag) => (
+            <Tag
+              className="cursor-pointer text-sm"
+              variant="outline"
+              key={tag}
+              onClick={() => handleTagClick(tag)}
+            >
+              {tag}
+            </Tag>
+          ))}
+        </div>)
+      }
     </div>
   );
 }

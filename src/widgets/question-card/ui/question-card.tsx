@@ -13,23 +13,23 @@ export function QuestionCard({
     <Card className="h-fit border-muted-foreground">
       <CardHeader className="flex flex-row justify-between items-start gap-4 p-6 pb-3">
         <div className="flex flex-col gap-y-3 flex-1">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2">
               <Avatar>
                 <AvatarImage src={question.user.avatarUrl} alt="avatar" />
                 <AvatarFallback>
                   <Icon icon="ph:user" className="size-6" />
                 </AvatarFallback>
               </Avatar>
-              <span className="text-xl font-semibold">{question.user.firstName}</span>
-              <div className="flex flex-row items-center gap-1">
+              <span className="truncate text-xl font-semibold">{question.user.firstName}</span>
+              <div className="flex shrink-0 flex-row items-center gap-1">
                 <Button variant="ghost" className="p-0" onClick={() => alert("В разработке")}>
                   <Icon icon={"ph:thumbs-up"} />
                 </Button>
                 <span className="text-lg align-middle">{question.user.rating}</span>
               </div>
             </div>
-            <div className="text-sm text-muted-foreground whitespace-nowrap">
+            <div className="shrink-0 text-sm text-muted-foreground whitespace-nowrap">
               {formatRelativeDate(question.createdAt)}
             </div>
           </div>
