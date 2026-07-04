@@ -1,32 +1,53 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
+import { deleteQuestion, useQuestions } from "@/entities/question";
+import { ConfirmModal } from "@/features/confirm-modal";
 import { FiltersMobile, FiltersSidebar, TagsFilterSection, useFilters } from "@/widgets/filters";
 import { FilterTabs } from "@/widgets/filter-tabs";
 import { Search } from "@/widgets/search";
 import { PageContainer } from "@/shared/ui/page-container";
 import { Button } from "@/shared/ui/button";
-import { useQuestions } from "@/entities/question";
+import { ROUTES } from "@/shared/model/routes";
+import type { QuestionData } from "@/widgets/question-card";
 import { mapQuestion } from "@/pages/qa/model/question-mapper";
 import { qaTabs } from "@/widgets/filter-tabs/model/tabs-data";
 import { TAB_TO_FILTER } from "@/pages/qa/model/tabs";
 import { QaList } from "@/pages/qa/ui/qa-list";
-import { ROUTES } from "@/shared/model/routes.ts";
 
 export function QAPageContent() {
   const navigate = useNavigate();
   const [tab, setTab] = useState("new");
   const [search, setSearch] = useState("");
+  const [questionToDelete, setQuestionToDelete] = useState<QuestionData | null>(null);
   const { selected, reset } = useFilters();
   const tags = selected["tags"] ?? [];
 
-  const { data, isLoading, isError } = useQuestions({
+  const questionsQuery = useQuestions({
     filter: TAB_TO_FILTER[tab],
     search,
     tags,
   });
 
-  const questions = data?.pages.flatMap((page) => page.items.map(mapQuestion)) ?? [];
+  const deleteMutation = useMutation({
+    mutationFn: deleteQuestion,
+    onSuccess: () => {
+      toast.success("Вопрос удалён");
+      setQuestionToDelete(null);
+      void questionsQuery.refetch();
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const questions =
+    questionsQuery.data?.pages.flatMap((page) => page.items.map(mapQuestion)) ?? [];
+  const isMyTab = tab === "my-questions";
+  const totalQuestions = questionsQuery.data?.pages[0]?.count ?? questions.length;
+  const remainingQuestions = Math.max(totalQuestions - questions.length, 0);
 
   return (
     <PageContainer className="py-8">
@@ -79,9 +100,38 @@ export function QAPageContent() {
               Задать вопрос
             </Button>
           </div>
-          <QaList questions={questions} isLoading={isLoading} isError={isError} />
+
+          <QaList
+            questions={questions}
+            isLoading={questionsQuery.isPending}
+            isError={questionsQuery.isError}
+            isMyTab={isMyTab}
+            onDelete={setQuestionToDelete}
+            deletingId={deleteMutation.isPending ? (questionToDelete?.id ?? undefined) : undefined}
+            hasNextPage={questionsQuery.hasNextPage}
+            onLoadMore={() => questionsQuery.fetchNextPage()}
+            isFetchingNextPage={questionsQuery.isFetchingNextPage}
+            remainingCount={remainingQuestions}
+          />
         </main>
       </div>
+
+      <ConfirmModal
+        open={Boolean(questionToDelete)}
+        onOpenChange={(open) => { if (!open) setQuestionToDelete(null); }}
+        icon="ph:trash"
+        title="Удалить вопрос?"
+        description={
+          questionToDelete
+            ? `Вопрос «${questionToDelete.title}» будет удалён без возможности восстановления.`
+            : "Вопрос будет удалён без возможности восстановления."
+        }
+        confirmText="Удалить"
+        cancelText="Отменить"
+        onConfirm={() => { if (questionToDelete) deleteMutation.mutate(questionToDelete.id); }}
+        isLoading={deleteMutation.isPending}
+        loadingText="Удаление..."
+      />
     </PageContainer>
   );
 }
