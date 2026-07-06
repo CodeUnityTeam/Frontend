@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
 import { Icon } from "@iconify/react";
+import { toast } from "sonner";
 
-import { getQuestionById } from "@/entities/question";
+import { deleteQuestion, getQuestion, updateQuestion } from "@/entities/question";
 import type { QuestionFormValues } from "@/entities/question";
 import { ConfirmModal } from "@/features/confirm-modal";
+import { useSkills } from "@/entities/skill";
 import { ROUTES } from "@/shared/model/routes";
 import { PageContainer } from "@/shared/ui/page-container";
 import { QuestionForm } from "@/widgets/question-form";
@@ -15,16 +18,78 @@ function QaEditPage() {
   const goBack = () => navigate(-1);
   const [isDeleteOpen, setDeleteOpen] = useState(false);
 
-  const question = id ? getQuestionById(id) : undefined;
+  const questionId = id ?? "";
+  const questionQuery = useQuery({
+    queryKey: ["question-details", questionId],
+    queryFn: () => getQuestion(questionId),
+    enabled: Boolean(questionId),
+  });
+  const skillsQuery = useSkills();
+
+  const updateMutation = useMutation({
+    mutationFn: (values: QuestionFormValues) =>
+      updateQuestion(questionId, {
+        title: values.title,
+        description: values.details,
+        tags: values.tags,
+      }),
+    onSuccess: () => {
+      toast.success("Вопрос сохранён");
+      navigate(ROUTES.QA, { replace: true });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteQuestion(questionId),
+    onSuccess: () => {
+      setDeleteOpen(false);
+      toast.success("Вопрос удалён");
+      navigate(ROUTES.QA, { replace: true });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
 
   const handleSubmit = (values: QuestionFormValues) => {
-    void values;
-    goBack();
+    updateMutation.mutate(values);
   };
 
   const confirmDelete = () => {
-    navigate(ROUTES.QA);
+    deleteMutation.mutate();
   };
+
+  if (questionQuery.isPending || skillsQuery.isPending) {
+    return (
+      <PageContainer className="py-8 max-md:px-4 md:py-10">
+        <div className="flex min-h-[40vh] items-center justify-center">
+          <p className="text-base text-foreground">Загрузка вопроса...</p>
+        </div>
+      </PageContainer>
+    );
+  }
+
+  if (questionQuery.error || skillsQuery.error || !questionQuery.data || !skillsQuery.data) {
+    return (
+      <PageContainer className="py-8 max-md:px-4 md:py-10">
+        <div className="flex min-h-[40vh] items-center justify-center">
+          <p className="text-base text-foreground">
+            Не удалось загрузить вопрос.
+          </p>
+        </div>
+      </PageContainer>
+    );
+  }
+
+  const skillIdByName = new Map(
+    skillsQuery.data.map((skill) => [skill.name, skill.skillId]),
+  );
+  const initialTags = questionQuery.data.tags
+    .map((tagName) => skillIdByName.get(tagName))
+    .filter((skillId): skillId is string => Boolean(skillId));
 
   return (
     <PageContainer className="py-8 max-md:px-4 md:py-10">
@@ -53,32 +118,29 @@ function QaEditPage() {
             </h1>
           </div>
 
-          {question ? (
-            <>
-              <QuestionForm
-                initialValues={{
-                  title: question.title,
-                  details: question.details,
-                  tags: question.tags,
-                }}
-                onSubmit={handleSubmit}
-                onDelete={() => setDeleteOpen(true)}
-              />
+          <QuestionForm
+            initialValues={{
+              title: questionQuery.data.title,
+              details: questionQuery.data.description,
+              tags: initialTags,
+            }}
+            onSubmit={handleSubmit}
+            onDelete={() => setDeleteOpen(true)}
+            isSubmitting={updateMutation.isPending || deleteMutation.isPending}
+          />
 
-              <ConfirmModal
-                open={isDeleteOpen}
-                onOpenChange={setDeleteOpen}
-                icon="ph:trash"
-                title="Удалить вопрос?"
-                description="Это действие приведёт к безвозвратному удалению вопроса"
-                confirmText="Удалить"
-                cancelText="Отменить"
-                onConfirm={confirmDelete}
-              />
-            </>
-          ) : (
-            <p className="text-base text-foreground">Вопрос не найден.</p>
-          )}
+          <ConfirmModal
+            open={isDeleteOpen}
+            onOpenChange={setDeleteOpen}
+            icon="ph:trash"
+            title="Удалить вопрос?"
+            description="Это действие приведёт к безвозвратному удалению вопроса"
+            confirmText="Удалить"
+            cancelText="Отменить"
+            onConfirm={confirmDelete}
+            isLoading={deleteMutation.isPending}
+            loadingText="Удаление..."
+          />
         </div>
       </div>
     </PageContainer>

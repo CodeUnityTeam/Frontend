@@ -1,46 +1,52 @@
-import type { Question } from "@/entities/question/model/types";
 import { Icon } from "@iconify/react";
-import type { QuestionTag } from "../model/types";
-import { Link } from "react-router";
+import { Link, generatePath } from "react-router";
 
-type TQuestionCard = Omit<Question, "tags"> & {
-  author: {
-    name: string;
-    avatar: string;
-  };
-  likes: number;
-  createdAt: string;
-  details: string;
-  tags: QuestionTag[];
+import AvatarPlaceholder from "@/shared/assets/images/avatar.png";
+import { formatRelativeDate } from "@/shared/lib/pluralize";
+import { ROUTES } from "@/shared/model/routes";
+import { Button } from "@/shared/ui/button";
+import type { QuestionData } from "@/widgets/question-card";
+
+type MyQuestionsCardProps = {
+  question: QuestionData;
+  editHref: string;
+  onDelete: () => void;
+  isDeleting?: boolean;
 };
 
-type TMyQuestionsCard = {
-  question: TQuestionCard;
-};
+export function MyQuestionsCard({
+  question,
+  editHref,
+  onDelete,
+  isDeleting = false,
+}: MyQuestionsCardProps) {
+  const detailHref = generatePath(ROUTES.QA_DETAILS, {
+    id: question.id,
+  });
+  const avatarSrc = question.user.avatarUrl || AvatarPlaceholder;
 
-export function MyQuestionsCard({ question }: TMyQuestionsCard) {
   return (
     <article className="mt-5 w-full max-w-[955px] rounded-[var(--radius-lg)] border border-1 border-[var(--color-gray)] bg-[var(--color-white)] px-8 py-9">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
           <img
-            src={question.author.avatar}
-            alt={question.author.name}
+            src={avatarSrc}
+            alt={question.user.firstName}
             className="h-10 w-10 rounded-full object-cover"
           />
           <div className="flex items-center gap-3">
             <span className="text-[20px] font-semibold text-[var(--color-black)]">
-              {question.author.name}
+              {question.user.firstName}
             </span>
             <div className="flex items-center gap-1 text-[var(--color-black)]">
               <Icon icon="ph:thumbs-up" className="h-5 w-5" />
-              <span className="text-[18px]">{question.likes}</span>
+              <span className="text-[18px]">{question.user.rating}</span>
             </div>
           </div>
         </div>
 
         <span className="pt-3 pb-3 text-[14px] text-[var(--color-black)]">
-          {question.createdAt}
+          {formatRelativeDate(question.createdAt)}
         </span>
       </div>
 
@@ -49,27 +55,38 @@ export function MyQuestionsCard({ question }: TMyQuestionsCard) {
       </h2>
 
       <div className="mt-3 flex flex-wrap gap-2">
-        {question.tags.map((tag) => (
+        {question.skills.map((tag) => (
           <span
-            key={tag.id}
+            key={tag}
             className="rounded-[var(--radius-lg)] border border-1 border-[var(--color-gray)] px-3 py-1 text-[18px] text-[var(--color-black)]"
           >
-            {tag.label}
+            {tag}
           </span>
         ))}
       </div>
 
-      <div className="mt-7 leading-[1.5] font-[18px] font-normal text-[var(--color-black)]">
-        {question.details.split("\n").map((paragraph, index) => (
+      <div className="mt-7 leading-[1.5] text-[18px] font-normal text-[var(--color-black)]">
+        {question.description.split("\n").map((paragraph, index) => (
           <p key={index}>{paragraph}</p>
         ))}
       </div>
 
-      <div className="mt-7 flex justify-end">
-        <button className="font-[18px] font-semibold text-[var(--color-black)]">
-          <Link to="" />
-          Редактировать
-        </button>
+      <div className="mt-7 flex flex-wrap justify-end gap-3">
+        <Button asChild variant="ghost" className="font-[18px] font-semibold">
+          <Link to={detailHref}>Подробнее</Link>
+        </Button>
+        <Button asChild variant="outline" className="font-[18px] font-semibold">
+          <Link to={editHref}>Редактировать</Link>
+        </Button>
+        <Button
+          type="button"
+          variant="destructive"
+          className="font-[18px] font-semibold"
+          onClick={onDelete}
+          disabled={isDeleting}
+        >
+          {isDeleting ? "Удаление..." : "Удалить"}
+        </Button>
       </div>
     </article>
   );

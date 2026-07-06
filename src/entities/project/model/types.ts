@@ -12,6 +12,7 @@ export interface Project {
   publishedAt: string;
   participantsCount: number;
   isLikedByMe: boolean;
+  isFavoriteByMe: boolean;
   skills: Skill[];
 }
 
@@ -24,6 +25,10 @@ export interface ProjectsPage {
 export interface ProjectLikeResponse {
   liked: boolean;
   likesCount: number;
+}
+
+export interface ProjectFavoriteResponse {
+  favorited: boolean;
 }
 
 export interface Specialization {
@@ -50,6 +55,7 @@ export interface GetProjectsParams {
   };
   search?: string;
   favourites?: boolean;
+  myProject?: boolean;
 }
 
 export interface GetRecommendationsParams {

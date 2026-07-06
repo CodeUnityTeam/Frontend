@@ -17,6 +17,7 @@ export const ROUTES = {
   PROJECTS: "/projects",
   RESET_PASSWORD_CONFIRM: "/password-reset/confirm/:uid/:token",
   QA: "/qa",
+  QA_DETAILS: "/qa/:id",
   QA_CREATE: "/qa/create",
   QA_EDIT: "/qa/:id/edit",
   ABOUT: "/about",
@@ -39,6 +40,9 @@ export type PathParams = {
     key: string;
   };
   [ROUTES.NAME_PAGE_1]: {
+    id: string;
+  };
+  [ROUTES.QA_DETAILS]: {
     id: string;
   };
   [ROUTES.QA_EDIT]: {

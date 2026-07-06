@@ -23,6 +23,8 @@ type ConfirmModalProps = {
   onConfirm?: () => void;
   variant?: "default" | "destructive";
   closeOnOutsideClick?: boolean;
+  isLoading?: boolean;
+  loadingText?: string;
 };
 
 export function ConfirmModal({
@@ -35,7 +37,11 @@ export function ConfirmModal({
   icon,
   onConfirm,
   closeOnOutsideClick,
+  isLoading = false,
+  loadingText,
 }: ConfirmModalProps) {
+  const confirmLabel = isLoading ? loadingText ?? confirmText : confirmText;
+
   return (
     <AlertModal
       open={open}
@@ -51,9 +57,11 @@ export function ConfirmModal({
       </AlertModalHeader>
 
       <AlertModalFooter>
-        <AlertModalAction onClick={onConfirm}>{confirmText}</AlertModalAction>
+        <AlertModalAction onClick={onConfirm} disabled={isLoading}>
+          {confirmLabel}
+        </AlertModalAction>
 
-        <AlertModalCancel>{cancelText}</AlertModalCancel>
+        <AlertModalCancel disabled={isLoading}>{cancelText}</AlertModalCancel>
       </AlertModalFooter>
     </AlertModal>
   );

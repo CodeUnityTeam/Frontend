@@ -1,12 +1,26 @@
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { Icon } from "@iconify/react";
 
+import { createQuestion } from "@/entities/question";
+import { ROUTES } from "@/shared/model/routes";
 import { PageContainer } from "@/shared/ui/page-container";
 import { CreateQuestionForm } from "@/widgets/create-question-form";
 
 function QaCreatePage() {
   const navigate = useNavigate();
   const goBack = () => navigate(-1);
+  const createMutation = useMutation({
+    mutationFn: createQuestion,
+    onSuccess: () => {
+      toast.success("Вопрос опубликован");
+      navigate(ROUTES.QA, { replace: true });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
 
   return (
     <PageContainer className="py-8 max-md:px-4 md:py-10">
@@ -35,7 +49,17 @@ function QaCreatePage() {
             </h1>
           </div>
 
-          <CreateQuestionForm />
+          <CreateQuestionForm
+            isSubmitting={createMutation.isPending}
+            onSubmit={({ anonymous, ...values }) => {
+              createMutation.mutate({
+                title: values.title,
+                description: values.details,
+                tags: values.tags,
+                is_anonymous: anonymous,
+              });
+            }}
+          />
         </div>
       </div>
     </PageContainer>

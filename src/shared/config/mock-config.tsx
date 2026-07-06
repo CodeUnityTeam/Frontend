@@ -1,5 +1,3 @@
-export const isAuth: boolean = false;
-
 export const employmentRole: "worker" | "employer" = "worker";
 
 /** Моковые данные для старта onboarding из заглушки входа. */

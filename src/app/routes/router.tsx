@@ -13,6 +13,7 @@ const ResetPasswordConfirmPage = lazy(() => import("@/pages/reset-password/reset
 const ProjectsPage = lazy(() => import("@/pages/projects/projects-page").then(m => ({ default: m.Component })));
 const ProjectDetails = lazy(() => import("@/pages/project-details/project-details").then(m => ({ default: m.Component })));
 const QAPage = lazy(() => import("@/pages/qa/qa-page").then(m => ({ default: m.Component })));
+const QADetailsPage = lazy(() => import("@/pages/qa-details/qa-details-page").then(m => ({ default: m.Component })));
 const QACreatePage = lazy(() => import("@/pages/qa-create/qa-create-page").then(m => ({ default: m.Component })));
 const QAEditPage = lazy(() => import("@/pages/qa-edit/qa-edit-page").then(m => ({ default: m.Component })));
 const AboutPage = lazy(() => import("@/pages/about/about-page").then(m => ({ default: m.Component })));
@@ -39,6 +40,7 @@ export const router = createBrowserRouter([
       { path: ROUTES.PROJECTS, element: <ProtectedRoute><ProjectsPage /></ProtectedRoute> },
       { path: "projects/:id", element: <ProtectedRoute><ProjectDetails /></ProtectedRoute> },
       { path: ROUTES.QA, element: <ProtectedRoute><QAPage /></ProtectedRoute> },
+      { path: ROUTES.QA_DETAILS, element: <ProtectedRoute><QADetailsPage /></ProtectedRoute> },
       { path: ROUTES.QA_CREATE, element: <ProtectedRoute><QACreatePage /></ProtectedRoute> },
       { path: ROUTES.QA_EDIT, element: <ProtectedRoute><QAEditPage /></ProtectedRoute> },
       { path: ROUTES.ABOUT, element: <ProtectedRoute><AboutPage /></ProtectedRoute> },
