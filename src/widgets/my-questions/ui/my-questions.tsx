@@ -73,6 +73,12 @@ export function MyQuestionsCard({
 
       <div className="mt-7 flex flex-wrap justify-end gap-3">
         <Button asChild variant="ghost" className="font-[18px] font-semibold">
+          <Link to={`${detailHref}#question-answer-form`}>
+            <Icon icon="ph:arrow-bend-down-right" className="h-5 w-5" />
+            <span>Ответить</span>
+          </Link>
+        </Button>
+        <Button asChild variant="ghost" className="font-[18px] font-semibold">
           <Link to={detailHref}>Подробнее</Link>
         </Button>
         <Button asChild variant="outline" className="font-[18px] font-semibold">
