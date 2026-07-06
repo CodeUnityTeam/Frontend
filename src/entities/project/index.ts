@@ -5,6 +5,7 @@ export type { CreateProjectDto, ProjectStatus } from "./api/create-project";
 export type { UpdateProjectDto } from "./api/update-project";
 export { useRecommendations } from "./api/use-recommendations";
 export { useLikeProject } from "./api/use-like-project";
+export { useFavoriteProject } from "./api/use-favorite-project";
 export {
   type Project,
   type ProjectDetails,
@@ -15,6 +16,7 @@ export {
   type ProjectFormat,
   type ProjectsPage,
   type ProjectLikeResponse,
+  type ProjectFavoriteResponse,
   type GetProjectsParams,
   type GetRecommendationsParams,
 } from "./model/types";

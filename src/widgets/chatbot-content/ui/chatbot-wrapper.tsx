@@ -108,7 +108,7 @@ function ProjectsCarousel({
           tags={project.skills.map((skill) => skill.name)}
           date={formatDate(project.publishedAt)}
           location={project.location}
-          isLikedByMe={project.isLikedByMe}
+          isFavoriteByMe={project.isFavoriteByMe}
         />
       </div>
     ),
