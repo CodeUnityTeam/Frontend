@@ -48,7 +48,7 @@ function CheckEmailPage() {
     if (email && password) {
       try {
         await loginMutation.mutateAsync({ email, password });
-        navigate(ROUTES.REGISTER, { state: { prefill } });
+        navigate(ROUTES.ONBOARDING, { state: { prefill } });
         return;
       } catch {
         toast.error("Не удалось войти автоматически. Войдите вручную.");
@@ -58,7 +58,7 @@ function CheckEmailPage() {
     }
 
     if (hasPrefillEmail) {
-      navigate(ROUTES.REGISTER, { state: { prefill } });
+      navigate(ROUTES.ONBOARDING, { state: { prefill } });
       return;
     }
 

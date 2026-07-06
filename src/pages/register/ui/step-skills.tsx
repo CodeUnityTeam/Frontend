@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { useSkills } from "@/entities/skill";
 import { Button } from "@/shared/ui/button";
@@ -24,10 +24,7 @@ export function OnboardingStep2({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const skillsQuery = useSkills();
-  const catalogNames = useMemo(
-    () => (skillsQuery.data ?? []).map((skill) => skill.name),
-    [skillsQuery.data],
-  );
+  const catalogNames = (skillsQuery.data ?? []).map((skill) => skill.name);
 
   const findCatalogName = (value: string): string | undefined => {
     const needle = value.trim().toLowerCase();
