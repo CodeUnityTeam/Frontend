@@ -1,19 +1,29 @@
 import { useRef, useState } from "react";
+import { Icon } from "@iconify/react";
 
 import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
-import type { RegisterFormData } from "../model/use-register-form";
+import type { RegisterFormData } from "@/pages/register/model/use-register-form";
 
 interface StepAboutProps {
   data: RegisterFormData;
   onNext: (patch: Partial<RegisterFormData>) => void;
   onBack: () => void;
   onPatch: (patch: Partial<RegisterFormData>) => void;
+  isSubmitting?: boolean;
 }
 
-export function OnboardingStep4({ data, onNext, onBack, onPatch }: StepAboutProps) {
+export function OnboardingStep4({
+  data,
+  onNext,
+  onBack,
+  onPatch,
+  isSubmitting = false,
+}: StepAboutProps) {
   const [qualities, setQualities] = useState<string[]>(data.qualities ?? []);
-  const [qualityInput, setQualityInput] = useState<string>(data.qualitiesDraft ?? "");
+  const [qualityInput, setQualityInput] = useState<string>(
+    data.qualitiesDraft ?? "",
+  );
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [about, setAbout] = useState(data.about);
@@ -51,20 +61,24 @@ export function OnboardingStep4({ data, onNext, onBack, onPatch }: StepAboutProp
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onPatch?.({ qualities, });
+    onPatch?.({ qualities });
     onNext({ about, qualities });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-3xl mx-auto w-full py-8">
+    <form onSubmit={handleSubmit} className="mx-auto w-full max-w-3xl py-8">
       {/* Intro card (outlined white) */}
-      <div className="mx-auto border border-border bg-background rounded-[18px] px-6 py-5 sm:px-8 sm:py-6">
-        <h1 className="text-3xl sm:text-2xl font-semibold pl-12 sm:pl-16">О вас</h1>
-        <p className="mt-2 text-muted-foreground leading-snug pl-12 sm:pl-16">Добавьте немного личности. Так проще найти своих людей</p>
+      <div className="mx-auto rounded-[18px] border border-border bg-background px-6 py-5 sm:px-8 sm:py-6">
+        <h1 className="pl-12 text-3xl font-semibold sm:pl-16 sm:text-2xl">
+          О вас
+        </h1>
+        <p className="mt-2 pl-12 leading-snug text-muted-foreground sm:pl-16">
+          Добавьте немного личности. Так проще найти своих людей
+        </p>
       </div>
 
       {/* Form area (reduced mobile spacing) */}
-      <div className="mt-8 sm:mt-18 flex flex-col gap-6">
+      <div className="mt-8 flex flex-col gap-6 sm:mt-18">
         <div>
           <label className="text-sm font-medium">Личные качества</label>
 
@@ -73,7 +87,10 @@ export function OnboardingStep4({ data, onNext, onBack, onPatch }: StepAboutProp
             onClick={() => inputRef.current?.focus()}
           >
             {qualities.map((q) => (
-              <span key={q} className="flex items-center gap-1 rounded-sm bg-secondary px-2 py-0.5 text-sm">
+              <span
+                key={q}
+                className="flex items-center gap-1 rounded-sm bg-secondary px-2 py-0.5 text-sm"
+              >
                 {q}
                 <button
                   type="button"
@@ -98,7 +115,7 @@ export function OnboardingStep4({ data, onNext, onBack, onPatch }: StepAboutProp
               }}
               onKeyDown={handleQualityKeyDown}
               placeholder={qualities.length === 0 ? "Ваши преимущества" : ""}
-              className="min-w-35 basis-32 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
+              className="min-w-35 flex-1 basis-32 bg-transparent text-base outline-none placeholder:text-muted-foreground"
             />
           </div>
         </div>
@@ -117,11 +134,30 @@ export function OnboardingStep4({ data, onNext, onBack, onPatch }: StepAboutProp
         </div>
 
         <div className="mt-8 flex flex-col gap-3 sm:mt-12 sm:flex-row sm:justify-between">
-          <Button type="button" variant="outline" size="lg" onClick={onBack} className="w-full sm:w-auto">
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            onClick={onBack}
+            disabled={isSubmitting}
+            className="w-full sm:w-auto"
+          >
             Предыдущий шаг
           </Button>
-          <Button type="submit" size="lg" className="w-full sm:w-auto">
-            Завершить заполнение
+          <Button
+            type="submit"
+            size="lg"
+            disabled={isSubmitting}
+            className="w-full sm:w-auto"
+          >
+            {isSubmitting ? (
+              <>
+                <Icon icon="ph:spinner" className="mr-2 animate-spin" />
+                Сохраняем...
+              </>
+            ) : (
+              "Завершить заполнение"
+            )}
           </Button>
         </div>
       </div>
