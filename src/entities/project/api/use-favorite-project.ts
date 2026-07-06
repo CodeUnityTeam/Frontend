@@ -111,8 +111,10 @@ export function useFavoriteProject() {
       toast.error(error.message);
     },
 
-    onSuccess: (data, { projectId }) => {
-      applyFavorited(projectId, data.favorited);
+    onSuccess: (data, { projectId, favorited }) => {
+      if (data.favorited !== favorited) {
+        applyFavorited(projectId, data.favorited);
+      }
       queryClient.invalidateQueries({
         queryKey: [PROJECTS_QUERY_KEY],
         predicate: (query) => isFavouritesListKey(query.queryKey),

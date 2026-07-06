@@ -98,8 +98,10 @@ export function useLikePerson() {
       toast.error(error.message);
     },
 
-    onSuccess: (isLiked, { userId }) => {
-      applyLiked(userId, isLiked);
+    onSuccess: (isLiked, { userId, liked }) => {
+      if (isLiked !== liked) {
+        applyLiked(userId, isLiked);
+      }
       queryClient.invalidateQueries({
         queryKey: [PEOPLE_QUERY_KEY],
         predicate: (query) => isFavouritesListKey(query.queryKey),

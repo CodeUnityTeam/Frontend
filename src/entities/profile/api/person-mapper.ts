@@ -14,13 +14,13 @@ export interface PersonDto {
 }
 
 const INTERNAL_MINIO_PREFIX = /^https?:\/\/minio:\d+\//;
-const PUBLIC_MEDIA_BASE = "https://dev.code-unity.ru/media/";
+const PUBLIC_MEDIA_PATH = "/media/";
 
 function normalizeAvatarUrl(url: string | null | undefined): string {
   if (!url) {
     return "";
   }
-  return url.replace(INTERNAL_MINIO_PREFIX, PUBLIC_MEDIA_BASE);
+  return url.replace(INTERNAL_MINIO_PREFIX, PUBLIC_MEDIA_PATH);
 }
 
 export function mapPerson(dto: PersonDto): Person {
