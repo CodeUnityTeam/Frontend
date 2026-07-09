@@ -212,6 +212,14 @@ function QaDetailsPage() {
       .flatMap((page) => page.items)
       .some((item) => item.id === questionId),
   );
+  const goBack = () => {
+    if (window.history.state?.idx > 0) {
+      navigate(-1);
+      return;
+    }
+
+    navigate(ROUTES.QA, { replace: true });
+  };
 
   const answerThreads = useMemo(
     () => buildAnswerTree(question?.answers ?? []),
@@ -339,8 +347,8 @@ function QaDetailsPage() {
       <div key={answer.answer_id} className={cn(depth > 0 && "pl-5 sm:pl-8")}>
         <Card
           className={cn(
-            "h-fit rounded-2xl border-muted-foreground",
-            depth > 0 && "border-dashed bg-muted/20 shadow-none",
+            "h-fit rounded-2xl border-none bg-transparent shadow-none",
+            depth > 0 && "bg-transparent",
           )}
         >
           <CardHeader className="flex flex-row items-start justify-between gap-4 p-6 pb-3">
@@ -427,7 +435,7 @@ function QaDetailsPage() {
                 variant="ghost"
                 size="sm"
                 onClick={() => setAnswerDeleteTarget(answer)}
-                className="gap-2 px-3 font-medium text-destructive hover:text-destructive"
+                className="gap-2 px-3 font-medium text-muted-foreground hover:text-primary"
               >
                 <Icon icon="ph:trash" className="size-5" />
                 <span>Удалить</span>
@@ -480,7 +488,7 @@ function QaDetailsPage() {
     <PageContainer className="py-8 max-md:px-4 md:py-10">
       <button
         type="button"
-        onClick={() => navigate(-1)}
+        onClick={goBack}
         className="mb-5 hidden cursor-pointer items-center gap-2 text-base font-semibold text-foreground transition-colors hover:text-primary md:inline-flex"
       >
         <Icon icon="ph:arrow-left" className="size-6" />
@@ -489,7 +497,7 @@ function QaDetailsPage() {
 
       <button
         type="button"
-        onClick={() => navigate(-1)}
+        onClick={goBack}
         aria-label="Назад"
         className="mb-5 inline-flex cursor-pointer items-center gap-2 text-foreground transition-colors hover:text-primary md:hidden"
       >

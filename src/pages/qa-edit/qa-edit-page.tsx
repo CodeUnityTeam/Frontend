@@ -15,7 +15,14 @@ import { QuestionForm } from "@/widgets/question-form";
 function QaEditPage() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const goBack = () => navigate(-1);
+  const goBack = () => {
+    if (window.history.state?.idx > 0) {
+      navigate(-1);
+      return;
+    }
+
+    navigate(ROUTES.QA, { replace: true });
+  };
   const [isDeleteOpen, setDeleteOpen] = useState(false);
 
   const questionId = id ?? "";
