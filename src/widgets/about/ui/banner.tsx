@@ -1,14 +1,13 @@
 import { useIsAuthed } from "@/shared/lib/auth";
 import { Button } from "@/shared/ui/button";
 import { openAuthRegister } from "@/widgets/registration/model/auth-modal-actions";
-import { AuthQuickActions } from "@/widgets/auth-quick-actions";
 
 export function Banner() {
   const isAuthed = useIsAuthed();
 
   return (
     <section
-      className={`px-4 md:px-20 md:mx-20 ${isAuthed ? "py-[46.5px] md:pbs-20 md:pbe-[56px]" : "py-[36.5px] md:py-[74.5px]"} rounded-2xl bg-[url('@/shared/assets/images/greetingText.png')] bg-cover bg-center font-['Raleway']`}
+      className={`px-4 md:mx-20 md:px-20 ${isAuthed ? "py-[46.5px] md:pbs-20 md:pbe-[56px]" : "py-[36.5px] md:py-[74.5px]"} rounded-2xl bg-[url('@/shared/assets/images/greetingText.png')] bg-cover bg-center font-['Raleway']`}
     >
       <div className="max-w-600">
         <span className="text-xl font-semibold text-[var(--focused)] uppercase">
@@ -34,9 +33,7 @@ export function Banner() {
             </ul>
           </div>
         </div>
-        {isAuthed ? (
-          <AuthQuickActions className="mbs-10 md:mbs-16" />
-        ) : (
+        {!isAuthed && (
           <Button
             onClick={openAuthRegister}
             size="lg"
