@@ -11,23 +11,40 @@ import { Tag } from "@/shared/ui/tag";
 
 const SEARCH_TAGS_LIMIT = 10;
 
-export function Search() {
+interface SearchProps {
+  onSearch: (value: string) => void;
+}
+
+export function Search({ onSearch }: SearchProps) {
   const [searchValue, setSearchValue] = useState<string>("");
   const [searchTag, setSearchTag] = useState<string[]>(mockTags);
   const isMobile = window.innerWidth < 768;
 
   const handleSearch = () => {
-    if (!searchValue.trim()) {
-      return;
-    }
+    const trimmed = searchValue.trim();
+    if (!trimmed) return;
+
     setSearchTag((prev) => {
       const filtered = prev.filter(
-        (tag) => tag.toLowerCase() !== searchValue.toLowerCase(),
+        (tag) => tag.toLowerCase() !== trimmed.toLowerCase(),
       );
-      return [searchValue, ...filtered].slice(0, SEARCH_TAGS_LIMIT);
+      return [trimmed, ...filtered].slice(0, SEARCH_TAGS_LIMIT);
     });
-    setSearchValue("");
+    onSearch(trimmed);
   };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchValue(value);
+    if (!value) {
+      onSearch("");
+    }
+  };
+
+  const handleTagClick = (tag: string) => {
+    setSearchValue(tag);
+    onSearch(tag)
+  }
 
   return (
     <div className="my-8.5 flex flex-col justify-start py-4 max-md:px-5">
@@ -41,7 +58,7 @@ export function Search() {
           type="text"
           className={isMobile ? "h-14" : "h-7"}
           value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
+          onChange={handleSearchChange}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               handleSearch();
@@ -57,9 +74,7 @@ export function Search() {
               className="mx-6 my-3 rounded-[12px] px-8 py-3"
               variant="outline"
               size="md"
-              onClick={() => {
-                handleSearch();
-              }}
+              onClick={handleSearch}
             >
               Найти
             </Button>
@@ -67,7 +82,16 @@ export function Search() {
         </InputGroupAddon>
       </InputGroup>
       <div className="mt-3 flex flex-wrap gap-2">
-        {searchTag.map((tag) => <Tag className="text-sm" variant="outline" key={tag}>{tag}</Tag>)}
+        {searchTag.map((tag) => (
+          <Tag
+            className="cursor-pointer text-sm"
+            variant="outline"
+            key={tag}
+            onClick={() => handleTagClick(tag)}
+          >
+            {tag}
+          </Tag>
+        ))}
       </div>
     </div>
   );

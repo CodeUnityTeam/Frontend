@@ -9,6 +9,7 @@ const HomePage = lazy(() => import("@/pages/home/ui/home-page").then(m => ({ def
 const RegisterPage = lazy(() => import("@/pages/register/ui/register-page").then(m => ({ default: m.Component })));
 const CheckEmailPage = lazy(() => import("@/pages/register/ui/check-email-page").then(m => ({ default: m.Component })));
 const VerifyEmailPage = lazy(() => import("@/pages/register/ui/verify-email-page").then(m => ({ default: m.Component })));
+const ResetPasswordConfirmPage = lazy(() => import("@/pages/reset-password/reset-password-confirm-page").then(m => ({ default: m.Component})));
 const ProjectsPage = lazy(() => import("@/pages/projects/projects-page").then(m => ({ default: m.Component })));
 const ProjectDetails = lazy(() => import("@/pages/project-details/project-details").then(m => ({ default: m.Component })));
 const QAPage = lazy(() => import("@/pages/qa/qa-page").then(m => ({ default: m.Component })));
@@ -34,6 +35,7 @@ export const router = createBrowserRouter([
       { path: ROUTES.REGISTER_CHECK_EMAIL, element: <CheckEmailPage /> },
       { path: ROUTES.REGISTER_VERIFY_EMAIL, element: <VerifyEmailPage /> },
       { path: ROUTES.REGISTER_VERIFY_EMAIL_FALLBACK, element: <VerifyEmailPage /> },
+      { path: ROUTES.RESET_PASSWORD_CONFIRM, element: <ResetPasswordConfirmPage />},
       { path: ROUTES.PROJECTS, element: <ProtectedRoute><ProjectsPage /></ProtectedRoute> },
       { path: "projects/:id", element: <ProtectedRoute><ProjectDetails /></ProtectedRoute> },
       { path: ROUTES.QA, element: <ProtectedRoute><QAPage /></ProtectedRoute> },
