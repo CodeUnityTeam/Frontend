@@ -100,7 +100,7 @@ function ProjectsCarousel({
   const items = projects.map((project) => ({
     id: project.projectId,
     card: (
-      <div className="w-[273px]">
+      <div className="h-full w-[273px]">
         <ProjectCard
           projectId={project.projectId}
           title={project.title}
