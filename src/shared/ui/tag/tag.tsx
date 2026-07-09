@@ -1,53 +1,37 @@
-import React from "react";
-import { Root, List, Trigger, Content } from "@radix-ui/react-tabs";
-
 import { cn } from "@/shared/lib/utils";
+import React from "react";
 
-const Tabs = Root;
+type TagVariant = "default" | "accent" | "muted" | "outline";
 
-const TabsList = React.forwardRef<
-  React.ElementRef<typeof List>,
-  React.ComponentPropsWithoutRef<typeof List>
->(({ className, ...props }, ref) => (
-  <List
-    ref={ref}
-    className={cn(
-      "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
-      className,
-    )}
-    {...props}
-  />
-));
-TabsList.displayName = List.displayName;
+type TagProps = {
+  children?: React.ReactNode;
+  label?: string;
+  variant?: TagVariant;
+  className?: string;
+  onRemove?: (e: React.MouseEvent) => void;
+  onClick?: (e: React.MouseEvent) => void;
+};
 
-const TabsTrigger = React.forwardRef<
-  React.ElementRef<typeof Trigger>,
-  React.ComponentPropsWithoutRef<typeof Trigger>
->(({ className, ...props }, ref) => (
-  <Trigger
-    ref={ref}
-    className={cn(
-      "inline-flex cursor-pointer items-center justify-center border-b border-transparent text-[16px] font-medium whitespace-nowrap ring-offset-background transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none data-[state=active]:border-primary data-[state=active]:bg-background data-[state=active]:text-foreground lg:text-lg",
-      className,
-    )}
-    {...props}
-  />
-));
-TabsTrigger.displayName = Trigger.displayName;
+export const Tag = ({
+  children,
+  label,
+  variant = "default",
+  className,
+  onClick,
+}: TagProps) => {
+  const base =
+    "inline-flex cursor-pointer items-center rounded-full px-3 py-1 text-sm font-medium";
 
-const TabsContent = React.forwardRef<
-  React.ElementRef<typeof Content>,
-  React.ComponentPropsWithoutRef<typeof Content>
->(({ className, ...props }, ref) => (
-  <Content
-    ref={ref}
-    className={cn(
-      "mt-2 ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none",
-      className,
-    )}
-    {...props}
-  />
-));
-TabsContent.displayName = Content.displayName;
+  const variants: Record<TagVariant, string> = {
+    default: "bg-muted text-foreground",
+    accent: "bg-primary text-primary-foreground",
+    muted: "bg-muted text-muted-foreground",
+    outline: "border text-foreground text-lg"
+  };
 
-export { Tabs, TabsList, TabsTrigger, TabsContent };
+  return (
+    <span className={cn(base, variants[variant], className)} onClick={onClick}>
+      {children ?? label}
+    </span>
+  );
+};
