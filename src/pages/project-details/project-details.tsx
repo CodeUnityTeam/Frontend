@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar/avatar";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent } from "@/shared/ui/card/card";
 import { PageContainer } from "@/shared/ui/page-container/page-container";
-import { Tag } from "@/shared/ui/tag/tag";
+import { Tag } from "@/shared/ui/tag";
 
 function ProjectDetails() {
   const navigate = useNavigate();
