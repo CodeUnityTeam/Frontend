@@ -100,7 +100,7 @@ function ProjectsCarousel({
   const items = projects.map((project) => ({
     id: project.projectId,
     card: (
-      <div className="w-[273px]">
+      <div className="h-full w-[273px]">
         <ProjectCard
           projectId={project.projectId}
           title={project.title}
@@ -108,7 +108,7 @@ function ProjectsCarousel({
           tags={project.skills.map((skill) => skill.name)}
           date={formatDate(project.publishedAt)}
           location={project.location}
-          isLikedByMe={project.isLikedByMe}
+          isFavoriteByMe={project.isFavoriteByMe}
         />
       </div>
     ),

@@ -20,7 +20,7 @@ export const Tag = ({
   onClick,
 }: TagProps) => {
   const base =
-    "inline-flex items-center rounded-full px-3 py-1 text-sm font-medium";
+    "inline-flex cursor-pointer items-center rounded-full px-3 py-1 text-sm font-medium";
 
   const variants: Record<TagVariant, string> = {
     default: "bg-muted text-foreground",

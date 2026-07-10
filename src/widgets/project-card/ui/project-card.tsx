@@ -1,7 +1,8 @@
 import { Icon } from "@iconify/react";
 import { useCallback } from "react";
 
-import { useLikeProject } from "@/entities/project";
+import { useFavoriteProject } from "@/entities/project";
+import { useRespondToProject } from "@/entities/response";
 import { useIsAuthed } from "@/shared/lib/auth";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
@@ -14,7 +15,7 @@ type ProjectCardProps = {
   tags: string[];
   date: string;
   location: string;
-  isLikedByMe: boolean;
+  isFavoriteByMe: boolean;
 };
 
 export function ProjectCard({
@@ -24,18 +25,23 @@ export function ProjectCard({
   tags,
   date,
   location,
-  isLikedByMe,
+  isFavoriteByMe,
 }: ProjectCardProps) {
   const isAuthed = useIsAuthed();
-  const { mutate: toggleLike } = useLikeProject();
+  const { mutate: toggleFavorite } = useFavoriteProject();
+  const {
+    mutate: respond,
+    isPending: isResponding,
+    isSuccess: hasResponded,
+  } = useRespondToProject();
 
-  const handleLike = useCallback(() => {
-    toggleLike({ projectId, liked: !isLikedByMe });
-  }, [toggleLike, projectId, isLikedByMe]);
+  const handleFavorite = useCallback(() => {
+    toggleFavorite({ projectId, favorited: !isFavoriteByMe });
+  }, [toggleFavorite, projectId, isFavoriteByMe]);
 
   const handleApply = useCallback(() => {
-    console.log("Откликнуться");
-  }, []);
+    respond(projectId);
+  }, [respond, projectId]);
 
   return (
     <div className="flex h-full w-full flex-col rounded-lg border border-border p-4">
@@ -45,15 +51,19 @@ export function ProjectCard({
             variant="ghost"
             size="icon"
             aria-label={
-              isLikedByMe ? "Убрать из избранного" : "Добавить в избранное"
+              isFavoriteByMe ? "Убрать из избранного" : "Добавить в избранное"
             }
             type="button"
-            onClick={handleLike}
-            aria-pressed={isLikedByMe}
+            onClick={handleFavorite}
+            aria-pressed={isFavoriteByMe}
           >
             <Icon
-              icon={isLikedByMe ? "ph:heart-straight-fill" : "ph:heart-straight"}
-              className={cn("text-xl", isLikedByMe && "text-primary")}
+              icon={
+                isFavoriteByMe
+                  ? "ph:heart-straight-fill"
+                  : "ph:heart-straight"
+              }
+              className={cn("text-xl", isFavoriteByMe && "text-primary")}
             />
           </Button>
         </div>
@@ -98,12 +108,14 @@ export function ProjectCard({
 
         {isAuthed && (
           <Button
-            className="flex w-full items-center justify-center gap-1 rounded-xl border border-primary py-2 text-[16px] font-semibold text-foreground"
+            className="flex w-full items-center justify-center gap-1 rounded-xl border border-primary py-2 text-[16px] font-semibold text-foreground disabled:border-(--color-light-gray-200) disabled:bg-muted disabled:text-muted-foreground"
             onClick={handleApply}
             variant="ghost"
+            type="button"
+            disabled={isResponding || hasResponded}
           >
             <Icon icon="ph:chats-teardrop-light" className="text-xl" />
-            <span>Откликнуться</span>
+            <span>{hasResponded ? "Отклик отправлен" : "Откликнуться"}</span>
           </Button>
         )}
       </div>

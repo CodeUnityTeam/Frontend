@@ -4,7 +4,10 @@ import { Icon } from "@iconify/react";
 import { EmptyState } from "@/widgets/account/ui/empty-state";
 import avatarImg from "@/shared/assets/images/account-avatar.jpg";
 import { accountData } from "@/widgets/account/model/account-data";
-import type { AccountProfileProps, SkillsFormData } from "@/widgets/account/model/types";
+import type {
+  AccountProfileProps,
+  SkillsFormData,
+} from "@/widgets/account/model/types";
 import { SetSkillsModal } from "@/widgets/set-skills-modal";
 
 import { ExperienceModal } from "@/widgets/account/ui/experience-modal";
@@ -17,7 +20,8 @@ export const AccountProfile = ({
   experience,
 }: AccountProfileProps) => {
   const [tab, setTab] = React.useState<"profile" | "experience">("profile");
-  const [isSkillsModalOpen, setSkillsModalOpen] = React.useState<boolean>(false);
+  const [isSkillsModalOpen, setSkillsModalOpen] =
+    React.useState<boolean>(false);
 
   const [isExperienceModalOpen, setIsExperienceModalOpen] =
     React.useState(false);
@@ -27,55 +31,53 @@ export const AccountProfile = ({
     avatar: accountData.profile.avatar || avatarImg,
   };
 
-  const skillsData = skills && skills.length > 0 ? skills : accountData.skills;
+  const skillsData = skills ?? accountData.skills;
 
-  const qualitiesData =
-    qualities && qualities.length > 0 ? qualities : accountData.qualities;
+  const qualitiesData = qualities ?? accountData.qualities;
 
-  const aboutData =
-    about && about.trim().length > 0 ? about : accountData.about;
+  const aboutData = about ?? accountData.about;
 
-  const experienceData =
-    experience && experience.length > 0 ? experience : accountData.experience;
+  const experienceData = experience ?? accountData.experience;
 
   const hasProfileData =
     skillsData.length > 0 || qualitiesData.length > 0 || Boolean(aboutData);
 
-  // данные и хендлеры для SetSkillsModal
   const [skillsFormData, setSkillsFormData] = React.useState<SkillsFormData>({
     skills: skillsData || [],
     qualities: qualitiesData || [],
-    about: aboutData || ""
+    about: aboutData || "",
   });
 
   const handleSkillsFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     alert("В разработке");
-  }
+  };
 
   const handleSkillsChange = (newSkills: string[]) => {
-    setSkillsFormData(prev => ({ ...prev, skills: newSkills }));
-  }
+    setSkillsFormData((prev) => ({ ...prev, skills: newSkills }));
+  };
 
   const handleQualitiesChange = (newQualities: string[]) => {
-    setSkillsFormData(prev => ({ ...prev, qualities: newQualities }));
-  }
+    setSkillsFormData((prev) => ({ ...prev, qualities: newQualities }));
+  };
 
-  const handleAboutChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSkillsFormData(prev => ({ ...prev, about: e.target.value}));
-  }
+  const handleAboutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSkillsFormData((prev) => ({ ...prev, about: e.target.value }));
+  };
 
   return (
     <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[413px_1fr]">
       <aside className="w-full rounded-[20px] border border-border bg-card px-5 py-6 sm:px-8 sm:pt-10 sm:pb-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1 text-muted-foreground">
-            <Icon icon="mdi:star-outline" className="h-7 w-7" />
-            <span className="text-[14px] leading-[140%] font-normal text-foreground">
-              {profileData.rating?.toFixed(1)}
-            </span>
+            {profileData.rating != null && (
+              <>
+                <Icon icon="mdi:star-outline" className="h-7 w-7" />
+                <span className="text-[14px] leading-[140%] font-normal text-foreground">
+                  {profileData.rating.toFixed(1)}
+                </span>
+              </>
+            )}
           </div>
 
           <Button
@@ -161,7 +163,7 @@ export const AccountProfile = ({
             onSkillsChange={handleSkillsChange}
             onQualitiesChange={handleQualitiesChange}
             onAboutChange={handleAboutChange}
-            />
+          />
           {tab === "experience" && (
             <Button
               variant="ghost"

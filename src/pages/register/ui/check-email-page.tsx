@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { Icon } from "@iconify/react";
 import { Link, useLocation, useNavigate } from "react-router";
+import { toast } from "sonner";
 
+import { useLogin } from "@/entities/auth";
 import { verifyEmail } from "@/shared/api/auth";
 import { ROUTES } from "@/shared/model/routes";
 import { Button } from "@/shared/ui/button";
@@ -25,13 +27,16 @@ type CheckEmailLocationState = {
     surname?: string;
     email?: string;
   };
+  password?: string;
 };
 
 function CheckEmailPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const prefill = (location.state as CheckEmailLocationState | undefined)
-    ?.prefill;
+  const locationState = location.state as CheckEmailLocationState | undefined;
+  const prefill = locationState?.prefill;
+  const password = locationState?.password;
+  const loginMutation = useLogin();
   const email = prefill?.email?.trim();
   const emailLabel = email || "адрес, указанный при регистрации";
   const [manualKey, setManualKey] = useState("");
@@ -39,13 +44,21 @@ function CheckEmailPage() {
   const [manualMessage, setManualMessage] = useState<string>("");
   const hasPrefillEmail = Boolean(email);
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
+    if (email && password) {
+      try {
+        await loginMutation.mutateAsync({ email, password });
+        navigate(ROUTES.ONBOARDING, { state: { prefill } });
+        return;
+      } catch {
+        toast.error("Не удалось войти автоматически. Войдите вручную.");
+        openAuthLogin();
+        return;
+      }
+    }
+
     if (hasPrefillEmail) {
-      navigate(ROUTES.REGISTER, {
-        state: {
-          prefill,
-        },
-      });
+      navigate(ROUTES.ONBOARDING, { state: { prefill } });
       return;
     }
 
@@ -220,14 +233,14 @@ function CheckEmailPage() {
                 </Button>
 
                 {manualStatus === "success" && (
-                <Button
-                  type="button"
-                  className="w-full sm:order-1 sm:w-auto"
-                  onClick={handleContinue}
-                >
-                  {hasPrefillEmail ? "Продолжить" : "Войти и продолжить"}
-                </Button>
-              )}
+                  <Button
+                    type="button"
+                    className="w-full sm:order-1 sm:w-auto"
+                    onClick={handleContinue}
+                  >
+                    {hasPrefillEmail ? "Продолжить" : "Войти и продолжить"}
+                  </Button>
+                )}
               </div>
 
               {manualStatus === "success" && (

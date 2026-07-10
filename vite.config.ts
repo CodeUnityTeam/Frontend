@@ -34,8 +34,15 @@ export default defineConfig({
     },
   },
   server: {
+    port: 5173,
+    strictPort: true,
     proxy: {
       "/api": {
+        target: "https://dev.code-unity.ru",
+        changeOrigin: true,
+      },
+
+      "/media": {
         target: "https://dev.code-unity.ru",
         changeOrigin: true,
       },

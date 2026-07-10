@@ -10,7 +10,7 @@ import "react-router";
 export const ROUTES = {
   HOME: "/",
   LOGIN: "/login",
-  REGISTER: "/register",
+  ONBOARDING: "/onboarding",
   REGISTER_CHECK_EMAIL: "/register/check-email",
   REGISTER_VERIFY_EMAIL: "/register/verify-email/:key",
   REGISTER_VERIFY_EMAIL_FALLBACK: "/:key",
@@ -51,7 +51,7 @@ export type PathParams = {
   [ROUTES.RESET_PASSWORD_CONFIRM]: {
     uid: string;
     token: string;
-  }
+  };
 };
 
 declare module "react-router" {
