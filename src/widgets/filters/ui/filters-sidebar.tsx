@@ -4,9 +4,10 @@ import { FiltersContent } from "./filters-content";
 
 type FiltersSidebarProps = {
   className?: string;
+  children?: React.ReactNode
 };
 
-export function FiltersSidebar({ className }: FiltersSidebarProps) {
+export function FiltersSidebar({ className, children }: FiltersSidebarProps) {
   return (
     <aside
       className={cn(
@@ -14,7 +15,7 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
         className,
       )}
     >
-      <FiltersContent className="px-5" />
+      {children ? <div className="px-5">{children}</div> : <FiltersContent className="px-5" />}
     </aside>
   );
 }

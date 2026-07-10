@@ -13,9 +13,10 @@ const SEARCH_TAGS_LIMIT = 10;
 
 interface SearchProps {
   onSearch: (value: string) => void;
+  placeholder?: string;
 }
 
-export function Search({ onSearch }: SearchProps) {
+export function Search({ onSearch, placeholder = 'Поиск' }: SearchProps) {
   const [searchValue, setSearchValue] = useState<string>("");
   const [searchTag, setSearchTag] = useState<string[]>(mockTags);
   const isMobile = window.innerWidth < 768;
@@ -47,7 +48,7 @@ export function Search({ onSearch }: SearchProps) {
   }
 
   return (
-    <div className="my-8.5 flex flex-col justify-start py-4 max-md:px-5">
+    <div className="my-2 md:my-8.5 flex flex-col justify-start py-4">
       <InputGroup
         className={isMobile ? "h-14 rounded-[28px]" : "h-18 rounded-[28px]"}
       >
@@ -64,7 +65,7 @@ export function Search({ onSearch }: SearchProps) {
               handleSearch();
             }
           }}
-          placeholder={isMobile ? "Поиск" : "Поиск проектов и команд"}
+          placeholder={isMobile ? "Поиск" : placeholder}
         />
         <InputGroupAddon align="inline-end">
           {isMobile ? (
@@ -81,18 +82,20 @@ export function Search({ onSearch }: SearchProps) {
           )}
         </InputGroupAddon>
       </InputGroup>
-      <div className="mt-3 flex flex-wrap gap-2">
-        {searchTag.map((tag) => (
-          <Tag
-            className="cursor-pointer text-sm"
-            variant="outline"
-            key={tag}
-            onClick={() => handleTagClick(tag)}
-          >
-            {tag}
-          </Tag>
-        ))}
-      </div>
+      {
+        !isMobile && (<div className="mt-3 flex flex-wrap gap-2">
+          {searchTag.map((tag) => (
+            <Tag
+              className="cursor-pointer text-sm"
+              variant="outline"
+              key={tag}
+              onClick={() => handleTagClick(tag)}
+            >
+              {tag}
+            </Tag>
+          ))}
+        </div>)
+      }
     </div>
   );
 }

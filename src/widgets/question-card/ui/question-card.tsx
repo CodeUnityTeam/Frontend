@@ -22,10 +22,10 @@ export function QuestionCard({ question }: QuestionCardProps) {
 
   return (
     <Card className="h-fit border-muted-foreground">
-      <CardHeader className="flex flex-row items-start justify-between gap-4 p-6 pb-3">
-        <div className="flex flex-1 flex-col gap-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+      <CardHeader className="flex flex-row justify-between items-start gap-4 p-6 pb-3">
+        <div className="flex flex-col gap-y-3 flex-1">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2">
               <Avatar>
                 <AvatarImage src={avatarSrc} alt={question.user.firstName} />
                 <AvatarFallback>

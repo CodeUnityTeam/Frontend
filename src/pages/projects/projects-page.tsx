@@ -476,7 +476,7 @@ function ProjectsPage() {
   return (
     <FiltersProvider>
       <PageContainer className="py-8">
-        <Search onSearch={setSearch} />
+        <Search onSearch={setSearch} placeholder="Поиск проектов и команд" />
 
         <div className="mb-6 flex items-center justify-between gap-4 md:hidden">
           <FiltersMobile />
