@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
+import { useRole } from "@/entities/profile";
 
 import { useLikeProject } from "@/entities/project";
 import { RESPONSES_QUERY_KEY, type ProjectResponse } from "@/entities/response";
@@ -34,6 +35,9 @@ type ResponseCardProps = {
 };
 
 export function ResponseCard({ response }: ResponseCardProps) {
+  const { role } = useRole();
+  const isEmployer = role === "employer";
+
   const queryClient = useQueryClient();
   const { mutate: toggleLike } = useLikeProject();
 
@@ -123,7 +127,7 @@ export function ResponseCard({ response }: ResponseCardProps) {
           )}
         </div>
 
-        {canContact ? (
+        {isEmployer && (canContact ? (
           <Button variant="ghost" className={contactButtonClass} asChild>
             <a href={`mailto:${response.authorEmail}`}>
               <Icon icon="ph:chats-teardrop-light" className="text-xl" />
@@ -143,7 +147,7 @@ export function ResponseCard({ response }: ResponseCardProps) {
             <Icon icon="ph:chats-teardrop-light" className="text-xl" />
             <span>Связаться</span>
           </Button>
-        )}
+        ))}
       </div>
     </div>
   );

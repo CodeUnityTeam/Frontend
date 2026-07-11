@@ -11,8 +11,18 @@ import { LoginModal } from "@/features/login-modal";
 import { ProfileMenu } from "./profile-menu";
 import { ResetPasswordModal } from "@/features/reset-password";
 import { openAuthRegister } from "@/widgets/registration/model/auth-modal-actions";
+import { useRole } from "@/entities/profile";
 
 export function Header() {
+  const { role } = useRole();
+  const isEmployer = role === "employer";
+
+  const headerItems = navigationConfigs.header.map((item) =>
+    item.id === "projects" && isEmployer
+      ? { ...item, label: "Отклики" }
+      : item
+  );
+
   const [isOpen, setIsOpen] = useState(false);
   const loginModal = useModal();
   const resetPasswordModal = useModal();
@@ -33,7 +43,7 @@ export function Header() {
       </Link>
 
       <Navigation
-        items={navigationConfigs["header"]}
+        items={headerItems}
         listClassName="flex gap-9 text-lg font-semibold max-md:hidden"
       />
 
@@ -86,7 +96,7 @@ export function Header() {
 
           <div className="mt-10 flex flex-col gap-6">
             <Navigation
-              items={navigationConfigs.header}
+              items={headerItems}
               listClassName="flex flex-col gap-6 text-md font-semibold"
               onItemClick={() => setIsOpen(false)}
             />
