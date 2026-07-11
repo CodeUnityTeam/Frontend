@@ -6,7 +6,6 @@ import {
 } from "@/shared/ui/input";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
-import { mockTags } from "@/widgets/search/model/tags-data";
 import { Tag } from "@/shared/ui/tag";
 
 const SEARCH_TAGS_LIMIT = 10;
@@ -18,7 +17,7 @@ interface SearchProps {
 
 export function Search({ onSearch, placeholder = 'Поиск' }: SearchProps) {
   const [searchValue, setSearchValue] = useState<string>("");
-  const [searchTag, setSearchTag] = useState<string[]>(mockTags);
+  const [searchTag, setSearchTag] = useState<string[]>([]);
   const isMobile = window.innerWidth < 768;
 
   const handleSearch = () => {

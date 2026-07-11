@@ -22,9 +22,9 @@ export type Profile = {
 };
 
 export type AccountProfileProps = {
-  profile?: Profile;
-  skills?: string[];
-  qualities?: string[];
-  about?: string;
-  experience?: ExperienceItem[];
+  profile: Profile;
+  skills: string[];
+  qualities: string[];
+  about: string;
+  experience: ExperienceItem[];
 };
