@@ -9,6 +9,7 @@ export type QuestionAnswerDto = {
   created_at: string;
   likes_count: number;
   images: string[];
+  is_owned_by_me: boolean;
 };
 
 export type QuestionDetailDto = {

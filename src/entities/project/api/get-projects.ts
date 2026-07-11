@@ -24,44 +24,38 @@ export async function getProjects(
     search
   } = params;
 
-  const query: Record<string, string | number> = {
-    page,
-    page_size: pageSize,
-  };
-
-  if (sortBy) {
-    query.sort_by = sortBy;
-  }
-  if (skillsId && skillsId.length > 0) {
-    query.skills_id = skillsId.join(",");
-  }
-  if (formatId && formatId.length > 0) {
-    query.format_id = formatId.join(",");
-  }
-  if (specId && specId.length > 0) {
-    query.spec_id = specId.join(",");
-  }
-  if (duration) {
-    query.duration_operator = duration.operator;
-    if (duration.min != null) {
-      query.duration_min = duration.min;
-    }
-    if (duration.max != null) {
-      query.duration_max = duration.max;
-    }
-  }
-  if (favourites) {
-    query.favourites = "true";
-  }
-  if (myProject) {
-    query.my_project = "true";
-  }
-  if(search?.trim()) {
-    query.search = search.trim()
-  }
-
   const { data } = await apiClient.get<ProjectsResponseDto>("/projects/", {
-    params: query,
+    params: {
+      page,
+      limit: pageSize,
+      ...(sortBy && { sort_by: sortBy }),
+      ...(skillsId && skillsId?.length > 0 && { skills_id: skillsId.join(",") }),
+      ...(formatId && formatId?.length > 0 && { format_id: formatId.join(",") }),
+      ...(specId && specId?.length > 0 && { spec_id: specId.join(",") }),
+      ...(duration?.operator && { duration_operator: duration.operator }),
+      ...(duration?.min && { duration_min: duration.min }),
+      ...(duration?.max && { duration_max: duration.max }),
+      ...(favourites && { favourites }),
+      ...(myProject && { my_project: "true" }),
+      ...(search?.trim() && { search: search.trim() }),
+      /*
+        TO DO: ДОБАВИТЬ ПАРАМЕТРЫ ДЛЯ БЭКОВ (#11_июля)
+
+        load_more	
+        boolean
+        Флаг подгрузки (бесконечный скролл)
+
+        sort_by	
+        string
+        Enum: "like" "published_at" "relevance"
+        Сортировка: like (по лайкам),published_at (по дате публикации), relevance (по релевантности — только при наличии search).По умолчанию: published_at.
+
+        status	
+        string
+        Enum: "draft" "published" "recruiting_closed"
+        Статус проекта: draft, published, recruiting_closed. При фильтрации по специализации проекты со статусом recruiting_closed не отображаются.
+      */ 
+    },
   });
 
   return {

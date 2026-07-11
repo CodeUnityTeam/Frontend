@@ -11,12 +11,12 @@ import { Tag } from "@/shared/ui/tag";
 function ProjectDetails() {
   const navigate = useNavigate();
 
-  const { data: project } = useProject();
+  const { data: project } = useProject()
+  
+  console.log(project, 'project');
   const { mutate: toggleLike } = useLikeProject();
 
-  if (!project) {
-    return null;
-  }
+  if (!project || !Object.keys(project).length) return null;
 
   const handleLike = () => {
     toggleLike({
@@ -42,18 +42,12 @@ function ProjectDetails() {
             <div className="px-2">
               <div className="flex items-start gap-3">
                 <Avatar className="h-14 w-14">
-                  <AvatarImage src={project.author.avatar} />
-                  <AvatarFallback>
-                    {project.author.first_name[0]}
-                  </AvatarFallback>
+                  <AvatarImage src={project?.author?.avatar_url} />
                 </Avatar>
 
                 <div>
                   <div className="text-lg font-semibold">
-                    {project.author.first_name}
-                    {project.author.last_name
-                      ? ` ${project.author.last_name}`
-                      : ""}
+                    {project.author.full_name}
                   </div>
 
                   <div className="text-sm text-muted-foreground">
@@ -76,9 +70,9 @@ function ProjectDetails() {
                     className="size-6 text-muted-foreground"
                   />
 
-                  <span className="text-primary">
-                    @{project.author.username}
-                  </span>
+                  {/* <span className="text-primary">
+                    @{project.author.telegram} // нет такого поля в бэкенде
+                  </span> */}
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -98,13 +92,14 @@ function ProjectDetails() {
                     className="size-6 text-muted-foreground"
                   />
 
-                  <span>{project.author.phone ?? "Не указан"}</span>
+                  <span>{project.author.phone_number ?? "Не указан"}</span>
                 </div>
               </div>
             </div>
 
+            {/* TO DO: Добавить проверку на то, что пользователь является участником проекта (#11_июля) */}
             <Button variant="outline" className="mt-6 h-10 w-full">
-              {project.is_applied ? "Отклик отправлен" : "Откликнуться"}
+             Откликнуться
             </Button>
           </CardContent>
         </Card>
@@ -182,15 +177,15 @@ function ProjectDetails() {
                 </div>
 
                 <div className="flex -space-x-2">
-                  {project.participants.map((participant) => (
+                  {project?.participants?.map((participant) => (
                     <Avatar
-                      key={participant.participant_id}
+                      key={participant?.user_id}
                       className="h-10 w-10 border-2 border-background"
                     >
-                      <AvatarImage src={participant.user.avatar} />
+                      <AvatarImage src={participant?.avatar_url} />
 
                       <AvatarFallback>
-                        {participant.user.first_name[0]}
+                        {participant?.full_name}
                       </AvatarFallback>
                     </Avatar>
                   ))}

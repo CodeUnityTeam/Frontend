@@ -11,7 +11,7 @@ export interface ProjectDto {
   short_desc: string;
   location: string;
   status_project: string;
-  published_at: string;
+  published_at: string | null;
   participants_count: number;
   is_liked_by_me: boolean;
   is_favorite_by_me: boolean;

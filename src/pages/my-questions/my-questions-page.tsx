@@ -37,7 +37,7 @@ export function MyQuestionsPage() {
   const questions =
     questionsQuery.data?.pages.flatMap((page) => page.items.map(mapQuestion)) ??
     [];
-  const totalQuestions = questionsQuery.data?.pages[0]?.count ?? questions.length;
+  const totalQuestions = questionsQuery.data?.pages[0]?.total ?? questions.length;
   const remainingQuestions = Math.max(totalQuestions - questions.length, 0);
 
   const handleConfirmDelete = () => {

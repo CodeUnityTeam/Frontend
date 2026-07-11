@@ -114,6 +114,7 @@ type ProjectsListProps = {
   myProject?: boolean;
   emptyTitle?: string;
   emptyDescription?: string;
+  isOwner?: boolean;
 };
 
 function ProjectsList({
@@ -122,6 +123,7 @@ function ProjectsList({
   myProject,
   emptyTitle,
   emptyDescription,
+  isOwner,
 }: ProjectsListProps) {
   const { sort, selected, duration } = useFilters();
 
@@ -177,6 +179,7 @@ function ProjectsList({
               date={formatDate(project.publishedAt)}
               location={project.location}
               isFavoriteByMe={project.isFavoriteByMe}
+              isOwner={isOwner}
             />
           </li>
         ))}
@@ -518,6 +521,7 @@ function ProjectsPage() {
                     myProject
                     emptyTitle="У вас пока нет проектов"
                     emptyDescription="Создайте проект или присоединитесь к существующему — они появятся здесь."
+                    isOwner
                   />
                 }
               />

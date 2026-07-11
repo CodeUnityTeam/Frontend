@@ -60,6 +60,6 @@ export interface QuestionItem {
 
 export interface QuestionsPage {
   items: QuestionItem[];
-  count: number;
+  total: number;
   hasMore: boolean;
 }

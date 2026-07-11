@@ -7,6 +7,7 @@ import { useIsAuthed } from "@/shared/lib/auth";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Tag } from "@/shared/ui/tag";
+import { Link } from "react-router";
 
 type ProjectCardProps = {
   projectId: string;
@@ -16,6 +17,7 @@ type ProjectCardProps = {
   date: string;
   location: string;
   isFavoriteByMe: boolean;
+  isOwner?: boolean;
 };
 
 export function ProjectCard({
@@ -26,6 +28,7 @@ export function ProjectCard({
   date,
   location,
   isFavoriteByMe,
+  isOwner,
 }: ProjectCardProps) {
   const isAuthed = useIsAuthed();
   const { mutate: toggleFavorite } = useFavoriteProject();
@@ -39,12 +42,14 @@ export function ProjectCard({
     toggleFavorite({ projectId, favorited: !isFavoriteByMe });
   }, [toggleFavorite, projectId, isFavoriteByMe]);
 
-  const handleApply = useCallback(() => {
+  const handleApply = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     respond(projectId);
   }, [respond, projectId]);
 
   return (
-    <div className="flex h-full w-full flex-col rounded-lg border border-border p-4">
+    <Link to={`/projects/${projectId}`}>
+      <div className="flex h-full w-full flex-col rounded-lg border border-border p-4">
       {isAuthed && (
         <div className="mb-3 flex justify-end">
           <Button
@@ -106,7 +111,7 @@ export function ProjectCard({
           </div>
         </div>
 
-        {isAuthed && (
+        {!isOwner && isAuthed && (
           <Button
             className="flex w-full items-center justify-center gap-1 rounded-xl border border-primary py-2 text-[16px] font-semibold text-foreground disabled:border-(--color-light-gray-200) disabled:bg-muted disabled:text-muted-foreground"
             onClick={handleApply}
@@ -120,5 +125,6 @@ export function ProjectCard({
         )}
       </div>
     </div>
+    </Link>
   );
 }

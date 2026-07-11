@@ -39,28 +39,23 @@ export async function getQuestions(
     tags,
   } = params;
   const normalizedSearch = normalizeQuestionSearch(search);
-  const query: Record<string, string | number> = { limit, offset };
-
-  if (filter) {
-    query.filter = filter;
-  }
-  if (normalizedSearch) {
-    query.search = normalizedSearch;
-  }
-  if (tags && tags.length > 0) {
-    query.tags = tags.join(",");
-  }
 
   const { data } = await apiClient.get<GetQuestionsResponse>(
     "/qna/questions/",
     {
-      params: query,
+      params: {
+        limit,
+        offset,
+        ...(filter && { filter }),
+        ...(normalizedSearch && { search: normalizedSearch }),
+        ...(tags && tags?.length > 0 && { tags }),
+      },
     },
   );
 
   return {
     items: data.items.map(mapQuestionItem),
-    count: data.total,
+    total: data.total,
     hasMore: data.has_more,
   };
 }

@@ -44,13 +44,11 @@ export async function verifyEmail(
 
 export async function getProviderUrl(provider: string): Promise<string | null> {
   const { data } = await apiClient.get<{
-    url?: string;
     authorization_url?: string;
-    auth_url?: string;
   }>(`/user/auth/${provider}/url/`);
  
   return (
-    (data && (data.url || data.authorization_url || data.auth_url)) || null
+    (data && (data.authorization_url)) || null
   );
 }
 

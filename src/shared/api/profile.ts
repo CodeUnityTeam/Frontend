@@ -42,6 +42,7 @@ export type CurrentUserProfile = {
   specializations: ProfileSpecializationItem[];
   workformats: ProfileWorkFormatItem[];
   experiences: ProfileExperienceItem[];
+  rating: number;
 };
 
 export type OnboardingPrefill = {

@@ -9,7 +9,7 @@ export interface Project {
   shortDesc: string;
   location: string;
   status: string;
-  publishedAt: string;
+  publishedAt: string | null;
   participantsCount: number;
   isLikedByMe: boolean;
   isFavoriteByMe: boolean;
@@ -65,27 +65,18 @@ export interface GetRecommendationsParams {
 
 export interface Author {
   user_id: string;
-  username: string;
-  email: string;
-  first_name: string;
-  last_name?: string;
-  avatar?: string;
-  phone?: string;
+  email?: string;
+  full_name?: string;
+  avatar_url?: string;
+  phone_number?: string;
   last_activity_at?: string | null;
 }
 
+
 export interface Participant {
-  participant_id: string;
-  user: {
-    user_id: string;
-    username: string;
-    email: string;
-    first_name: string;
-    last_name?: string;
-    avatar?: string;
-    phone?: string;
-  };
-  role: "author" | "member";
+  avatar_url?: string;
+  full_name?: string;
+  user_id: string;
 }
 
 export interface ProjectDetails {
@@ -105,7 +96,7 @@ export interface ProjectDetails {
   end_date: string;
   participants_count: number;
   is_liked_by_me: boolean;
-  is_applied: boolean;
+  is_favorite_by_me: boolean;
   likes_count: number;
   skills: Skill[];
   specializations: Specialization[];

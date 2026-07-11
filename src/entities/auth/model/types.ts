@@ -20,6 +20,28 @@ export interface UserDetailsDto {
   email: string;
   first_name: string;
   last_name: string;
+  role: string; // TO DO: Добавить роли из бэка (#11_июля)
+  rating: number;
+  projects_relation: string; // TO DO: Добавить relation из бэка (#11_июля)
+  phone_number: string;
+  additional_contact: string;
+  country: string;
+  city: string;
+  soft_skills: string;
+  about_me: string;
+  avatar_url: string;
+  skills: {
+    skill_id: string;
+    name: string;
+  }[];
+  specializations: {
+    spec_id: string;
+    name: string;
+  }[];
+  workformats: {
+    format_id: string;
+    name: string;
+  }[];
 }
 
 export interface LoginResponseDto {
