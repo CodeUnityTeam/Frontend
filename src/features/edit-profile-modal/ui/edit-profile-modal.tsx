@@ -70,21 +70,18 @@ export function EditProfileModal({
     const payload = {
       first_name: values.firstName,
       last_name: values.lastName,
-      projects_relation: values.role as "employer" | "worker",
+      projects_relation: values.role,
       phone_number: userData.phone_number || "",
       additional_contact: userData.additional_contact || "",
       country: values.country,
       city: values.city,
       soft_skills: userData.soft_skills || "",
       about_me: userData.about_me || "",
-      avatar_url: userData.avatar_url || "",
-      skills: userData.skills.map((s) => ({ skill_id: s.skill_id })),
-      specializations: userData.specializations.map((s) => ({
-        spec_id: s.spec_id,
-      })),
+      skills: userData.skills.map((s) => s.skill_id),
+      specializations: userData.specializations.map((s) => s.spec_id),
       workformats: values.format
-        ? [{ format_id: values.format }]
-        : userData.workformats.map((f) => ({ format_id: f.format_id })),
+        ? [values.format]
+        : userData.workformats.map((f) => f.format_id),
     };
 
     updateProfile(payload, {
