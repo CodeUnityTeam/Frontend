@@ -444,8 +444,10 @@ function ProjectsPage() {
   const isEmployer = role === "employer";
 
   const visibleTabs = isAuthed
+  ? isEmployer
     ? projectTabs
-    : projectTabs.filter((item) => item.value === "catalog");
+    : projectTabs.filter((item) => item.value !== "my-projects")
+  : projectTabs.filter((item) => item.value === "catalog");
   const activeTab = isAuthed ? tab : "catalog";
 
   const catalogContent = isEmployer ? (
@@ -496,7 +498,7 @@ function ProjectsPage() {
                 value={activeTab}
                 onValueChange={setTab}
               />
-              {activeTab === "my-projects" && (
+              {activeTab === "my-projects" && isEmployer && (
                 <Button
                   variant="ghost"
                   type="button"
