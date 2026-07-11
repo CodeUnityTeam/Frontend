@@ -13,7 +13,6 @@ function ProjectDetails() {
 
   const { data: project } = useProject()
   
-  console.log(project, 'project');
   const { mutate: toggleLike } = useLikeProject();
 
   if (!project || !Object.keys(project).length) return null;
