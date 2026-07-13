@@ -56,6 +56,8 @@ export interface GetProjectsParams {
   search?: string;
   favourites?: boolean;
   myProject?: boolean;
+  loadMore?: boolean;
+  status?: "draft" | "published" | "recruiting_closed"
 }
 
 export interface GetRecommendationsParams {

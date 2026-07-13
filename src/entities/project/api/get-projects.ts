@@ -14,21 +14,28 @@ export async function getProjects(
   const {
     page = 1,
     pageSize = 20,
-    sortBy,
+    sortBy = "published_at",
     skillsId,
     formatId,
     specId,
     duration,
     favourites,
     myProject,
-    search
+    search,
+    loadMore,
+    status
   } = params;
+
+  let finalSortBy = sortBy;
+  if (sortBy === "relevance" && !search?.trim()) {
+    finalSortBy = "published_at";
+  }
 
   const { data } = await apiClient.get<ProjectsResponseDto>("/projects/", {
     params: {
       page,
       limit: pageSize,
-      ...(sortBy && { sort_by: sortBy }),
+      ...(finalSortBy && { sort_by: finalSortBy }),
       ...(skillsId && skillsId?.length > 0 && { skills_id: skillsId.join(",") }),
       ...(formatId && formatId?.length > 0 && { format_id: formatId.join(",") }),
       ...(specId && specId?.length > 0 && { spec_id: specId.join(",") }),
@@ -38,23 +45,8 @@ export async function getProjects(
       ...(favourites && { favourites }),
       ...(myProject && { my_project: "true" }),
       ...(search?.trim() && { search: search.trim() }),
-      /*
-        TO DO: ДОБАВИТЬ ПАРАМЕТРЫ ДЛЯ БЭКОВ (#11_июля)
-
-        load_more	
-        boolean
-        Флаг подгрузки (бесконечный скролл)
-
-        sort_by	
-        string
-        Enum: "like" "published_at" "relevance"
-        Сортировка: like (по лайкам),published_at (по дате публикации), relevance (по релевантности — только при наличии search).По умолчанию: published_at.
-
-        status	
-        string
-        Enum: "draft" "published" "recruiting_closed"
-        Статус проекта: draft, published, recruiting_closed. При фильтрации по специализации проекты со статусом recruiting_closed не отображаются.
-      */ 
+      ...(loadMore !== undefined && { load_more: loadMore }),
+      ...(status && { status })
     },
   });
 
