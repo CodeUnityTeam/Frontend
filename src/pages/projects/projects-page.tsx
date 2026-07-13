@@ -155,7 +155,6 @@ function ProjectsList({search}:{search:string}) {
 }
 
 function ProjectsPage() {
-  const [tab, setTab] = useState("catalog");
   const [search, setSearch] = useState("");
   return (
     <FiltersProvider>
