@@ -14,14 +14,11 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   useEffect(() => {
     if (!isAuthed) {
-      // Сохраняем путь для редиректа после логина
       setRedirectPath(location.pathname + location.search);
-      // Открываем модалку
       openModal();
     }
   }, [isAuthed, location, openModal, setRedirectPath]);
 
-  // Если не авторизован - показываем null, модалка откроется
   if (!isAuthed) {
     return null;
   }

@@ -22,6 +22,7 @@ export function LoginModal({
   onOpenRegister,
   onOpenResetPassword,
 }: LoginModalProps) {
+  
   return (
     <Modal
       open={open}

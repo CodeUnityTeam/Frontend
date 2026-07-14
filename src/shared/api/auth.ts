@@ -1,4 +1,5 @@
 import { apiClient } from "@/shared/api";
+import { clearTokens } from "../lib/auth";
 
 export type RegistrationRequest = {
   email: string;
@@ -52,8 +53,17 @@ export async function getProviderUrl(provider: string): Promise<string | null> {
   );
 }
 
+export async function logout(): Promise<void> {
+  try {
+    await apiClient.post("/auth/logout/");
+  } finally {
+    clearTokens();
+  }
+}
+
 export default {
   registerUser,
   verifyEmail,
   getProviderUrl,
+  logout,
 };
