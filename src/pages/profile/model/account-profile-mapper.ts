@@ -33,7 +33,8 @@ export function buildAccountProfileProps(
     profile: {
       avatar: profile.avatar_url,
       name: [profile.first_name, profile.last_name].filter(Boolean).join(" "),
-      role: profile.specializations[0]?.name,
+      profession: profile.specializations[0]?.name,
+      role: profile.projects_relation,
       location: [profile.city, profile.country].filter(Boolean).join(", "),
     },
     skills: profile.skills.map((skill) => skill.name),
