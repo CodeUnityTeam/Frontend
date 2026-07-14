@@ -1,6 +1,7 @@
 export { login } from "./api/login";
 export { useLogin } from "./api/use-login";
 export { useLogout } from "./api/use-logout";
+export { useRefresh } from "./api/use-refresh";
 
 export type {
   LoginCredentials,

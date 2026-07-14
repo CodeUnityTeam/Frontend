@@ -27,12 +27,13 @@ export function App() {
     };
   }, [openModal]);
 
+  // ✅ Редирект после логина - убираем проверку на !isOpen
   useEffect(() => {
-    if (!isOpen && isAuthed && redirectPath) {
+    if (isAuthed && redirectPath) {
       navigate(redirectPath, { replace: true });
       clearRedirectPath();
     }
-  }, [clearRedirectPath, isAuthed, isOpen, navigate, redirectPath]);
+  }, [isAuthed, redirectPath, navigate, clearRedirectPath]);
 
   const handleModalClose = (open: boolean) => {
     if (!open) {

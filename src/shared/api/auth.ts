@@ -1,5 +1,5 @@
 import { apiClient } from "@/shared/api";
-import { clearTokens } from "../lib/auth";
+import { clearTokens, getRefreshToken } from "@/shared/lib/auth";
 
 export type RegistrationRequest = {
   email: string;
@@ -19,6 +19,11 @@ export type VerifyEmailRequest = {
 export type ApiRequestError = Error & {
   status?: number;
   data?: unknown;
+};
+
+export type RefreshResponse = {
+  access: string;
+  refresh?: string;
 };
 
 export async function registerUser(
@@ -61,9 +66,24 @@ export async function logout(): Promise<void> {
   }
 }
 
+export async function refreshToken(): Promise<{ access: string }> {
+  const refresh = getRefreshToken();
+  if (!refresh) {
+    throw new Error("No refresh token available");
+  }
+
+  const { data } = await apiClient.post<RefreshResponse>(
+    "/user/auth/token/refresh/",
+    { refresh }
+  );
+
+  return { access: data.access };
+}
+
 export default {
   registerUser,
   verifyEmail,
   getProviderUrl,
   logout,
+  refreshToken,
 };
