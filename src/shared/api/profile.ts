@@ -1,3 +1,4 @@
+import type { ProjectsRelation } from "@/entities/profile/model/types";
 import { apiClient } from "./index";
 
 export type ProfileSkillItem = {
@@ -29,8 +30,8 @@ export type CurrentUserProfile = {
   email: string;
   first_name: string;
   last_name: string;
-  role: string;
-  projects_relation: "employer" | "worker";
+  role: ProjectsRelation;
+  projects_relation: ProjectsRelation;
   phone_number: string;
   additional_contact: string;
   country: string;

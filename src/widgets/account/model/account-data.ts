@@ -4,7 +4,8 @@ export const accountData = {
     avatar: "",
     status: "Онлайн вчера",
     name: "Анна Иванова",
-    role: "Продуктовый дизайнер",
+    profession: "Продуктовый дизайнер", 
+    role: "worker",
     location: "Екатеринбург",
   },
 

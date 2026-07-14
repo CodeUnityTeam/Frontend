@@ -1,3 +1,5 @@
+import type { ProjectsRelation } from "@/entities/profile/model/types";
+
 export type ExperienceItem = {
   company: string;
   from: string;
@@ -11,7 +13,8 @@ export type Profile = {
   avatar?: string;
   status?: string;
   name?: string;
-  role?: string;
+  profession: string; 
+  role?: ProjectsRelation;
   location?: string;
 };
 
