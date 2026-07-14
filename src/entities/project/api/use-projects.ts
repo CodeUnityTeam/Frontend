@@ -13,7 +13,12 @@ export function useProjects(params: GetProjectsParams = {}) {
   return useInfiniteQuery({
     queryKey: [PROJECTS_QUERY_KEY, { ...params, pageSize }],
     queryFn: ({ pageParam }) =>
-      getProjects({ ...params, page: pageParam, pageSize }),
+      getProjects({ 
+        ...params,
+        page: pageParam,
+        pageSize,
+        loadMore: pageParam > 1
+      }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) =>
       lastPage.hasMore ? allPages.length + 1 : undefined,

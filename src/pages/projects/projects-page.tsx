@@ -115,6 +115,7 @@ type ProjectsListProps = {
   emptyTitle?: string;
   emptyDescription?: string;
   isOwner?: boolean;
+  status?: GetProjectsParams['status'];
 };
 
 function ProjectsList({
@@ -124,6 +125,7 @@ function ProjectsList({
   emptyTitle,
   emptyDescription,
   isOwner,
+  status
 }: ProjectsListProps) {
   const { sort, selected, duration } = useFilters();
 
@@ -146,7 +148,8 @@ function ProjectsList({
     duration: durationParam,
     favourites,
     myProject,
-    search
+    search,
+    status
   });
 
   if (isPending) {
