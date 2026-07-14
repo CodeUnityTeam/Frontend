@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import { useCallback } from "react";
 
 import { useLikePerson, type Person } from "@/entities/profile";
+import { useInviteUser } from "@/entities/project";
 import { cn } from "@/shared/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
@@ -9,6 +10,7 @@ import { Tag } from "@/shared/ui/tag";
 
 type PersonCardProps = {
   person: Person;
+  projectId?: string;
   badge?: string;
   badgeClassName?: string;
   note?: string;
@@ -16,11 +18,13 @@ type PersonCardProps = {
 
 export function PersonCard({
   person,
+  projectId,
   badge,
   badgeClassName,
   note,
 }: PersonCardProps) {
   const { mutate: toggleLike } = useLikePerson();
+  const { mutate: invite, isPending: isInviting } = useInviteUser();
 
   const { userId, isLiked } = person;
 
@@ -113,9 +117,9 @@ export function PersonCard({
         <Button
           variant="ghost"
           type="button"
-          disabled
-          title="Бэк пока не отдаёт контакты соискателя"
+          disabled={!projectId || isInviting}
           className="flex w-full items-center justify-center gap-1 rounded-xl border border-primary py-2 text-[16px] font-semibold text-foreground disabled:border-(--color-light-gray-200) disabled:bg-muted disabled:text-muted-foreground"
+          onClick={() => projectId && invite({ projectId, userId })}
         >
           <Icon icon="ph:chats-teardrop-light" className="text-xl" />
           <span>Связаться</span>
