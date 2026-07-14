@@ -36,3 +36,8 @@ export {
 } from "./api/update-question";
 export { deleteQuestion } from "./api/delete-question";
 export { QuestionLikeButton } from "./ui/question-like-button";
+export {
+  uploadQuestionFile,
+  type UploadQuestionFileResponse,
+} from "./api/upload-question-file";
+export { useUploadQuestionFile } from "./api/use-upload-question-file";
