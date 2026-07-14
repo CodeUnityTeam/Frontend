@@ -117,6 +117,7 @@ export function PersonCard({
         <Button
           variant="ghost"
           type="button"
+          title="Бэк пока не отдаёт контакты соискателя"
           disabled={!projectId || isInviting}
           className="flex w-full items-center justify-center gap-1 rounded-xl border border-primary py-2 text-[16px] font-semibold text-foreground disabled:border-(--color-light-gray-200) disabled:bg-muted disabled:text-muted-foreground"
           onClick={() => projectId && invite({ projectId, userId })}
