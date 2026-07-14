@@ -138,6 +138,21 @@ export async function createExperience(payload: ExperienceCreateRequest) {
   return data;
 }
 
+export async function updateExperience(
+  id: string,
+  payload: ExperienceCreateRequest,
+) {
+  const { data } = await apiClient.put<ApiObject>(
+    `/user/profile/me/experience/${id}/`,
+    payload,
+  );
+  return data;
+}
+
+export async function deleteExperience(id: string): Promise<void> {
+  await apiClient.delete(`/user/profile/me/experience/${id}/`);
+}
+
 export async function uploadCurrentUserAvatar(file: File) {
   const formData = new FormData();
   formData.append("file", file);
@@ -160,4 +175,8 @@ export async function uploadCurrentUserAvatar(file: File) {
   }
 
   return "";
+}
+
+export async function deleteCurrentUserAvatar(): Promise<void> {
+  await apiClient.delete("/user/profile/me/avatar/");
 }

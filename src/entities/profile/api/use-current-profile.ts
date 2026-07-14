@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getCurrentUserProfile } from "@/shared/api/profile";
 
+export const PROFILE_QUERY_KEY = ["profile", "me"] as const;
+
 interface UseCurrentProfileOptions {
   enabled?: boolean;
 }
@@ -10,7 +12,7 @@ export function useCurrentProfile({
   enabled = true,
 }: UseCurrentProfileOptions = {}) {
   return useQuery({
-    queryKey: ["profile", "me"],
+    queryKey: PROFILE_QUERY_KEY,
     queryFn: getCurrentUserProfile,
     enabled,
   });
