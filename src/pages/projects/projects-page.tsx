@@ -456,7 +456,7 @@ function ProjectsPage() {
   const catalogContent = isEmployer ? (
     <PeopleList search={search} />
   ) : (
-    <ProjectsList search={search} />
+    <ProjectsList search={search} status={["published"]} />
   );
 
   const favoritesContent = isEmployer ? (
@@ -469,6 +469,7 @@ function ProjectsPage() {
   ) : (
     <ProjectsList
       search={search}
+      status={["published", "recruiting_closed"]}
       favourites
       emptyTitle="В избранном пусто"
       emptyDescription="Добавляйте проекты в избранное — нажимайте на сердечко в карточке."
@@ -523,6 +524,7 @@ function ProjectsPage() {
                 myProjects={
                   <ProjectsList
                     search={search}
+                    status={["draft", "published", "recruiting_closed"]}
                     myProject
                     emptyTitle="У вас пока нет проектов"
                     emptyDescription="Создайте проект или присоединитесь к существующему — они появятся здесь."
