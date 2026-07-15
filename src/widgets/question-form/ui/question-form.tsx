@@ -1,9 +1,11 @@
 import type { FormEvent } from "react";
 
 import type { QuestionFormValues } from "@/entities/question";
+import { uploadQuestionFile } from "@/entities/question";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 import { Textarea } from "@/shared/ui/textarea";
+import { MarkdownEditor } from "@/shared/ui/markdown-editor";
 
 import { useQuestionForm } from "../model/use-question-form";
 import { TagsSelect } from "./tags-select";
@@ -55,11 +57,14 @@ export function QuestionForm({
           className="rounded-2xl border-foreground [&>textarea]:min-h-[113px] [&>textarea]:min-w-0 [&>textarea]:overflow-auto md:[&>textarea]:min-h-[86px]"
         />
 
-        <Textarea
+        <MarkdownEditor
           label="Суть вопроса"
-          value={details}
-          onChange={(event) => setDetails(event.target.value)}
-          className="rounded-2xl border-foreground [&>textarea]:min-h-[466px] [&>textarea]:min-w-0 [&>textarea]:overflow-auto md:[&>textarea]:min-h-[250px]"
+          description="Поддерживаются Markdown и изображения."
+          markdown={details}
+          onChange={setDetails}
+          imageUploadHandler={uploadQuestionFile}
+          editorClassName="rounded-2xl"
+          contentEditableClassName="min-h-[320px] md:min-h-[420px]"
         />
 
         <TagsSelect

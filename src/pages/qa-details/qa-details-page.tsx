@@ -19,6 +19,7 @@ import {
   useCreateQuestionAnswer,
   useDeleteAnswer,
   useQuestions,
+  uploadQuestionFile,
   type QuestionAnswerDto,
 } from "@/entities/question";
 import { ConfirmModal } from "@/features/confirm-modal";
@@ -26,6 +27,8 @@ import { ROUTES } from "@/shared/model/routes";
 import AvatarPlaceholder from "@/shared/assets/images/avatar.png";
 import { formatRelativeDate } from "@/shared/lib/pluralize";
 import { cn } from "@/shared/lib/utils";
+import { MarkdownEditor } from "@/shared/ui/markdown-editor";
+import { MarkdownViewer } from "@/shared/ui/markdown-viewer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
 import {
@@ -38,12 +41,13 @@ import {
 } from "@/shared/ui/card";
 import { PageContainer } from "@/shared/ui/page-container";
 import { Tag } from "@/shared/ui/tag";
-import { Textarea } from "@/shared/ui/textarea";
 import {
   EMPTY_PENDING_ANSWER_IDS,
   useQuestionCommentCount as useQuestionAnswerCount,
   useQuestionCommentsStore,
 } from "@/shared/store/question-comments-store";
+import type { MDXEditorMethods } from "@mdxeditor/editor";
+
 const QUESTION_ANSWER_FORM_ID = "question-answer-form";
 
 type QuestionAnswerNode = QuestionAnswerDto & {
@@ -105,7 +109,7 @@ function QuestionAnswerForm({
   cancelLabel = "Отмена",
   className,
   id,
-  textareaRef,
+  editorRef,
 }: {
   title: string;
   description: string;
@@ -119,7 +123,7 @@ function QuestionAnswerForm({
   cancelLabel?: string;
   className?: string;
   id?: string;
-  textareaRef?: Ref<HTMLTextAreaElement>;
+  editorRef?: Ref<MDXEditorMethods>;
 }) {
   return (
     <Card
@@ -136,12 +140,15 @@ function QuestionAnswerForm({
       </CardHeader>
       <CardContent className="!p-6">
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
-          <Textarea
+          <MarkdownEditor
+            ref={editorRef}
             label={label}
-            value={value}
-            onChange={(event) => onChange(event.target.value)}
-            ref={textareaRef}
-            className="rounded-2xl border-foreground [&>textarea]:min-h-[160px] [&>textarea]:min-w-0 [&>textarea]:overflow-auto"
+            description={description}
+            markdown={value}
+            onChange={onChange}
+            imageUploadHandler={uploadQuestionFile}
+            editorClassName="rounded-2xl"
+            contentEditableClassName="min-h-[200px]"
           />
 
           <div className="flex flex-wrap justify-end gap-3">
@@ -173,7 +180,7 @@ function QaDetailsPage() {
   const location = useLocation();
   const { id } = useParams();
   const questionId = id ?? "";
-  const answerTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const answerEditorRef = useRef<MDXEditorMethods>(null);
   const [answerContent, setAnswerContent] = useState("");
   const [replyAnswerContent, setReplyAnswerContent] = useState("");
   const [replyToAnswerId, setReplyToAnswerId] = useState<string | null>(null);
@@ -225,7 +232,10 @@ function QaDetailsPage() {
       behavior: "smooth",
       block: "start",
     });
-    answerTextareaRef.current?.focus();
+    answerEditorRef.current?.focus(undefined, {
+      defaultSelection: "rootEnd",
+      preventScroll: true,
+    });
   }, [location.hash, question]);
 
   useEffect(() => {
@@ -379,9 +389,10 @@ function QaDetailsPage() {
               depth > 0 ? "p-5" : "p-6",
             )}
           >
-            <p className="whitespace-pre-line text-lg leading-7 text-foreground">
-              {answer.content}
-            </p>
+            <MarkdownViewer
+              markdown={answer.content}
+              className="text-lg leading-7 text-foreground"
+            />
 
             {answer.images.length > 0 && (
               <div className="grid gap-3 sm:grid-cols-2">
@@ -576,9 +587,10 @@ function QaDetailsPage() {
                 </div>
               </div>
 
-              <p className="max-w-4xl text-[18px] leading-[1.4] font-medium text-foreground">
-                {question.description}
-              </p>
+              <MarkdownViewer
+                markdown={question.description}
+                className="max-w-4xl text-[18px] leading-[1.4] font-medium text-foreground"
+              />
 
               {question.images.length > 0 && (
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -625,7 +637,7 @@ function QaDetailsPage() {
             onSubmit={handleAnswerSubmit}
             isSubmitting={createAnswerMutation.isPending}
             submitLabel="Отправить"
-            textareaRef={answerTextareaRef}
+            editorRef={answerEditorRef}
           />
 
           <section className="space-y-4">

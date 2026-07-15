@@ -5,6 +5,7 @@ import AvatarPlaceholder from "@/shared/assets/images/avatar-placeholder.svg";
 import { formatRelativeDate } from "@/shared/lib/pluralize";
 import { ROUTES } from "@/shared/model/routes";
 import { Button } from "@/shared/ui/button";
+import { MarkdownViewer } from "@/shared/ui/markdown-viewer";
 import type { QuestionData } from "@/widgets/question-card";
 
 type MyQuestionsCardProps = {
@@ -65,11 +66,10 @@ export function MyQuestionsCard({
         ))}
       </div>
 
-      <div className="mt-7 leading-[1.5] text-[18px] font-normal text-[var(--color-black)]">
-        {question.description.split("\n").map((paragraph, index) => (
-          <p key={index}>{paragraph}</p>
-        ))}
-      </div>
+      <MarkdownViewer
+        markdown={question.description}
+        className="mt-7 text-[18px] font-normal text-[var(--color-black)]"
+      />
 
       <div className="mt-7 flex flex-wrap justify-end gap-3">
         <Button asChild variant="ghost" className="font-[18px] font-semibold">

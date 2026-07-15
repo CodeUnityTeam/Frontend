@@ -6,8 +6,9 @@ import { formatRelativeDate } from "@/shared/lib/pluralize";
 import { ROUTES } from "@/shared/model/routes";
 import { Button } from "@/shared/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/shared/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/shared/ui/card";
 import { Tag } from "@/shared/ui/tag";
+import { MarkdownViewer } from "@/shared/ui/markdown-viewer";
 import { useQuestionCommentCount } from "@/shared/store/question-comments-store";
 import { QuestionLikeButton } from "@/entities/question";
 import type { QuestionCardProps } from "../model/types";
@@ -61,9 +62,10 @@ export function QuestionCard({ question }: QuestionCardProps) {
       </CardHeader>
 
       <CardContent className="p-6 pt-0">
-        <CardDescription className="line-clamp-2 text-lg text-foreground">
-          {question.description}
-        </CardDescription>
+        <MarkdownViewer
+          markdown={question.description}
+          className="max-h-24 overflow-hidden text-lg text-foreground"
+        />
       </CardContent>
 
       <CardFooter className="flex flex-wrap items-center justify-between gap-4 p-6 pt-0">
