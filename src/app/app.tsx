@@ -13,7 +13,7 @@ export function App() {
   const { isOpen, closeModal, openModal, redirectPath, clearRedirectPath, setRedirectPath } = useAuthModalStore();
   const isAuthed = useIsAuthed();
   const navigate = useNavigate();
-  const location = useLocation(); // ✅ добавить
+  const location = useLocation(); 
 
   // Обработчик 401 ошибок
   useEffect(() => {

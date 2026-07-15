@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { ROUTES } from "@/shared/model/routes";
-import { clearTokens } from "@/shared/lib/auth"; // ✅ используем единую функцию
+import { clearTokens } from "@/shared/lib/auth";
 
 interface HandleErrorOptions {
   navigate: (to: string, options?: { replace?: boolean }) => void;
