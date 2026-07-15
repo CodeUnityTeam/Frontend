@@ -4,12 +4,12 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from "axios";
 import {
-  clearTokens,
   getAccessToken,
   getRefreshToken,
   setTokens,
 } from "@/shared/lib/auth";
 import { toApiError } from "../api/api-error";
+import { logout } from "./auth"; 
 
 export const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -59,23 +59,6 @@ const processQueue = (
   failedQueue = [];
 };
 
-const logout = async () => {
-  try {
-    const refresh = getRefreshToken();
-
-    if (refresh) {
-      await apiClient.post("/auth/logout/", {
-        refresh,
-      });
-    }
-  } catch {
-    // ignore
-  } finally {
-    clearTokens();
-    window.dispatchEvent(new CustomEvent("open-login-modal"));
-  }
-};
-
 interface RetryAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
 }
@@ -106,7 +89,7 @@ apiClient.interceptors.response.use(
     const refreshToken = getRefreshToken();
 
     if (!refreshToken) {
-      await logout();
+      await logout(); 
       throw toApiError(error);
     }
 
@@ -141,7 +124,7 @@ apiClient.interceptors.response.use(
 
       setTokens({
         access,
-        refresh,
+        refresh: refresh || refreshToken, 
       });
 
       processQueue(null, access);

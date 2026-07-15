@@ -12,12 +12,14 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const location = useLocation();
   const { openModal, setRedirectPath } = useAuthModalStore();
 
+  const redirectUrl = location.pathname + location.search;
+
   useEffect(() => {
     if (!isAuthed) {
-      setRedirectPath(location.pathname + location.search);
+      setRedirectPath(redirectUrl);
       openModal();
     }
-  }, [isAuthed, location, openModal, setRedirectPath]);
+  }, [isAuthed, redirectUrl, openModal, setRedirectPath]);
 
   if (!isAuthed) {
     return null;

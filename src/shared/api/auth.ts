@@ -1,5 +1,5 @@
 import { apiClient } from "@/shared/api";
-import { clearTokens, getRefreshToken } from "@/shared/lib/auth";
+import { clearTokens, getRefreshToken, setTokens } from "@/shared/lib/auth";
 
 export type RegistrationRequest = {
   email: string;
@@ -60,7 +60,12 @@ export async function getProviderUrl(provider: string): Promise<string | null> {
 
 export async function logout(): Promise<void> {
   try {
-    await apiClient.post("/auth/logout/");
+    const refresh = getRefreshToken();
+    if (refresh) {
+      await apiClient.post("/auth/logout/", { refresh });
+    } else {
+      await apiClient.post("/auth/logout/");
+    }
   } finally {
     clearTokens();
   }
@@ -76,6 +81,13 @@ export async function refreshToken(): Promise<{ access: string }> {
     "/user/auth/token/refresh/",
     { refresh }
   );
+
+  if (data.refresh) {
+    setTokens({
+      access: data.access,
+      refresh: data.refresh,
+    });
+  }
 
   return { access: data.access };
 }
