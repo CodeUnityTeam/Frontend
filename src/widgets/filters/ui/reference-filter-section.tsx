@@ -102,12 +102,7 @@ export function ReferenceFilterSection({
           )}
 
           {!isPending && !isError && (
-            <ul
-              className={cn(
-                "flex flex-col",
-                searchable && "max-h-[280px] overflow-y-auto",
-              )}
-            >
+            <ul className="flex flex-col">
               {visibleItems.length === 0 ? (
                 <li className="py-1 text-[16px] text-muted-foreground">
                   {search ? "Ничего не найдено" : "Список пуст"}
