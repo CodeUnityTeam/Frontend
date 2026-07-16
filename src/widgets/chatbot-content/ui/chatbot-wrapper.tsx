@@ -11,6 +11,7 @@ import { ChatbotTabs } from "./chatbot-tabs";
 import { ChatbotNavigate } from "./chatbot-navigate";
 import { ChatbotBtn } from "./chatbot-btn";
 import { ChatbotRender } from "./chatbot-render";
+import { ChatbotMessage } from "./chatbot-message";
 
 export type TTabId = "popular" | "recommended" | "profile";
 
@@ -58,14 +59,6 @@ function ProjectsError({ onRetry }: { onRetry: () => void }) {
       <Button type="button" onClick={onRetry}>
         Повторить
       </Button>
-    </div>
-  );
-}
-
-function ChatbotMessage({ text }: { text: string }) {
-  return (
-    <div className="flex items-center justify-center py-12 text-center">
-      <p className="text-muted-foreground">{text}</p>
     </div>
   );
 }
