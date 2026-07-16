@@ -1,5 +1,6 @@
-import type { ProjectsRelation } from "@/entities/profile/model/types";
 import { apiClient } from "./index";
+
+export type ProjectsRelation = "employer" | "worker";
 
 export type ProfileSkillItem = {
   skill_id: string;
@@ -55,7 +56,7 @@ export type OnboardingPrefill = {
 export type ProfileUpdateRequest = {
   first_name?: string;
   last_name?: string;
-  projects_relation?: "employer" | "worker";
+  projects_relation?: ProjectsRelation;
   phone_number?: string;
   additional_contact?: string;
   country?: string;
