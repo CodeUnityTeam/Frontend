@@ -27,7 +27,7 @@ import { ROUTES } from "@/shared/model/routes";
 import AvatarPlaceholder from "@/shared/assets/images/avatar.png";
 import { formatRelativeDate } from "@/shared/lib/pluralize";
 import { cn } from "@/shared/lib/utils";
-import { MarkdownEditor } from "@/shared/ui/markdown-editor";
+import { MarkdownImageField } from "@/shared/ui/markdown-image-field";
 import { MarkdownViewer } from "@/shared/ui/markdown-viewer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
@@ -46,7 +46,6 @@ import {
   useQuestionCommentCount as useQuestionAnswerCount,
   useQuestionCommentsStore,
 } from "@/shared/store/question-comments-store";
-import type { MDXEditorMethods } from "@mdxeditor/editor";
 
 const QUESTION_ANSWER_FORM_ID = "question-answer-form";
 
@@ -123,7 +122,7 @@ function QuestionAnswerForm({
   cancelLabel?: string;
   className?: string;
   id?: string;
-  editorRef?: Ref<MDXEditorMethods>;
+  editorRef?: Ref<HTMLTextAreaElement>;
 }) {
   return (
     <Card
@@ -140,15 +139,14 @@ function QuestionAnswerForm({
       </CardHeader>
       <CardContent className="!p-6">
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
-          <MarkdownEditor
+          <MarkdownImageField
             ref={editorRef}
             label={label}
             description={description}
             markdown={value}
             onChange={onChange}
             imageUploadHandler={uploadQuestionFile}
-            editorClassName="rounded-2xl"
-            contentEditableClassName="min-h-[200px]"
+            textareaClassName="min-h-[200px] rounded-2xl"
           />
 
           <div className="flex flex-wrap justify-end gap-3">
@@ -180,7 +178,7 @@ function QaDetailsPage() {
   const location = useLocation();
   const { id } = useParams();
   const questionId = id ?? "";
-  const answerEditorRef = useRef<MDXEditorMethods>(null);
+  const answerEditorRef = useRef<HTMLTextAreaElement>(null);
   const [answerContent, setAnswerContent] = useState("");
   const [replyAnswerContent, setReplyAnswerContent] = useState("");
   const [replyToAnswerId, setReplyToAnswerId] = useState<string | null>(null);
@@ -232,10 +230,7 @@ function QaDetailsPage() {
       behavior: "smooth",
       block: "start",
     });
-    answerEditorRef.current?.focus(undefined, {
-      defaultSelection: "rootEnd",
-      preventScroll: true,
-    });
+    answerEditorRef.current?.focus();
   }, [location.hash, question]);
 
   useEffect(() => {

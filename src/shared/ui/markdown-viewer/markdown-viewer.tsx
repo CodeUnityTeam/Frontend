@@ -8,9 +8,31 @@ import "highlight.js/styles/github.css";
 type MarkdownViewerProps = {
   markdown: string;
   className?: string;
+  imageVariant?: "full" | "thumbnail";
 };
 
-const markdownComponents: Components = {
+type MarkdownImage = {
+  alt: string;
+  src: string;
+};
+
+const markdownImagePattern = /!\[([^\]]*)\]\(([^)]+)\)/g;
+
+function extractMarkdownImages(markdown: string): MarkdownImage[] {
+  return Array.from(markdown.matchAll(markdownImagePattern), ([, alt, rawSrc]) => ({
+    alt,
+    src: rawSrc.trim().split(/\s+/)[0] ?? "",
+  })).filter((image) => image.src.length > 0);
+}
+
+function stripMarkdownImages(markdown: string) {
+  return markdown
+    .replace(markdownImagePattern, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+const markdownComponents = (imageVariant: "full" | "thumbnail"): Components => ({
   a: ({ className, ...props }) => (
     <a
       {...props}
@@ -152,30 +174,81 @@ const markdownComponents: Components = {
       alt={alt ?? ""}
       loading="lazy"
       className={cn(
-        "my-4 max-h-[32rem] w-full rounded-2xl border border-border object-contain",
+        "my-4",
         className,
       )}
+      style={
+        imageVariant === "thumbnail"
+          ? {
+              display: "inline-block",
+              maxHeight: "4.5rem",
+              maxWidth: "6.5rem",
+              width: "auto",
+              objectFit: "contain",
+              verticalAlign: "top",
+              marginTop: "0.5rem",
+              marginBottom: "0.5rem",
+              borderRadius: 0,
+            }
+          : {
+              maxHeight: "32rem",
+              width: "100%",
+              objectFit: "contain",
+              borderRadius: 0,
+            }
+      }
     />
   ),
   hr: ({ className, ...props }) => (
     <hr {...props} className={cn("my-6 border-border", className)} />
   ),
-};
+});
 
-export function MarkdownViewer({ markdown, className }: MarkdownViewerProps) {
+export function MarkdownViewer({
+  markdown,
+  className,
+  imageVariant = "full",
+}: MarkdownViewerProps) {
   if (!markdown.trim()) {
     return null;
   }
 
+  const compactImages =
+    imageVariant === "thumbnail" ? extractMarkdownImages(markdown) : [];
+  const markdownBody =
+    imageVariant === "thumbnail" ? stripMarkdownImages(markdown) : markdown;
+
   return (
-    <div className={cn("markdown-viewer break-words", className)}>
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeHighlight]}
-        components={markdownComponents}
-      >
-        {markdown}
-      </ReactMarkdown>
+    <div className={cn("markdown-viewer wrap-break-word", className)}>
+      {markdownBody && (
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeHighlight]}
+          components={markdownComponents(imageVariant)}
+        >
+          {markdownBody}
+        </ReactMarkdown>
+      )}
+
+      {compactImages.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2 overflow-hidden">
+          {compactImages.map((image, index) => (
+            <img
+              key={`${image.src}-${index}`}
+              src={image.src}
+              alt={image.alt}
+              loading="lazy"
+              className="block h-auto shrink-0"
+              style={{
+                maxHeight: "4.5rem",
+                maxWidth: "6.5rem",
+                objectFit: "contain",
+                borderRadius: 0,
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

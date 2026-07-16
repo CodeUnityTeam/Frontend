@@ -65,6 +65,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
         <MarkdownViewer
           markdown={question.description}
           className="max-h-24 overflow-hidden text-lg text-foreground"
+          imageVariant="thumbnail"
         />
       </CardContent>
 

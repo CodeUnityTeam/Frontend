@@ -69,6 +69,7 @@ export function MyQuestionsCard({
       <MarkdownViewer
         markdown={question.description}
         className="mt-7 text-[18px] font-normal text-[var(--color-black)]"
+        imageVariant="thumbnail"
       />
 
       <div className="mt-7 flex flex-wrap justify-end gap-3">
