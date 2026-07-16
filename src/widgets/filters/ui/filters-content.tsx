@@ -20,12 +20,12 @@ export function FiltersContent({ className }: FiltersContentProps) {
   ];
 
   return (
-    <div className={cn("flex flex-col", className)}>
+    <div className={cn("flex min-h-0 flex-1 flex-col overflow-y-auto", className)}>
       {blocks.map((block, index) => (
         <div
           key={block.id}
           className={cn(
-            "py-6",
+            "shrink-0 py-6",
             index === 0 && "pt-0",
             index === blocks.length - 1 && "pb-0",
             index < blocks.length - 1 &&

@@ -4,7 +4,13 @@ import { useSkills } from "@/entities/skill";
 
 import { ReferenceFilterSection } from "./reference-filter-section";
 
-export function TagsFilterSection() {
+type TagsFilterSectionProps = {
+  scrollable?: boolean;
+};
+
+export function TagsFilterSection({
+  scrollable = false,
+}: TagsFilterSectionProps) {
   const { data, isPending, isError, refetch } = useSkills();
   const items = useMemo(
     () => data?.map((skill) => ({ id: skill.skillId, name: skill.name })),
@@ -21,6 +27,7 @@ export function TagsFilterSection() {
       onRetry={() => refetch()}
       searchable
       searchPlaceholder="Поиск по тегам"
+      scrollable={scrollable}
     />
   );
 }

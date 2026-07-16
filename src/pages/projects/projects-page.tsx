@@ -516,7 +516,7 @@ function ProjectsPage() {
         <FiltersBar className="mb-6 hidden md:flex" />
 
         <div className="md:flex md:items-start md:gap-5">
-          <FiltersSidebar className="hidden md:block" />
+          <FiltersSidebar className="hidden md:flex" />
           <div className="flex-1">
             <div className="flex items-center justify-between gap-4">
               <FilterTabs

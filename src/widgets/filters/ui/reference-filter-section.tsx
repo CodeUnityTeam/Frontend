@@ -17,6 +17,7 @@ type ReferenceFilterSectionProps = {
   onRetry: () => void;
   searchable?: boolean;
   searchPlaceholder?: string;
+  scrollable?: boolean;
 };
 
 export function ReferenceFilterSection({
@@ -28,6 +29,7 @@ export function ReferenceFilterSection({
   onRetry,
   searchable = false,
   searchPlaceholder = "Поиск",
+  scrollable = false,
 }: ReferenceFilterSectionProps) {
   const { isChecked, toggle } = useFilters();
   const [open, setOpen] = useState(true);
@@ -45,12 +47,17 @@ export function ReferenceFilterSection({
   }, [items, search]);
 
   return (
-    <section className="flex flex-col gap-2">
+    <section
+      className={cn(
+        "flex flex-col gap-2",
+        scrollable ? "h-full min-h-0" : "shrink-0",
+      )}
+    >
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
-        className="flex w-full cursor-pointer items-center justify-between py-1 text-left"
+        className="flex w-full shrink-0 cursor-pointer items-center justify-between py-1 text-left"
       >
         <span className="text-xl leading-[1.3] font-semibold text-foreground">
           {title}
@@ -65,9 +72,14 @@ export function ReferenceFilterSection({
       </button>
 
       {open && (
-        <div className="flex flex-col gap-2">
+        <div
+          className={cn(
+            "flex flex-col gap-2",
+            scrollable && "min-h-0 flex-1",
+          )}
+        >
           {searchable && (
-            <div className="relative">
+            <div className="relative shrink-0">
               <Icon
                 icon="ph:magnifying-glass"
                 className="absolute top-1/2 left-3 size-5 -translate-y-1/2 text-muted-foreground"
@@ -83,11 +95,13 @@ export function ReferenceFilterSection({
           )}
 
           {isPending && (
-            <p className="py-2 text-[16px] text-muted-foreground">Загрузка…</p>
+            <p className="shrink-0 py-2 text-[16px] text-muted-foreground">
+              Загрузка…
+            </p>
           )}
 
           {isError && (
-            <div className="flex flex-col items-start gap-1 py-2">
+            <div className="flex shrink-0 flex-col items-start gap-1 py-2">
               <p className="text-[16px] text-muted-foreground">
                 Не удалось загрузить.
               </p>
@@ -102,7 +116,12 @@ export function ReferenceFilterSection({
           )}
 
           {!isPending && !isError && (
-            <ul className="flex flex-col">
+            <ul
+              className={cn(
+                scrollable &&
+                  "min-h-0 flex-1 overflow-y-auto overscroll-contain",
+              )}
+            >
               {visibleItems.length === 0 ? (
                 <li className="py-1 text-[16px] text-muted-foreground">
                   {search ? "Ничего не найдено" : "Список пуст"}

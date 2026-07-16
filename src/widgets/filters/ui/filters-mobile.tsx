@@ -43,10 +43,10 @@ export function FiltersMobile({ className, children }: FiltersMobileProps) {
 
       <SheetContent
         side="bottom"
-        className="h-dvh gap-0 p-0"
+        className="flex h-dvh flex-col gap-0 overflow-hidden p-0"
         aria-describedby={undefined}
       >
-        <header className="flex items-center justify-between border-b border-(--color-light-gray-200) px-4 py-3">
+        <header className="flex shrink-0 items-center justify-between border-b border-(--color-light-gray-200) px-4 py-3">
           <button
             type="button"
             onClick={reset}
@@ -62,15 +62,24 @@ export function FiltersMobile({ className, children }: FiltersMobileProps) {
           </SheetClose>
         </header>
 
-        <div className="flex-1 overflow-y-auto">
+        <div
+          className={cn(
+            "min-h-0 flex-1",
+            children
+              ? "flex flex-col overflow-hidden"
+              : "overflow-y-auto overscroll-contain",
+          )}
+        >
           {children ? (
-            <div className="px-4 pt-4">{children}</div>
+            <div className="flex min-h-0 flex-1 flex-col px-4 pt-4 pb-4">
+              {children}
+            </div>
           ) : (
             <FiltersContent className="px-4 [&>*:first-child]:pt-4" />
           )}
         </div>
 
-        <footer className="border-t border-(--color-light-gray-200) p-4">
+        <footer className="shrink-0 border-t border-(--color-light-gray-200) p-4">
           <SheetClose asChild>
             <Button size="lg" className="w-full">
               Применить
