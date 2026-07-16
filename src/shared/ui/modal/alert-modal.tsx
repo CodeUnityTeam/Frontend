@@ -11,7 +11,7 @@ import {
 import { cn } from "@/shared/lib/utils";
 import type { ReactNode } from "react";
 
-import { buttonVariants } from "@/shared/ui/button/button";
+import { buttonVariants } from "@/shared/ui/button/styles";
 
 type AlertModalSlotProps = {
   children?: ReactNode;
