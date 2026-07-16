@@ -21,21 +21,18 @@ function mapApiReviewToReview(apiReview: ApiReview): UIReview {
   };
 }
 
-
 export function ReviewsSection({ isAuthed }: { isAuthed: boolean }) {
   const { data: apiReviews, isLoading, isError } = useReviews();
-  if (!isAuthed) return null;
+  if (isAuthed) return null;
 
   if (isLoading) {
     return (
-      <section className="py-5">
-        <div className="container mx-auto max-w-[1120px] px-4 lg:px-0">
-          <h2 className="mb-7 text-[32px] leading-[1.3] font-semibold md:mb-6 md:text-4xl">
-            Что о нас говорят?
-          </h2>
-          <div className="flex justify-center py-10">
-            <p className="text-muted-foreground">Загрузка отзывов...</p>
-          </div>
+      <section className="px-4 py-5 md:mx-20 md:px-20">
+        <h2 className="mb-7 text-[32px] leading-[1.3] font-semibold md:mb-6 md:text-4xl">
+          Что о нас говорят?
+        </h2>
+        <div className="flex justify-center py-10">
+          <p className="text-muted-foreground">Загрузка отзывов...</p>
         </div>
       </section>
     );
@@ -48,26 +45,24 @@ export function ReviewsSection({ isAuthed }: { isAuthed: boolean }) {
   const reviews = apiReviews.map(mapApiReviewToReview);
 
   return (
-    <section className="py-5">
-      <div className="container mx-auto max-w-[1120px] px-4 lg:px-0">
-        <h2 className="mb-7 text-[32px] leading-[1.3] font-semibold md:mb-6 md:text-4xl">
-          Что о нас говорят?
-        </h2>
-        <Carousel className="mx-auto max-w-[77%] md:max-w-[90%] xl:max-w-full">
-          <CarouselContent className="-ml-4 md:-ml-9">
-            {reviews.map((review) => (
-              <CarouselItem
-                key={review.id}
-                className="pl-4 md:basis-1/2 md:pl-9"
-              >
-                <ReviewCard author={review.author} text={review.text} />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
-      </div>
+    <section className="px-4 py-5 md:mx-20 md:px-20">
+      <h2 className="mb-7 text-[32px] leading-[1.3] font-semibold md:mb-6 md:text-4xl">
+        Что о нас говорят?
+      </h2>
+      <Carousel className="mx-auto max-w-[77%] md:max-w-[90%] xl:max-w-full">
+        <CarouselContent className="-ml-4 md:-ml-9">
+          {reviews.map((review) => (
+            <CarouselItem
+              key={review.id}
+              className="pl-4 md:basis-1/2 md:pl-9"
+            >
+              <ReviewCard author={review.author} text={review.text} />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
     </section>
   );
 }
