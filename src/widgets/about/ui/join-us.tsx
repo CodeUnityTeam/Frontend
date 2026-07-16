@@ -1,24 +1,14 @@
 import { Button } from "@/shared/ui/button";
 import { openAuthRegister } from "@/widgets/registration/model/auth-modal-actions";
-import { AuthQuickActions } from "@/widgets/auth-quick-actions";
 
 export function JoinUs({ isAuthed }: { isAuthed: boolean }) {
-  if (!isAuthed)  return null;
+  if (isAuthed) return null;
+
 
   return (
     <section className="md:px-20 md:mx-20 py-20 px-4 text-lg">
-      {isAuthed ? (
-        <>
-          <h2 className="mbe-4 text-4xl font-semibold md:mbe-4">
-            Продолжайте работать
-          </h2>
-          <p>
-            Перейдите к проектам, Q&A или откройте свой профиль.
-          </p>
-          <AuthQuickActions className="mbs-8 md:mbs-9" />
-        </>
-      ) : (
-        <>
+     
+        
           <h2 className="mbe-4 text-4xl font-semibold md:mbe-4">
             Присоединяйся!
           </h2>
@@ -32,8 +22,8 @@ export function JoinUs({ isAuthed }: { isAuthed: boolean }) {
           >
             Зарегистрироваться
           </Button>
-        </>
-      )}
+        
+    
     </section>
   );
 }
