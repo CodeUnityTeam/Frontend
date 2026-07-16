@@ -6,10 +6,25 @@ import {
   useRole,
   type GetPeopleParams,
 } from "@/entities/profile";
-import { useProjects, type GetProjectsParams } from "@/entities/project";
+import {
+  useDeleteProject,
+  useProject,
+  useProjects,
+  type GetProjectsParams,
+} from "@/entities/project";
 import { useResponses } from "@/entities/response";
+import { ProjectModal } from "@/features/project-modal";
 import { useIsAuthed } from "@/shared/lib/auth";
 import { Button } from "@/shared/ui/button";
+import {
+  AlertModal,
+  AlertModalHeader,
+  AlertModalTitle,
+  AlertModalDescription,
+  AlertModalFooter,
+  AlertModalAction,
+  AlertModalCancel,
+} from "@/shared/ui/modal/alert-modal";
 import { PageContainer } from "@/shared/ui/page-container";
 import {
   FiltersProvider,
@@ -32,7 +47,6 @@ import { Search } from "@/widgets/search";
 import { FilterTabs, projectTabs } from "@/widgets/filter-tabs";
 import { useState } from "react";
 
-
 const PAGE_SIZE = 20;
 
 const SORT_MAP: Record<string, GetProjectsParams["sortBy"]> = {
@@ -54,7 +68,6 @@ const dateFormatter = new Intl.DateTimeFormat("ru", {
 });
 
 function formatDate(iso: string | null): string {
-
   if (!iso) {
     return "";
   }
@@ -115,6 +128,8 @@ type ProjectsListProps = {
   emptyTitle?: string;
   emptyDescription?: string;
   isOwner?: boolean;
+  onEdit?: (projectId: string) => void;
+  onDelete?: (projectId: string) => void;
 };
 
 function ProjectsList({
@@ -124,6 +139,8 @@ function ProjectsList({
   emptyTitle,
   emptyDescription,
   isOwner,
+  onEdit,
+  onDelete,
 }: ProjectsListProps) {
   const { sort, selected, duration } = useFilters();
 
@@ -146,7 +163,7 @@ function ProjectsList({
     duration: durationParam,
     favourites,
     myProject,
-    search
+    search,
   });
 
   if (isPending) {
@@ -180,6 +197,9 @@ function ProjectsList({
               location={project.location}
               isFavoriteByMe={project.isFavoriteByMe}
               isOwner={isOwner}
+              participantsCount={project.participantsCount}
+              onEdit={onEdit}
+              onDelete={onDelete}
             />
           </li>
         ))}
@@ -440,14 +460,20 @@ function ProjectsPage() {
   const { role, isRolePending } = useRole();
   const [tab, setTab] = useState("catalog");
   const [search, setSearch] = useState("");
+  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
+  const [editProjectId, setEditProjectId] = useState<string | null>(null);
+  const [deleteProjectId, setDeleteProjectId] = useState<string | null>(null);
+
+  const { data: editProject } = useProject(editProjectId ?? undefined);
+  const { mutate: removeProject } = useDeleteProject();
 
   const isEmployer = role === "employer";
 
   const visibleTabs = isAuthed
-  ? isEmployer
-    ? projectTabs
-    : projectTabs.filter((item) => item.value !== "my-projects")
-  : projectTabs.filter((item) => item.value === "catalog");
+    ? isEmployer
+      ? projectTabs
+      : projectTabs.filter((item) => item.value !== "my-projects")
+    : projectTabs.filter((item) => item.value === "catalog");
   const activeTab = isAuthed ? tab : "catalog";
 
   const catalogContent = isEmployer ? (
@@ -499,14 +525,27 @@ function ProjectsPage() {
                 onValueChange={setTab}
               />
               {activeTab === "my-projects" && isEmployer && (
-                <Button
-                  variant="ghost"
-                  type="button"
-                  className="hidden h-auto shrink-0 p-0 text-[18px] font-semibold md:flex"
-                >
-                  Создать проект
-                  <Icon icon="ph:plus-circle" />
-                </Button>
+                <>
+                  <Button
+                    variant="ghost"
+                    type="button"
+                    className="hidden h-auto shrink-0 p-0 text-[18px] font-semibold md:flex"
+                    onClick={() => setCreateModalOpen(true)}
+                  >
+                    Создать проект
+                    <Icon icon="ph:plus-circle" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    type="button"
+                    size="icon"
+                    className="shrink-0 md:hidden"
+                    aria-label="Создать проект"
+                    onClick={() => setCreateModalOpen(true)}
+                  >
+                    <Icon icon="ph:plus-circle" />
+                  </Button>
+                </>
               )}
             </div>
             {isRolePending ? (
@@ -524,12 +563,61 @@ function ProjectsPage() {
                     emptyTitle="У вас пока нет проектов"
                     emptyDescription="Создайте проект или присоединитесь к существующему — они появятся здесь."
                     isOwner
+                    onEdit={isEmployer ? setEditProjectId : undefined}
+                    onDelete={isEmployer ? setDeleteProjectId : undefined}
                   />
                 }
               />
             )}
           </div>
         </div>
+
+        <ProjectModal
+          open={isCreateModalOpen}
+          onOpenChange={setCreateModalOpen}
+          mode="create"
+        />
+
+        <ProjectModal
+          open={Boolean(editProjectId)}
+          onOpenChange={(open) => {
+            if (!open) {
+              setEditProjectId(null);
+            }
+          }}
+          mode="edit"
+          project={editProject}
+        />
+
+        <AlertModal
+          open={Boolean(deleteProjectId)}
+          onOpenChange={(open) => {
+            if (!open) {
+              setDeleteProjectId(null);
+            }
+          }}
+        >
+          <AlertModalHeader className="gap-2">
+            <Icon icon="ph:trash" className="size-16 text-foreground" />
+            <AlertModalTitle>Удалить проект?</AlertModalTitle>
+            <AlertModalDescription className="text-base">
+              Это действие приведёт к безвозвратному удалению всей информации о
+              проекте
+            </AlertModalDescription>
+          </AlertModalHeader>
+          <AlertModalFooter>
+            <AlertModalAction
+              onClick={() => {
+                if (deleteProjectId) {
+                  removeProject(deleteProjectId);
+                }
+              }}
+            >
+              Удалить
+            </AlertModalAction>
+            <AlertModalCancel>Отменить</AlertModalCancel>
+          </AlertModalFooter>
+        </AlertModal>
       </PageContainer>
     </FiltersProvider>
   );
