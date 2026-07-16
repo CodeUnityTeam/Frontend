@@ -31,6 +31,7 @@ import { ResponseCard } from "@/widgets/response-card";
 import { Search } from "@/widgets/search";
 import { FilterTabs, projectTabs } from "@/widgets/filter-tabs";
 import { useState } from "react";
+import { useProjectStatus } from "@/shared/lib/hooks";
 
 
 const PAGE_SIZE = 20;
@@ -445,6 +446,7 @@ function ProjectsPage() {
   const [search, setSearch] = useState("");
 
   const isEmployer = role === "employer";
+  const status = useProjectStatus(tab, isEmployer);
 
   const visibleTabs = isAuthed
   ? isEmployer
@@ -456,7 +458,7 @@ function ProjectsPage() {
   const catalogContent = isEmployer ? (
     <PeopleList search={search} />
   ) : (
-    <ProjectsList search={search} status={["published"]} />
+    <ProjectsList search={search} status={status} />
   );
 
   const favoritesContent = isEmployer ? (
@@ -469,7 +471,7 @@ function ProjectsPage() {
   ) : (
     <ProjectsList
       search={search}
-      status={["published", "recruiting_closed"]}
+      status={status}
       favourites
       emptyTitle="В избранном пусто"
       emptyDescription="Добавляйте проекты в избранное — нажимайте на сердечко в карточке."
@@ -524,7 +526,7 @@ function ProjectsPage() {
                 myProjects={
                   <ProjectsList
                     search={search}
-                    status={["draft", "published", "recruiting_closed"]}
+                    status={status}
                     myProject
                     emptyTitle="У вас пока нет проектов"
                     emptyDescription="Создайте проект или присоединитесь к существующему — они появятся здесь."
