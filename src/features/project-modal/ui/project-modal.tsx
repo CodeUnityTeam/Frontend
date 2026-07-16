@@ -9,6 +9,7 @@ import {
   Modal,
   ModalHeader,
   ModalTitle,
+  ModalDescription,
   ModalBody,
   ModalFooter,
 } from "@/shared/ui/modal/modal";
@@ -115,7 +116,6 @@ export function ProjectModal({
         title: project.title,
         shortDesc: project.short_desc,
         location: project.location ?? "",
-        // input[type=date] понимает только гггг-мм-дд; start_date бэк может и не прислать
         startDate: toDateValue(project.start_date),
         endDate: toDateValue(project.end_date),
         specializations: project.specializations.map((s) => s.name),
@@ -130,7 +130,6 @@ export function ProjectModal({
   const startDate = useWatch({ control, name: "startDate" });
   const endDate = useWatch({ control, name: "endDate" });
 
-  // дату начала опубликованного проекта менять нельзя — бэк отвечает 400 на весь PATCH
   const canEditStartDate =
     mode === "create" || project?.status_project === "draft";
 
@@ -142,7 +141,6 @@ export function ProjectModal({
 
   const isPending = createMutation.isPending || updateMutation.isPending;
 
-  // строгий маппинг имя → UUID каталога: несовпавшие — ошибка формы, а не тихий дроп
   const resolveCatalogRefs = (
     values: ProjectFormValues,
   ): Pick<CreateProjectDto, "skills" | "specializations"> | null => {
@@ -186,7 +184,6 @@ export function ProjectModal({
     const refs = resolveCatalogRefs(values);
     if (!refs) return;
 
-    // full_desc не шлём: бэк заполняет его из short_desc сам
     const dto: CreateProjectDto = {
       title: values.title,
       short_desc: values.shortDesc,
@@ -200,7 +197,6 @@ export function ProjectModal({
     };
 
     if (mode === "create") {
-      // сразу публикуем: черновики бэк не отдаёт в «Мои проекты»
       createMutation.mutate(
         { ...dto, status_project: "published" },
         { onSuccess: () => onOpenChange(false) },
@@ -239,13 +235,17 @@ export function ProjectModal({
       <Modal
         open={open}
         onOpenChange={handleOpenChange}
-        aria-describedby={undefined}
         className="max-w-full p-4 max-sm:h-dvh max-sm:max-h-dvh max-sm:rounded-none sm:max-w-167 sm:px-8 sm:pt-6 sm:pb-5"
       >
         <ModalHeader>
           <ModalTitle>
             {mode === "create" ? "Создание проекта" : "Редактирование проекта"}
           </ModalTitle>
+          <ModalDescription className="sr-only">
+            {mode === "create"
+              ? "Форма создания нового проекта: название, описание, сроки и требуемые навыки"
+              : "Форма редактирования проекта: название, описание, сроки и требуемые навыки"}
+          </ModalDescription>
         </ModalHeader>
 
         <form onSubmit={onSubmit} className="flex min-h-0 flex-1 flex-col">
@@ -262,7 +262,9 @@ export function ProjectModal({
                     {...register("title")}
                   />
                 </InputGroup>
-                {errors.title && <FieldError>{errors.title.message}</FieldError>}
+                {errors.title && (
+                  <FieldError>{errors.title.message}</FieldError>
+                )}
               </Field>
 
               <Field className="gap-1">
