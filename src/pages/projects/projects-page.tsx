@@ -46,6 +46,10 @@ import { ResponseCard } from "@/widgets/response-card";
 import { Search } from "@/widgets/search";
 import { FilterTabs, projectTabs } from "@/widgets/filter-tabs";
 import { useState } from "react";
+import { formatDate } from "./model/format-date";
+import { ProjectsGridSkeleton } from "./ui/projects-grid-skeleton";
+import { ProjectsError } from "./ui/projects-error";
+import { ProjectsEmpty } from "./ui/projects-empty";
 
 const PAGE_SIZE = 20;
 
@@ -60,66 +64,6 @@ const PEOPLE_SORT_MAP: Record<string, GetPeopleParams["sortBy"]> = {
   date: "newest",
   relevance: "relevance",
 };
-
-const dateFormatter = new Intl.DateTimeFormat("ru", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-});
-
-function formatDate(iso: string | null): string {
-  if (!iso) {
-    return "";
-  }
-  const date = new Date(iso);
-  return Number.isNaN(date.getTime()) ? "" : dateFormatter.format(date);
-}
-
-function ProjectsGridSkeleton() {
-  return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-[repeat(auto-fill,minmax(273px,1fr))] md:gap-x-3.5">
-      {Array.from({ length: 6 }).map((_, index) => (
-        <div
-          key={`project-skeleton-${index}`}
-          className="h-[370px] w-full animate-pulse rounded-lg bg-muted"
-        />
-      ))}
-    </div>
-  );
-}
-
-function ProjectsError({
-  onRetry,
-  message = "Не удалось загрузить проекты. Попробуйте ещё раз.",
-}: {
-  onRetry: () => void;
-  message?: string;
-}) {
-  return (
-    <div className="flex flex-col items-center gap-4 py-16 text-center">
-      <p className="text-muted-foreground">{message}</p>
-      <Button type="button" onClick={onRetry}>
-        Повторить
-      </Button>
-    </div>
-  );
-}
-
-function ProjectsEmpty({
-  title = "Пока нет проектов",
-  description = "Здесь появятся проекты, как только их опубликуют. Загляните чуть позже.",
-}: {
-  title?: string;
-  description?: string;
-}) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-2xl bg-muted px-6 py-16 text-center">
-      <Icon icon="ph:folder-dashed" className="size-12 text-muted-foreground" />
-      <h3 className="text-xl font-semibold text-foreground">{title}</h3>
-      <p className="max-w-md text-sm text-muted-foreground">{description}</p>
-    </div>
-  );
-}
 
 type ProjectsListProps = {
   search: string;
