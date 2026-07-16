@@ -22,8 +22,9 @@ function mapApiReviewToReview(apiReview: ApiReview): UIReview {
 }
 
 
-export function ReviewsSection() {
+export function ReviewsSection({ isAuthed }: { isAuthed: boolean }) {
   const { data: apiReviews, isLoading, isError } = useReviews();
+  if (!isAuthed) return null;
 
   if (isLoading) {
     return (

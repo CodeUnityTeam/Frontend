@@ -1,10 +1,9 @@
-import { useIsAuthed } from "@/shared/lib/auth";
 import { Button } from "@/shared/ui/button";
 import { openAuthRegister } from "@/widgets/registration/model/auth-modal-actions";
 import { AuthQuickActions } from "@/widgets/auth-quick-actions";
 
-export function JoinUs() {
-  const isAuthed = useIsAuthed();
+export function JoinUs({ isAuthed }: { isAuthed: boolean }) {
+  if (!isAuthed)  return null;
 
   return (
     <section className="md:px-20 md:mx-20 py-20 px-4 text-lg">
