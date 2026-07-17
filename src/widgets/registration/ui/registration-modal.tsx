@@ -15,7 +15,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/shared/ui/sheet/sheet";
-import yandexSvg from "@/shared/assets/icons/yandex.svg";
+import { Icon as AppIcon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { useForm } from "react-hook-form";
@@ -147,33 +147,34 @@ export function RegistrationModal({
     }
   };
 
-  const providers = [
-    {
-      id: "yandex",
-      label: "Yandex",
-      icon: yandexSvg,
-    },
-  ];
-
   const providersButtons = (
     <div className="mt-6 flex flex-col items-center gap-5">
       <div className="h-px w-full bg-primary/70" />
 
       <div className="flex items-center justify-center gap-4">
-        {providers.map((p) => (
-          <Button
-            key={p.id}
-            type="button"
-            aria-label={p.label}
-            variant="outline"
-            size="icon_lg"
-            className="h-12 w-12 rounded-full border-0 bg-[#252728] p-0 text-white hover:bg-[#373a3b] focus-visible:bg-[#373a3b]"
-            onClick={() => handleProvider(p.id)}
-            disabled={providerLoading}
-          >
-            <img src={p.icon} alt="" aria-hidden="true" className="h-6 w-6" />
-          </Button>
-        ))}
+       <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          aria-label="Войти через Яндекс"
+          onClick={() => handleProvider("yandex")}
+          disabled={providerLoading}
+          className="p-0 transition-opacity hover:opacity-80 [&_svg]:size-8"
+        >
+          <AppIcon name="yandex" size={32} />
+        </Button>
+
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          aria-label="Войти через Mail.ru"
+          onClick={() => handleProvider("mailru")}
+          disabled={providerLoading}
+          className="p-0 transition-opacity hover:opacity-80 [&_svg]:size-8"
+        >
+          <AppIcon name="mail-ru" size={32} />
+        </Button>
       </div>
     </div>
   );
