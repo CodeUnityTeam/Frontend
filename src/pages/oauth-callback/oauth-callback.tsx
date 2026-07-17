@@ -7,7 +7,12 @@ import { ROUTES } from "@/shared/model/routes";
 export function OAuthCallback() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { yandexAuth, mailRuAuth, isYandexPending, isMailRuPending } = useSocialAuth();
+  const { 
+    yandexAuth, 
+    mailRuAuth, 
+    isYandexPending, 
+    isMailRuPending 
+} = useSocialAuth();
 
   const code = searchParams.get("code");
   const provider = getOAuthProvider();
