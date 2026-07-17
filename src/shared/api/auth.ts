@@ -81,18 +81,18 @@ export async function getMailRuAuthUrl(): Promise<string> {
   return data.authorization_url;
 }
 
-export async function yandexAuth(code: string): Promise<SocialAuthResponse> {
+export async function yandexAuth(code: string, state?: string): Promise<SocialAuthResponse> {
   const { data } = await apiClient.post<SocialAuthResponse>(
     "/user/auth/yandex/",
-    { code }
+    { code, state }
   );
   return data;
 }
 
-export async function mailRuAuth(code: string): Promise<SocialAuthResponse> {
+export async function mailRuAuth(code: string, state?: string): Promise<SocialAuthResponse> {
   const { data } = await apiClient.post<SocialAuthResponse>(
     "/user/auth/mailru/",
-    { code }
+    { code, state }
   );
   return data;
 }
