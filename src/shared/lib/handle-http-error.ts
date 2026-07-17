@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import { ROUTES } from "@/shared/model/routes";
+import { clearTokens } from "@/shared/lib/auth";
 
 interface HandleErrorOptions {
   navigate: (to: string, options?: { replace?: boolean }) => void;
@@ -16,8 +17,7 @@ export function handleHttpError(
     const status = error.response?.status;
     
     if (status === 401) {
-      localStorage.removeItem("ku_access");
-      localStorage.removeItem("ku_refresh");
+      clearTokens(); 
       
       if (openLoginModal) {
         openLoginModal();

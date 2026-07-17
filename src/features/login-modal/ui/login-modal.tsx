@@ -8,6 +8,9 @@ import {
 } from "@/shared/ui/dialog";
 import { LoginForm } from "./login-form";
 import { SocialLogin } from "./social-login";
+import { useLocation } from "react-router";
+import { useAuthModalStore } from "@/shared/store/auth-modal-store";
+import { useEffect } from "react";
 
 interface LoginModalProps {
   open: boolean;
@@ -22,6 +25,16 @@ export function LoginModal({
   onOpenRegister,
   onOpenResetPassword,
 }: LoginModalProps) {
+  const location = useLocation();
+  const currentPath = location.pathname + location.search;
+  const { setRedirectPath } = useAuthModalStore();
+
+  useEffect(() => {
+    if (open) {
+      setRedirectPath(currentPath);
+    }
+  }, [open, setRedirectPath, currentPath]);
+  
   return (
     <Modal
       open={open}
