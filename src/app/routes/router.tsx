@@ -68,12 +68,6 @@ const AccountPage = lazy(() =>
   })),
 );
 
-const OAuthCallback = lazy(() =>
-  import("@/pages/oauth-callback/oauth-callback").then((m) => ({
-    default: m.Component,
-  }))
-);
-
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -199,9 +193,15 @@ export const router = createBrowserRouter([
       },
       {
         path: "/auth/callback",
-        element: <OAuthCallback />,
+        lazy: () =>
+          import("@/pages/oauth-callback/oauth-callback").then((m) => ({
+            Component: m.Component,
+          })),
       },
-      { path: "*", lazy: () => import("@/pages/error-pages/page-404") },
+      { 
+        path: "*", 
+        lazy: () => import("@/pages/error-pages/page-404") 
+      },
     ],
   },
 ]);
