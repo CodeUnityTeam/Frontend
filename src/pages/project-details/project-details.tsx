@@ -38,7 +38,6 @@ function ProjectDetails() {
   };
 
   // TO DO: Добавить проверку на то, что пользователь является участником проекта (#11_июля)
-  const isParticipant = false;
 
   return (
     <PageContainer className="py-4">
@@ -112,7 +111,7 @@ function ProjectDetails() {
               </div>
             </div>
 
-            {isAuthed && !isParticipant && (
+            {isAuthed && (
               <Button
                 className={cn(
                   "mt-6 h-10 w-full",
@@ -130,12 +129,6 @@ function ProjectDetails() {
                   className="mr-2 text-xl" 
                 />
                 {hasResponded ? "Отклик отправлен" : "Откликнуться"}
-              </Button>
-            )}
-
-            {isParticipant && (
-              <Button variant="outline" className="mt-6 h-10 w-full" disabled>
-                Вы уже участник
               </Button>
             )}
           </CardContent>
