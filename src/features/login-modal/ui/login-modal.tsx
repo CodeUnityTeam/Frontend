@@ -26,14 +26,14 @@ export function LoginModal({
   onOpenResetPassword,
 }: LoginModalProps) {
   const location = useLocation();
+  const currentPath = location.pathname + location.search;
   const { setRedirectPath } = useAuthModalStore();
 
   useEffect(() => {
     if (open) {
-      const currentPath = location.pathname + location.search;
       setRedirectPath(currentPath);
     }
-  }, [open, location, setRedirectPath]);
+  }, [open, setRedirectPath, currentPath]);
   
   return (
     <Modal

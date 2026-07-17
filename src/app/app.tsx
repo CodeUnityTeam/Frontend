@@ -14,12 +14,12 @@ export function App() {
   const isAuthed = useIsAuthed();
   const navigate = useNavigate();
   const location = useLocation(); 
+  const currentPath = location.pathname + location.search;
 
   // Обработчик 401 ошибок
   useEffect(() => {
     const handleOpenLoginModal = () => {
       // Сохраняем текущий путь при 401
-      const currentPath = location.pathname + location.search;
       setRedirectPath(currentPath);
       openModal();
     };
@@ -29,7 +29,7 @@ export function App() {
     return () => {
       window.removeEventListener("open-login-modal", handleOpenLoginModal);
     };
-  }, [openModal, setRedirectPath, location]);
+  }, [openModal, setRedirectPath, currentPath]);
 
   // Редирект после логина
   useEffect(() => {
