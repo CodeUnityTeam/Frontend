@@ -56,7 +56,7 @@ export function QAPageContent() {
 
       <div className="mb-6 flex items-center lg:hidden">
         <FiltersMobile>
-          <TagsFilterSection />
+          <TagsFilterSection scrollable />
         </FiltersMobile>
       </div>
 
@@ -74,8 +74,8 @@ export function QAPageContent() {
       </div>
 
       <div className="lg:flex lg:items-start lg:gap-5">
-        <FiltersSidebar className="hidden lg:block shrink-0">
-          <TagsFilterSection />
+        <FiltersSidebar className="hidden lg:flex shrink-0">
+          <TagsFilterSection scrollable />
         </FiltersSidebar>
 
         <main className="flex-1 flex flex-col md:gap-8.5">

@@ -1,4 +1,4 @@
-export type ProjectsRelation = "employer" | "worker";
+export type { ProjectsRelation } from "@/shared/api/profile";
 
 export interface PersonSkill {
   skillId: string;

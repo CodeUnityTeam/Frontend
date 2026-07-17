@@ -9,17 +9,13 @@ import {
 } from "@/shared/ui/card";
 import { ROUTES } from "@/shared/model/routes";
 import { Button } from "@/shared/ui/button";
-import { useIsAuthed } from "@/shared/lib/auth";
 import { useModal } from "@/shared/lib/hooks";
 import { FeedbackModal } from "@/features/feedback-modal";
 
-export function SupportSection() {
+export function SupportSection({ isAuthed }: { isAuthed: boolean }) {
   const { open, setOpen, openModal } = useModal(false);
-  const isAuthed = useIsAuthed();
 
-  if (!isAuthed) {
-    return null;
-  }
+  if (!isAuthed) return null;
 
   return (
     <section className="mx-4 mb-[61px] sm:mx-20 sm:mb-[107px]">

@@ -8,11 +8,11 @@ function AboutPage() {
 
   return (
     <>
-      <Banner />
+      <Banner isAuthed={isAuthed} />
       <Description />
-      {!isAuthed && <ReviewsSection />}
-      <SupportSection />
-      {!isAuthed && <JoinUs />}
+      <ReviewsSection isAuthed={isAuthed} />
+      <SupportSection isAuthed={isAuthed} />
+      <JoinUs isAuthed={isAuthed} />
     </>
   );
 }
