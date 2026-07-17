@@ -11,8 +11,8 @@ export type CreateProjectDto = {
   title: string;
   short_desc: string;
   full_desc?: string;
-  location?: string;
-  start_date: string;
+  location: string;
+  start_date?: string;
   end_date: string;
   status_project?: ProjectStatus;
   skills: { skill_id: string }[];

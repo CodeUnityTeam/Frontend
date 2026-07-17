@@ -46,7 +46,6 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
     const [inputValue, setInputValue] = React.useState("");
     const [isFocused, setIsFocused] = React.useState(false);
 
-    // при наличии каталога подсказок приводим ввод к каноническому написанию
     const canonicalize = (raw: string) => {
       const trimmed = raw.trim();
       if (!suggestions) return trimmed;
@@ -59,7 +58,7 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
     const addTag = (tag: string) => {
       const trimmed = canonicalize(tag);
       if (!trimmed) return;
-      // не добавлять дубликаты
+
       if (value.includes(trimmed)) {
         setInputValue("");
         return;
@@ -172,7 +171,6 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
             {showSuggestions && (
               <ul
                 className="absolute top-full right-0 left-0 z-10 mt-1 max-h-48 overflow-y-auto rounded-md border border-input bg-background py-1 shadow-md"
-                // не отдавать фокус из инпута, чтобы клик по пункту успел сработать
                 onMouseDown={(e) => e.preventDefault()}
               >
                 {matches.map((suggestion) => (

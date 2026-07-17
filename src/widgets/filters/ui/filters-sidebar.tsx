@@ -11,11 +11,17 @@ export function FiltersSidebar({ className, children }: FiltersSidebarProps) {
   return (
     <aside
       className={cn(
-        "w-[413px] shrink-0 rounded-lg border border-(--color-light-gray-200) py-6",
+        "sticky top-6 flex h-[calc(100dvh-3rem)] w-[413px] shrink-0 flex-col self-start overflow-hidden rounded-lg border border-(--color-light-gray-200) py-6",
         className,
       )}
     >
-      {children ? <div className="px-5">{children}</div> : <FiltersContent className="px-5" />}
+      {children ? (
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden px-5">
+          {children}
+        </div>
+      ) : (
+        <FiltersContent className="px-5" />
+      )}
     </aside>
   );
 }

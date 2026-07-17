@@ -1,5 +1,5 @@
 import { Header } from "@/widgets/header";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, useNavigate, useLocation } from "react-router"; 
 import { Footer } from "@/widgets/footer";
 import { Providers } from "./providers";
 import AuthModalManager from "@/widgets/registration/ui/auth-modal-manager";
@@ -10,13 +10,17 @@ import { LoginModal } from "@/features/login-modal/ui/login-modal";
 import { openAuthRegister } from "@/widgets/registration/model/auth-modal-actions";
 
 export function App() {
-  const { isOpen, closeModal, openModal, redirectPath, clearRedirectPath } = useAuthModalStore();
+  const { isOpen, closeModal, openModal, redirectPath, clearRedirectPath, setRedirectPath } = useAuthModalStore();
   const isAuthed = useIsAuthed();
   const navigate = useNavigate();
+  const location = useLocation(); 
+  const currentPath = location.pathname + location.search;
 
   // Обработчик 401 ошибок
   useEffect(() => {
     const handleOpenLoginModal = () => {
+      // Сохраняем текущий путь при 401
+      setRedirectPath(currentPath);
       openModal();
     };
 
@@ -25,14 +29,15 @@ export function App() {
     return () => {
       window.removeEventListener("open-login-modal", handleOpenLoginModal);
     };
-  }, [openModal]);
+  }, [openModal, setRedirectPath, currentPath]);
 
+  // Редирект после логина
   useEffect(() => {
     if (!isOpen && isAuthed && redirectPath) {
       navigate(redirectPath, { replace: true });
       clearRedirectPath();
     }
-  }, [clearRedirectPath, isAuthed, isOpen, navigate, redirectPath]);
+  }, [isAuthed, redirectPath, navigate, clearRedirectPath]); 
 
   const handleModalClose = (open: boolean) => {
     if (!open) {
