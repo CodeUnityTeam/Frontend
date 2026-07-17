@@ -4,7 +4,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Icon } from "@iconify/react";
 import { Link, generatePath, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
-
 import {
   createQuestionAnswer,
   deleteQuestion,
@@ -12,7 +11,6 @@ import {
   QuestionLikeButton,
   QUESTIONS_QUERY_KEY,
   useQuestions,
-  type QuestionAnswerDto,
 } from "@/entities/question";
 import { ConfirmModal } from "@/features/confirm-modal";
 import { ROUTES } from "@/shared/model/routes";
@@ -20,128 +18,18 @@ import AvatarPlaceholder from "@/shared/assets/images/avatar.png";
 import { formatRelativeDate } from "@/shared/lib/pluralize";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/shared/ui/card";
+import { Card, CardContent, CardFooter } from "@/shared/ui/card";
 import { PageContainer } from "@/shared/ui/page-container";
 import { Tag } from "@/shared/ui/tag";
-import { Textarea } from "@/shared/ui/textarea";
 import {
   EMPTY_PENDING_ANSWER_IDS,
   useQuestionCommentCount,
   useQuestionCommentsStore,
 } from "@/shared/store/question-comments-store";
-
-function QuestionAnswerForm({
-  value,
-  onChange,
-  onSubmit,
-  isSubmitting,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  isSubmitting: boolean;
-}) {
-  return (
-    <Card className="rounded-[24px] border border-input">
-      <CardHeader className="gap-2 p-6 pb-0">
-        <CardTitle className="text-[24px] leading-[1.2] font-semibold">
-          Добавить комментарий
-        </CardTitle>
-        <CardDescription className="text-base text-muted-foreground">
-          Поделитесь опытом, уточните деталь или оставьте полезный ответ.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="!p-6">
-        <form onSubmit={onSubmit} className="flex flex-col gap-4">
-          <Textarea
-            label="Комментарий"
-            value={value}
-            onChange={(event) => onChange(event.target.value)}
-            className="rounded-2xl border-foreground [&>textarea]:min-h-[160px] [&>textarea]:min-w-0 [&>textarea]:overflow-auto"
-          />
-
-          <div className="flex justify-end">
-            <Button
-              type="submit"
-              disabled={isSubmitting || !value.trim()}
-              className="min-w-[180px]"
-            >
-              {isSubmitting ? "Отправка..." : "Отправить"}
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
-  );
-}
-
-function QuestionAnswerCard({ answer }: { answer: QuestionAnswerDto }) {
-  const images = answer.images ?? [];
-
-  return (
-    <Card className="rounded-[24px] border border-muted-foreground">
-      <CardContent className="!p-6">
-        <div className="flex items-start gap-3">
-          <Avatar className="size-12">
-            <AvatarImage src={AvatarPlaceholder} alt={answer.author_name} />
-            <AvatarFallback>
-              <Icon icon="ph:user" className="size-6" />
-            </AvatarFallback>
-          </Avatar>
-
-          <div className="min-w-0 flex-1">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-lg font-semibold text-foreground">
-                    {answer.author_name}
-                  </span>
-                  <div className="flex items-center gap-1 text-muted-foreground">
-                    <Icon icon="ph:thumbs-up" className="size-5" />
-                    <span>{answer.author_rating}</span>
-                  </div>
-                </div>
-                {answer.parent_answer_id && (
-                  <span className="mt-1 inline-flex rounded-full border px-2 py-0.5 text-xs text-muted-foreground">
-                    Ответ на комментарий
-                  </span>
-                )}
-              </div>
-
-              <span className="whitespace-nowrap text-sm text-muted-foreground">
-                {formatRelativeDate(answer.created_at)}
-              </span>
-            </div>
-
-            <p className="mt-4 whitespace-pre-line text-base leading-6 text-foreground">
-              {answer.content}
-            </p>
-
-            {images.length > 0 && (
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                {images.map((src) => (
-                  <img
-                    key={src}
-                    src={src}
-                    alt={answer.author_name}
-                    className="max-h-56 w-full rounded-2xl object-cover"
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
+import { QuestionAnswerCard } from "./ui/question-answer-card";
+import { QuestionAnswerForm } from "./ui/question-answer-form";
+import { QuestionError } from "./ui/question-error";
+import { QuestionLoading } from "./ui/question-loading";
 
 function QaDetailsPage() {
   const navigate = useNavigate();
@@ -153,8 +41,7 @@ function QaDetailsPage() {
   const pendingCommentCount = useQuestionCommentCount(questionId);
   const pendingAnswerIds = useQuestionCommentsStore(
     (state) =>
-      state.pendingAnswerIdsByQuestion[questionId] ??
-      EMPTY_PENDING_ANSWER_IDS,
+      state.pendingAnswerIdsByQuestion[questionId] ?? EMPTY_PENDING_ANSWER_IDS,
   );
   const addPendingAnswer = useQuestionCommentsStore(
     (state) => state.addPendingAnswer,
@@ -247,25 +134,11 @@ function QaDetailsPage() {
   };
 
   if (questionQuery.isPending) {
-    return (
-      <PageContainer className="py-8 max-md:px-4 md:py-10">
-        <div className="flex min-h-[40vh] items-center justify-center">
-          <p className="text-base text-foreground">Загрузка вопроса...</p>
-        </div>
-      </PageContainer>
-    );
+    return <QuestionLoading />;
   }
 
   if (questionQuery.error || !question) {
-    return (
-      <PageContainer className="py-8 max-md:px-4 md:py-10">
-        <div className="flex min-h-[40vh] items-center justify-center">
-          <p className="text-base text-foreground">
-            Не удалось загрузить вопрос.
-          </p>
-        </div>
-      </PageContainer>
-    );
+    return <QuestionError />;
   }
 
   return (
@@ -293,7 +166,10 @@ function QaDetailsPage() {
           <CardContent className="!px-5 !py-6">
             <div className="flex items-start gap-3">
               <Avatar className="size-14">
-                <AvatarImage src={AvatarPlaceholder} alt={question.author_name} />
+                <AvatarImage
+                  src={AvatarPlaceholder}
+                  alt={question.author_name}
+                />
                 <AvatarFallback>
                   <Icon icon="ph:user" className="size-6" />
                 </AvatarFallback>
@@ -384,7 +260,7 @@ function QaDetailsPage() {
                 </div>
               )}
             </CardContent>
-            <CardFooter className="flex flex-wrap gap-6 px-6 pb-6 pt-0 text-muted-foreground">
+            <CardFooter className="flex flex-wrap gap-6 px-6 pt-0 pb-6 text-muted-foreground">
               <QuestionLikeButton
                 questionId={question.question_id}
                 likesCount={question.likes_count}
