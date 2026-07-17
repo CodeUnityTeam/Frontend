@@ -1,5 +1,5 @@
-import { apiClient } from "@/shared/api";
+import { applyToProject } from "@/shared/api/projects";
 
-export async function respondToProject(projectId: string): Promise<void> {
-  await apiClient.post(`/projects/${projectId}/responses/`);
+export async function respondToProject(projectId: string) {
+  return applyToProject(projectId);
 }
