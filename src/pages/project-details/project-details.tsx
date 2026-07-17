@@ -2,18 +2,27 @@ import { useNavigate } from "react-router";
 import { Icon } from "@iconify/react";
 import { useProject } from "./hooks";
 import { useLikeProject } from "@/entities/project";
+import { useRespondToProject } from "@/entities/response";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar/avatar";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent } from "@/shared/ui/card/card";
 import { PageContainer } from "@/shared/ui/page-container/page-container";
 import { Tag } from "@/shared/ui/tag";
+import { cn } from "@/shared/lib/utils";
+import { useIsAuthed } from "@/shared/lib/auth";
 
 function ProjectDetails() {
   const navigate = useNavigate();
+  const isAuthed = useIsAuthed();
 
-  const { data: project } = useProject()
+  const { data: project } = useProject();
   
   const { mutate: toggleLike } = useLikeProject();
+  const {
+    mutate: respond,
+    isPending: isResponding,
+    isSuccess: hasResponded,
+  } = useRespondToProject();
 
   if (!project || !Object.keys(project).length) return null;
 
@@ -23,6 +32,13 @@ function ProjectDetails() {
       liked: !project.is_liked_by_me,
     });
   };
+
+  const handleApply = () => {
+    respond(project.project_id);
+  };
+
+  // TO DO: Добавить проверку на то, что пользователь является участником проекта (#11_июля)
+  const isParticipant = false;
 
   return (
     <PageContainer className="py-4">
@@ -96,10 +112,32 @@ function ProjectDetails() {
               </div>
             </div>
 
-            {/* TO DO: Добавить проверку на то, что пользователь является участником проекта (#11_июля) */}
-            <Button variant="outline" className="mt-6 h-10 w-full">
-             Откликнуться
-            </Button>
+            {isAuthed && !isParticipant && (
+              <Button
+                className={cn(
+                  "mt-6 h-10 w-full",
+                  hasResponded
+                    ? "border-(--color-light-gray-200) bg-muted text-muted-foreground"
+                    : "border-primary text-foreground hover:bg-primary/5"
+                )}
+                onClick={handleApply}
+                variant="outline"
+                type="button"
+                disabled={isResponding || hasResponded}
+              >
+                <Icon 
+                  icon={hasResponded ? "ph:check-circle" : "ph:chats-teardrop-light"} 
+                  className="mr-2 text-xl" 
+                />
+                {hasResponded ? "Отклик отправлен" : "Откликнуться"}
+              </Button>
+            )}
+
+            {isParticipant && (
+              <Button variant="outline" className="mt-6 h-10 w-full" disabled>
+                Вы уже участник
+              </Button>
+            )}
           </CardContent>
         </Card>
 

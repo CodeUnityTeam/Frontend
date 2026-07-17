@@ -184,13 +184,21 @@ export function ProjectCard({
 
           {!isOwner && isAuthed && (
             <Button
-              className="flex w-full items-center justify-center gap-1 rounded-xl border border-primary py-2 text-[16px] font-semibold text-foreground disabled:border-(--color-light-gray-200) disabled:bg-muted disabled:text-muted-foreground"
+              className={cn(
+                "flex w-full items-center justify-center gap-1 rounded-xl border py-2 text-[16px] font-semibold",
+                hasResponded
+                  ? "border-(--color-light-gray-200) bg-muted text-muted-foreground"
+                  : "border-primary text-foreground hover:bg-primary/5"
+              )}
               onClick={handleApply}
               variant="ghost"
               type="button"
               disabled={isResponding || hasResponded}
             >
-              <Icon icon="ph:chats-teardrop-light" className="text-xl" />
+              <Icon 
+                icon={hasResponded ? "ph:check-circle" : "ph:chats-teardrop-light"} 
+                className="text-xl" 
+              />
               <span>{hasResponded ? "Отклик отправлен" : "Откликнуться"}</span>
             </Button>
           )}
