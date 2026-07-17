@@ -6,26 +6,13 @@ import { useRole } from "@/entities/profile";
 import { useLikeProject } from "@/entities/project";
 import { RESPONSES_QUERY_KEY, type ProjectResponse } from "@/entities/response";
 import { cn } from "@/shared/lib/utils";
+import { formatDate } from "@/shared/lib/format-date";
 import { Button } from "@/shared/ui/button";
 import { Tag } from "@/shared/ui/tag";
 import {
   statusLabels,
   statusBadgeClass,
 } from "@/widgets/response-card/model/status";
-
-const dateFormatter = new Intl.DateTimeFormat("ru", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-});
-
-function formatDate(iso: string | null): string {
-  if (!iso) {
-    return "";
-  }
-  const date = new Date(iso);
-  return Number.isNaN(date.getTime()) ? "" : dateFormatter.format(date);
-}
 
 const contactButtonClass =
   "flex w-full items-center justify-center gap-1 rounded-xl border border-primary py-2 text-[16px] font-semibold text-foreground";
