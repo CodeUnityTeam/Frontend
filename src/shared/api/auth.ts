@@ -1,4 +1,4 @@
-import type { UserDetailsDto } from "@/entities/auth/model/types";
+import type { SocialAuthResponse } from "@/entities/auth/model/types";
 import { apiClient } from "@/shared/api";
 import { clearTokens, getRefreshToken, setTokens } from "@/shared/lib/auth";
 
@@ -25,14 +25,6 @@ export type ApiRequestError = Error & {
 export type RefreshResponse = {
   access: string;
   refresh?: string;
-};
-
-export type SocialAuthResponse = {
-  access: string;
-  refresh: string;
-  user: UserDetailsDto; 
-  access_expiration: string;
-  refresh_expiration: string;
 };
 
 export async function registerUser(
