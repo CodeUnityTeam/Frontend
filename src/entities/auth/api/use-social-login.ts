@@ -5,8 +5,8 @@ import {
   getMailRuAuthUrl,
   yandexAuth,
   mailRuAuth,
-  type SocialAuthResponse,
 } from "@/shared/api/auth";
+import type { SocialAuthResponse } from "@/entities/auth/model/types";
 import { setTokens } from "@/shared/lib/auth";
 import { ROUTES } from "@/shared/model/routes";
 import {
