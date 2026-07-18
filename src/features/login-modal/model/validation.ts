@@ -19,3 +19,7 @@ export const passwordRules: RegisterOptions<LoginCredentials, "password"> = {
     message: "Пароль должен быть не менее 5 символов",
   },
 };
+
+export const consentRules: RegisterOptions<{ consent: boolean }, "consent"> = {
+  required: "Необходимо согласие на обработку данных",
+};

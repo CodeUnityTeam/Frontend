@@ -18,7 +18,8 @@ import {
 import yandexSvg from "@/shared/assets/icons/yandex.svg";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
-import { useForm } from "react-hook-form";
+import { Checkbox } from "@/shared/ui/checkbox";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   registrationSchema,
@@ -29,6 +30,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { ROUTES } from "@/shared/model/routes";
 import { getProviderUrl, type RegistrationRequest } from "@/shared/api/auth";
+import { getDocumentBySlug, useDocuments } from "@/entities/document";
 
 interface RegistrationModalProps {
   open: boolean;
@@ -83,6 +85,10 @@ export function RegistrationModal({
   const [providerLoading, setProviderLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
+  const { data: documents } = useDocuments();
+  const privacyPolicy = getDocumentBySlug(documents, "personal_data_processing");
+  const platformRules = getDocumentBySlug(documents, "platform_rules");
+  
   React.useEffect(() => {
     if (typeof window === "undefined") return;
     const mq = window.matchMedia("(max-width: 768px)");
@@ -96,13 +102,20 @@ export function RegistrationModal({
   const mutation = useRegisterMutation();
 
   const {
+    control,
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<RegistrationFormValues>({
     resolver: zodResolver(registrationSchema),
     mode: "onTouched",
+    defaultValues: {
+      consent: false,
+    },
   });
+
+  const consentValue = watch("consent");
 
   const onSubmit = (values: RegistrationFormValues) => {
     const payload: RegistrationRequest = {
@@ -237,11 +250,50 @@ export function RegistrationModal({
       </div>
 
       <div className="md:col-span-2">
+        <Controller
+          name="consent"
+          control={control}
+          render={({ field, fieldState }) => (
+            <div className="flex flex-col gap-2">
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="consent"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  className="border-2 border-foreground data-[state=checked]:bg-background data-[state=checked]:text-foreground"
+                />
+                <label
+                  htmlFor="consent"
+                  className="mt-1 text-sm leading-relaxed text-muted-foreground cursor-pointer"
+                >
+                  Соглашаюсь на{" "}
+                  <a
+                    href={privacyPolicy?.file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary underline hover:no-underline cursor-pointer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    обработку персональных данных
+                  </a>
+                </label>
+              </div>
+              {fieldState.error && (
+                <p className="text-sm text-destructive">
+                  {fieldState.error.message}
+                </p>
+              )}
+            </div>
+          )}
+        />
+      </div>
+
+      <div className="md:col-span-2">
         <Button
           type="submit"
           size="lg"
           className="w-full"
-          disabled={mutation.status === "pending" || isSubmitting}
+          disabled={!consentValue || mutation.status === "pending" || isSubmitting}
         >
           {mutation.status === "pending" || isSubmitting ? (
             <>
