@@ -193,14 +193,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/auth/callback",
-        lazy: () =>
-          import("@/pages/oauth-callback/oauth-callback").then((m) => ({
-            Component: m.Component,
-          })),
+        lazy: () => import("@/pages/oauth-callback/oauth-callback"),
       },
-      { 
-        path: "*", 
-        lazy: () => import("@/pages/error-pages/page-404") 
+      {
+        path: "*",
+        lazy: () => import("@/pages/error-pages/page-404"),
       },
     ],
   },
