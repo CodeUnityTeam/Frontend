@@ -10,23 +10,17 @@ import { ProfileHeaderModal } from "@/widgets/account/ui/profile-header-modal";
 import { SetSkillsModal } from "@/widgets/set-skills-modal";
 
 export const AccountProfile = ({
-  profile,
-  skills,
-  qualities,
-  about,
-  experience,
+  profile: profileData,
+  skills: skillsData,
+  qualities: qualitiesData,
+  about: aboutData,
+  experience: experienceData,
 }: AccountProfileProps) => {
   const [tab, setTab] = React.useState<"profile" | "experience">("profile");
 
   const [activeModal, setActiveModal] = React.useState<
     "header" | "skills" | "experience" | null
   >(null);
-
-  const profileData = profile;
-  const skillsData = skills;
-  const qualitiesData = qualities;
-  const aboutData = about;
-  const experienceData = experience;
 
   const hasProfileData =
     skillsData.length > 0 || qualitiesData.length > 0 || Boolean(aboutData);
