@@ -191,7 +191,14 @@ export const router = createBrowserRouter([
         path: ROUTES.SERVER_ERROR,
         lazy: () => import("@/pages/error-pages/page-500"),
       },
-      { path: "*", lazy: () => import("@/pages/error-pages/page-404") },
+      {
+        path: "/auth/callback",
+        lazy: () => import("@/pages/oauth-callback/oauth-callback"),
+      },
+      {
+        path: "*",
+        lazy: () => import("@/pages/error-pages/page-404"),
+      },
     ],
   },
 ]);

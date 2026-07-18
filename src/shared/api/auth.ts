@@ -1,3 +1,4 @@
+import type { SocialAuthResponse } from "@/entities/auth/model/types";
 import { apiClient } from "@/shared/api";
 import { clearTokens, getRefreshToken, setTokens } from "@/shared/lib/auth";
 
@@ -58,6 +59,36 @@ export async function getProviderUrl(provider: string): Promise<string | null> {
   );
 }
 
+export async function getYandexAuthUrl(): Promise<string> {
+  const { data } = await apiClient.get<{ authorization_url: string }>(
+    "/user/auth/yandex/url/"
+  );
+  return data.authorization_url;
+}
+
+export async function getMailRuAuthUrl(): Promise<string> {
+  const { data } = await apiClient.get<{ authorization_url: string }>(
+    "/user/auth/mailru/url/"
+  );
+  return data.authorization_url;
+}
+
+export async function yandexAuth(code: string, state?: string): Promise<SocialAuthResponse> {
+  const { data } = await apiClient.post<SocialAuthResponse>(
+    "/user/auth/yandex/",
+    { code, state }
+  );
+  return data;
+}
+
+export async function mailRuAuth(code: string, state?: string): Promise<SocialAuthResponse> {
+  const { data } = await apiClient.post<SocialAuthResponse>(
+    "/user/auth/mailru/",
+    { code, state }
+  );
+  return data;
+}
+
 export async function logout(): Promise<void> {
   try {
     const refresh = getRefreshToken();
@@ -96,6 +127,10 @@ export default {
   registerUser,
   verifyEmail,
   getProviderUrl,
+  getYandexAuthUrl,
+  getMailRuAuthUrl,
+  yandexAuth,
+  mailRuAuth,
   logout,
   refreshToken,
 };
