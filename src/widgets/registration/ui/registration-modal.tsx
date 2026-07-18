@@ -87,7 +87,6 @@ export function RegistrationModal({
 
   const { data: documents } = useDocuments();
   const privacyPolicy = getDocumentBySlug(documents, "personal_data_processing");
-  const platformRules = getDocumentBySlug(documents, "platform_rules");
   
   React.useEffect(() => {
     if (typeof window === "undefined") return;
