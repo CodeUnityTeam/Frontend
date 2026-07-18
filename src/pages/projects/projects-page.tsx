@@ -46,7 +46,7 @@ import { ResponseCard } from "@/widgets/response-card";
 import { Search } from "@/widgets/search";
 import { FilterTabs, projectTabs } from "@/widgets/filter-tabs";
 import { useState } from "react";
-import { formatDate } from "./model/format-date";
+import { formatDate } from "@/shared/lib/format-date";
 import { ProjectsGridSkeleton } from "./ui/projects-grid-skeleton";
 import { ProjectsError } from "./ui/projects-error";
 import { ProjectsEmpty } from "./ui/projects-empty";
