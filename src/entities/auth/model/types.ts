@@ -52,6 +52,14 @@ export interface LoginResponseDto {
   user: UserDetailsDto;
 }
 
+export interface SocialAuthResponse {
+  access: string;
+  refresh: string;
+  user: UserDetailsDto;
+  access_expiration: string;
+  refresh_expiration: string;
+}
+
 export function mapUserDetails(dto: UserDetailsDto): AuthUser {
   return {
     id: dto.pk,
