@@ -29,7 +29,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { ROUTES } from "@/shared/model/routes";
 import { getProviderUrl, type RegistrationRequest } from "@/shared/api/auth";
-import { getDocumentBySlug, useDocuments } from "@/entities/document";
+import { useDocuments } from "@/entities/document";
 
 interface RegistrationModalProps {
   open: boolean;
@@ -85,10 +85,6 @@ export function RegistrationModal({
   const [isMobile, setIsMobile] = useState(false);
 
   const { data: documents } = useDocuments();
-  const privacyPolicy = getDocumentBySlug(
-    documents,
-    "personal_data_processing",
-  );
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -158,6 +154,10 @@ export function RegistrationModal({
       setProviderLoading(false);
     }
   };
+
+  const privacyPolicy = documents?.find(doc => doc.slug === "personal_data_processing");
+  const platformRules = documents?.find(doc => doc.slug === "platform_rules");
+  const privacyPolicyFull = documents?.find(doc => doc.slug === "privacy_policy");
 
   const renderContent = () => (
     <>
@@ -254,6 +254,35 @@ export function RegistrationModal({
                     >
                       обработку персональных данных
                     </a>
+                    {platformRules && (
+                      <>
+                        ,{" "}
+                        <a
+                          href={platformRules.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="cursor-pointer text-primary underline hover:no-underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          правила пользования платформой
+                        </a>
+                      </>
+                    )}
+                    {privacyPolicyFull && (
+                      <>
+                        {" "}
+                        и{" "}
+                        <a
+                          href={privacyPolicyFull.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="cursor-pointer text-primary underline hover:no-underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          политику конфиденциальности
+                        </a>
+                      </>
+                    )}
                   </label>
                 </div>
                 {fieldState.error && (
