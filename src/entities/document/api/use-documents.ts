@@ -13,6 +13,9 @@ export function useDocuments() {
   });
 }
 
-export function getDocumentBySlug(documents: Document[] | undefined, slug: string): Document | undefined {
+export function getDocumentBySlug(
+  documents: Document[] | undefined,
+  slug: string,
+): Document | undefined {
   return documents?.find((doc) => doc.slug === slug);
 }
