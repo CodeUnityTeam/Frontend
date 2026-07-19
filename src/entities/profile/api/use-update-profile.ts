@@ -14,7 +14,7 @@ export function useUpdateProfile() {
     mutationFn: (payload: ProfileUpdateRequest) =>
       updateCurrentUserProfile(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: PROFILE_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: [PROFILE_QUERY_KEY] });
     },
     onError: (error) => toast.error(error.message),
   });

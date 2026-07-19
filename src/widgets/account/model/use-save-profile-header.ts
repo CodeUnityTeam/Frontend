@@ -33,7 +33,7 @@ export function useSaveProfileHeader() {
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: PROFILE_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: [PROFILE_QUERY_KEY] });
     },
     onError: (error) => toast.error(error.message),
   });

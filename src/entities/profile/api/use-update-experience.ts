@@ -3,13 +3,13 @@ import { toast } from "sonner";
 
 import {
   updateExperience,
-  type ExperienceCreateRequest,
+  type ExperienceUpdateRequest,
 } from "@/shared/api/profile";
 import { PROFILE_QUERY_KEY } from "@/entities/profile/api/use-current-profile";
 
 interface UpdateExperienceVars {
   id: string;
-  payload: ExperienceCreateRequest;
+  payload: ExperienceUpdateRequest;
 }
 
 export function useUpdateExperience() {
@@ -19,7 +19,7 @@ export function useUpdateExperience() {
     mutationFn: ({ id, payload }: UpdateExperienceVars) =>
       updateExperience(id, payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: PROFILE_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: [PROFILE_QUERY_KEY] });
     },
     onError: (error) => toast.error(error.message),
   });

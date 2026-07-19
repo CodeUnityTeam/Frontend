@@ -10,7 +10,7 @@ export function useDeleteExperience() {
   return useMutation({
     mutationFn: (id: string) => deleteExperience(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: PROFILE_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: [PROFILE_QUERY_KEY] });
     },
     onError: (error) => toast.error(error.message),
   });

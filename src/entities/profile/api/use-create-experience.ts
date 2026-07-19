@@ -14,7 +14,7 @@ export function useCreateExperience() {
     mutationFn: (payload: ExperienceCreateRequest) =>
       createExperience(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: PROFILE_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: [PROFILE_QUERY_KEY] });
     },
     onError: (error) => toast.error(error.message),
   });

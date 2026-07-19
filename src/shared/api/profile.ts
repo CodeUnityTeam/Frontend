@@ -76,6 +76,8 @@ export type ExperienceCreateRequest = {
   end_date: string | null;
 };
 
+export type ExperienceUpdateRequest = ExperienceCreateRequest;
+
 type ApiObject = Record<string, unknown>;
 
 function isFilledText(value: string | undefined | null): boolean {
@@ -142,7 +144,7 @@ export async function createExperience(payload: ExperienceCreateRequest) {
 
 export async function updateExperience(
   id: string,
-  payload: ExperienceCreateRequest,
+  payload: ExperienceUpdateRequest,
 ) {
   const { data } = await apiClient.put<ApiObject>(
     `/user/profile/me/experience/${id}/`,

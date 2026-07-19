@@ -22,10 +22,9 @@ export const AccountProfile = ({
 }: AccountProfileProps) => {
   const [tab, setTab] = React.useState<"profile" | "experience">("profile");
 
-  const [isHeaderModalOpen, setIsHeaderModalOpen] = React.useState(false);
-  const [isSkillsModalOpen, setIsSkillsModalOpen] = React.useState(false);
-  const [isExperienceModalOpen, setIsExperienceModalOpen] =
-    React.useState(false);
+  const [activeModal, setActiveModal] = React.useState<
+    "header" | "skills" | "experience" | null
+  >(null);
 
   const profileData = profile ?? {
     ...accountData.profile,
@@ -63,7 +62,7 @@ export const AccountProfile = ({
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setIsHeaderModalOpen(true)}
+            onClick={() => setActiveModal("header")}
             className="h-6 w-6 p-0"
           >
             <Icon
@@ -140,7 +139,7 @@ export const AccountProfile = ({
               variant="ghost"
               size="icon"
               aria-label="Редактировать опыт работы"
-              onClick={() => setIsExperienceModalOpen(true)}
+              onClick={() => setActiveModal("experience")}
               className="text-foreground hover:text-foreground"
             >
               <Icon icon="ph:pencil-simple-line" className="h-5 w-5" />
@@ -151,7 +150,7 @@ export const AccountProfile = ({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setIsSkillsModalOpen(true)}
+              onClick={() => setActiveModal("skills")}
               className="text-foreground hover:text-foreground"
             >
               <Icon icon="ph:pencil-simple-line" className="h-5 w-5" />
@@ -251,17 +250,17 @@ export const AccountProfile = ({
         </div>
       </main>
 
-      {isHeaderModalOpen && (
+      {activeModal === "header" && (
         <ProfileHeaderModal
-          open={isHeaderModalOpen}
-          onOpenChange={setIsHeaderModalOpen}
+          open
+          onOpenChange={(open) => setActiveModal(open ? "header" : null)}
         />
       )}
 
-      {isSkillsModalOpen && (
+      {activeModal === "skills" && (
         <SetSkillsModal
-          open={isSkillsModalOpen}
-          onOpenChange={setIsSkillsModalOpen}
+          open
+          onOpenChange={(open) => setActiveModal(open ? "skills" : null)}
           defaultValues={{
             skills: skillsData,
             qualities: qualitiesData,
@@ -270,10 +269,10 @@ export const AccountProfile = ({
         />
       )}
 
-      {isExperienceModalOpen && (
+      {activeModal === "experience" && (
         <ExperienceModal
-          open={isExperienceModalOpen}
-          onOpenChange={setIsExperienceModalOpen}
+          open
+          onOpenChange={(open) => setActiveModal(open ? "experience" : null)}
           experience={editableExperience}
         />
       )}
