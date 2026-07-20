@@ -23,6 +23,11 @@ export async function uploadQuestionFile(
   const { data } = await apiClient.post<UploadQuestionFileResponseDto>(
     "/qna/files/upload/",
     formData,
+    {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  },
   );
 
   return {

@@ -16,6 +16,7 @@ export {
   createQuestionAnswer,
   type CreateQuestionAnswerRequest,
   type CreateQuestionAnswerResponse,
+  type QuestionAnswerImage,
 } from "./api/create-question-answer";
 export {
   likeQuestion,

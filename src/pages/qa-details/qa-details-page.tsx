@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import type { FormEvent } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
+import type { FormEvent, ChangeEvent, Dispatch, SetStateAction } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Icon } from "@iconify/react";
 import { Link, generatePath, useNavigate, useParams } from "react-router";
@@ -12,7 +12,9 @@ import {
   QuestionLikeButton,
   QUESTIONS_QUERY_KEY,
   useQuestions,
+  useUploadQuestionFile,
   type QuestionAnswerDto,
+  type QuestionAnswerImage,
 } from "@/entities/question";
 import { ConfirmModal } from "@/features/confirm-modal";
 import { ROUTES } from "@/shared/model/routes";
@@ -42,12 +44,45 @@ function QuestionAnswerForm({
   onChange,
   onSubmit,
   isSubmitting,
+  images,
+  onImagesChange,
 }: {
   value: string;
   onChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   isSubmitting: boolean;
+  images: QuestionAnswerImage[];
+  onImagesChange: Dispatch<SetStateAction<QuestionAnswerImage[]>>;
 }) {
+  const inputRef = useRef<HTMLInputElement>(null);                        
+
+  const { mutateAsync: uploadFile } = useUploadQuestionFile();
+
+  const handleFileChange = async (
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
+    const files = Array.from(event.target.files ?? []);
+
+    const uploadedImages = await Promise.all(
+      files.map(async (file) => {
+        const data = await uploadFile(file);
+
+        return {
+          image_url: data.imageUrl,
+          original_name: data.originalName,
+          file_size: data.fileSize,
+          mime_type: data.mimeType,
+        };
+      }),
+    );
+
+    onImagesChange((prev) => [
+      ...prev,
+      ...uploadedImages,
+    ]);
+
+    event.target.value = "";
+  };
   return (
     <Card className="rounded-[24px] border border-input">
       <CardHeader className="gap-2 p-6 pb-0">
@@ -67,7 +102,51 @@ function QuestionAnswerForm({
             className="rounded-2xl border-foreground [&>textarea]:min-h-[160px] [&>textarea]:min-w-0 [&>textarea]:overflow-auto"
           />
 
-          <div className="flex justify-end">
+          {images.length > 0 && (
+            <div className="flex flex-wrap gap-3">
+              {images.map((image) => (
+                <div key={image.image_url} className="relative">
+                  <img
+                    src={image.image_url}
+                    alt={image.original_name}
+                    className="h-28 w-28 rounded-xl object-cover"
+                  />
+
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="outline"
+                    className="absolute -right-2 -top-2 h-6 w-6 rounded-full"
+                    onClick={() =>
+                      onImagesChange((prev) =>
+                        prev.filter((i) => i.image_url !== image.image_url),
+                      )
+                    }
+                  >
+                    <Icon icon="ph:x" className="size-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="flex justify-between">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => inputRef.current?.click()}
+            >
+              <Icon icon="ph:image-square" height={24} />
+            </Button>
+            <input
+              ref={inputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              hidden
+              onChange={handleFileChange}
+            />
             <Button
               type="submit"
               disabled={isSubmitting || !value.trim()}
@@ -149,6 +228,7 @@ function QaDetailsPage() {
   const { id } = useParams();
   const questionId = id ?? "";
   const [comment, setComment] = useState("");
+  const [images, setImages] = useState<QuestionAnswerImage[]>([]);
   const [isDeleteOpen, setDeleteOpen] = useState(false);
   const pendingCommentCount = useQuestionCommentCount(questionId);
   const pendingAnswerIds = useQuestionCommentsStore(
@@ -206,15 +286,23 @@ function QaDetailsPage() {
   }, [clearPendingAnswers, pendingAnswerIds, question?.answers, questionId]);
 
   const addCommentMutation = useMutation({
-    mutationFn: (content: string) =>
+    mutationFn: ({
+      content,
+      images,
+    }: {
+      content: string;
+      images: QuestionAnswerImage[];
+    }) =>
       createQuestionAnswer(questionId, {
         content,
         parent_answer: null,
+        images,
       }),
     onSuccess: (result) => {
       addPendingAnswer(questionId, result.answer_id);
       toast.success("Комментарий добавлен");
       setComment("");
+      setImages([]);
       void questionQuery.refetch();
       void queryClient.invalidateQueries({ queryKey: [QUESTIONS_QUERY_KEY] });
     },
@@ -243,7 +331,10 @@ function QaDetailsPage() {
       return;
     }
 
-    addCommentMutation.mutate(value);
+    addCommentMutation.mutate({
+      content: value,
+      images,
+    });
   };
 
   if (questionQuery.isPending) {
@@ -401,6 +492,8 @@ function QaDetailsPage() {
             onChange={setComment}
             onSubmit={handleSubmit}
             isSubmitting={addCommentMutation.isPending}
+            images={images}
+            onImagesChange={setImages}
           />
 
           <section className="space-y-4">
