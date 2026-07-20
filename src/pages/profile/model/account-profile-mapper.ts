@@ -3,6 +3,7 @@ import type {
   ProfileExperienceItem,
 } from "@/shared/api/profile";
 import type { AccountProfileProps, ExperienceItem } from "@/widgets/account";
+import { formatLastSeen } from "@/shared/lib/format-last-seen";
 
 function formatMonthYear(isoDate: string): string {
   const date = new Date(isoDate);
@@ -35,6 +36,9 @@ export function buildAccountProfileProps(
   return {
     profile: {
       rating: profile.rating,
+      status: profile.last_login
+        ? `Онлайн ${formatLastSeen(profile.last_login)}`
+        : undefined,
       avatar: profile.avatar_url,
       name: [profile.first_name, profile.last_name].filter(Boolean).join(" "),
       profession: profile.specializations[0]?.name,

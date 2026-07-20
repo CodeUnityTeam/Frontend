@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/shared/ui/card/card";
 import { PageContainer } from "@/shared/ui/page-container/page-container";
 import { Tag } from "@/shared/ui/tag";
 import { cn } from "@/shared/lib/utils";
+import { formatLastSeen } from "@/shared/lib/format-last-seen";
 import { useIsAuthed } from "@/shared/lib/auth";
 
 function ProjectDetails() {
@@ -16,7 +17,7 @@ function ProjectDetails() {
   const isAuthed = useIsAuthed();
 
   const { data: project } = useProject();
-  
+
   const { mutate: toggleLike } = useLikeProject();
   const {
     mutate: respond,
@@ -36,8 +37,6 @@ function ProjectDetails() {
   const handleApply = () => {
     respond(project.project_id);
   };
-
-  // TO DO: Добавить проверку на то, что пользователь является участником проекта (#11_июля)
 
   return (
     <PageContainer className="py-4">
@@ -66,12 +65,9 @@ function ProjectDetails() {
 
                   <div className="text-sm text-muted-foreground">
                     {project.author.last_activity_at
-                      ? `был(а) • ${new Date(
+                      ? `был(а) • ${formatLastSeen(
                           project.author.last_activity_at,
-                        ).toLocaleDateString("ru-RU", {
-                          day: "numeric",
-                          month: "long",
-                        })}`
+                        )}`
                       : "недавно"}
                   </div>
                 </div>
@@ -117,16 +113,18 @@ function ProjectDetails() {
                   "mt-6 h-10 w-full",
                   hasResponded
                     ? "border-(--color-light-gray-200) bg-muted text-muted-foreground"
-                    : "border-primary text-foreground hover:bg-primary/5"
+                    : "border-primary text-foreground hover:bg-primary/5",
                 )}
                 onClick={handleApply}
                 variant="outline"
                 type="button"
                 disabled={isResponding || hasResponded}
               >
-                <Icon 
-                  icon={hasResponded ? "ph:check-circle" : "ph:chats-teardrop-light"} 
-                  className="mr-2 text-xl" 
+                <Icon
+                  icon={
+                    hasResponded ? "ph:check-circle" : "ph:chats-teardrop-light"
+                  }
+                  className="mr-2 text-xl"
                 />
                 {hasResponded ? "Отклик отправлен" : "Откликнуться"}
               </Button>
@@ -157,7 +155,9 @@ function ProjectDetails() {
               >
                 <Icon
                   icon={project.is_liked_by_me ? "ph:heart-fill" : "ph:heart"}
-                  className={project.is_liked_by_me ? "text-primary" : undefined}
+                  className={
+                    project.is_liked_by_me ? "text-primary" : undefined
+                  }
                 />
               </Button>
             </div>
@@ -214,9 +214,7 @@ function ProjectDetails() {
                     >
                       <AvatarImage src={participant?.avatar_url} />
 
-                      <AvatarFallback>
-                        {participant?.full_name}
-                      </AvatarFallback>
+                      <AvatarFallback>{participant?.full_name}</AvatarFallback>
                     </Avatar>
                   ))}
                 </div>
