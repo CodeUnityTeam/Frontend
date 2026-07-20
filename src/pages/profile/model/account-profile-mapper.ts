@@ -18,11 +18,14 @@ function formatMonthYear(isoDate: string): string {
 
 function mapExperience(item: ProfileExperienceItem): ExperienceItem {
   return {
+    id: item.pk,
     company: item.company,
     position: item.position,
     responsibilities: item.responsibilities,
     from: formatMonthYear(item.start_date),
     to: item.end_date ? formatMonthYear(item.end_date) : undefined,
+    startDate: item.start_date,
+    endDate: item.end_date,
   };
 }
 
@@ -31,6 +34,7 @@ export function buildAccountProfileProps(
 ): AccountProfileProps {
   return {
     profile: {
+      rating: profile.rating,
       avatar: profile.avatar_url,
       name: [profile.first_name, profile.last_name].filter(Boolean).join(" "),
       profession: profile.specializations[0]?.name,
