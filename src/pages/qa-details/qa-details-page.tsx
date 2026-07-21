@@ -12,6 +12,7 @@ import {
   QUESTIONS_QUERY_KEY,
   useQuestions,
 } from "@/entities/question";
+import type { QuestionAnswerImage} from "@/entities/question";
 import { ConfirmModal } from "@/features/confirm-modal";
 import { ROUTES } from "@/shared/model/routes";
 import AvatarPlaceholder from "@/shared/assets/images/avatar.png";
@@ -37,6 +38,7 @@ function QaDetailsPage() {
   const { id } = useParams();
   const questionId = id ?? "";
   const [comment, setComment] = useState("");
+  const [images, setImages] = useState<QuestionAnswerImage[]>([]);
   const [isDeleteOpen, setDeleteOpen] = useState(false);
   const pendingCommentCount = useQuestionCommentCount(questionId);
   const pendingAnswerIds = useQuestionCommentsStore(
@@ -93,15 +95,23 @@ function QaDetailsPage() {
   }, [clearPendingAnswers, pendingAnswerIds, question?.answers, questionId]);
 
   const addCommentMutation = useMutation({
-    mutationFn: (content: string) =>
+    mutationFn: ({
+      content,
+      images,
+    }: {
+      content: string;
+      images: QuestionAnswerImage[];
+    }) =>
       createQuestionAnswer(questionId, {
         content,
         parent_answer: null,
+        images,
       }),
     onSuccess: (result) => {
       addPendingAnswer(questionId, result.answer_id);
       toast.success("Комментарий добавлен");
       setComment("");
+      setImages([]);
       void questionQuery.refetch();
       void queryClient.invalidateQueries({ queryKey: [QUESTIONS_QUERY_KEY] });
     },
@@ -130,7 +140,10 @@ function QaDetailsPage() {
       return;
     }
 
-    addCommentMutation.mutate(value);
+    addCommentMutation.mutate({
+      content: value,
+      images,
+    });
   };
 
   if (questionQuery.isPending) {
@@ -277,6 +290,8 @@ function QaDetailsPage() {
             onChange={setComment}
             onSubmit={handleSubmit}
             isSubmitting={addCommentMutation.isPending}
+            images={images}
+            onImagesChange={setImages}
           />
 
           <section className="space-y-4">
