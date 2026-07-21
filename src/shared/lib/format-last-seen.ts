@@ -1,3 +1,6 @@
+/** Миллисекунд в сутках: 24 ч × 60 мин × 60 сек × 1000 мс. */
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
 export function formatLastSeen(iso: string | null): string | undefined {
   if (!iso) return undefined;
 
@@ -6,7 +9,7 @@ export function formatLastSeen(iso: string | null): string | undefined {
 
   const now = new Date();
   const days = Math.round(
-    (startOfDay(now).getTime() - startOfDay(date).getTime()) / 86_400_000,
+    (startOfDay(now).getTime() - startOfDay(date).getTime()) / MS_PER_DAY,
   );
 
   if (days === 0) return "сегодня";
