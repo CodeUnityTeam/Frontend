@@ -1,3 +1,9 @@
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+import { useUpdateProfile } from "@/entities/profile";
+import { resolveReferenceIds } from "@/entities/reference";
+import { useSkills } from "@/entities/skill";
 import { Button } from "@/shared/ui/button";
 import {
   Dialog,
@@ -8,27 +14,69 @@ import {
 } from "@/shared/ui/dialog";
 import { TextInput } from "@/shared/ui/text-input";
 import { TagInput } from "@/shared/ui/tag-input";
-import type { SkillsFormData } from "@/widgets/account/model/types";
 
-type setSkillsModalProps = {
+interface SkillsFormValues {
+  skills: string[];
+  qualities: string[];
+  about: string;
+}
+
+type SetSkillsModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  formData: SkillsFormData;
-  onSkillsChange: (newSkills: string[]) => void;
-  onQualitiesChange: (newQualities: string[]) => void;
-  onAboutChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  defaultValues: SkillsFormValues;
 };
 
 export function SetSkillsModal({
   open,
   onOpenChange,
-  onSubmit,
-  onSkillsChange,
-  onQualitiesChange,
-  onAboutChange,
-  formData,
-}: setSkillsModalProps) {
+  defaultValues,
+}: SetSkillsModalProps) {
+  const skillsQuery = useSkills();
+  const updateProfile = useUpdateProfile();
+
+  const { control, handleSubmit, setError } = useForm<SkillsFormValues>({
+    mode: "onTouched",
+    defaultValues,
+  });
+
+  const catalog = (skillsQuery.data ?? []).map((skill) => ({
+    id: skill.skillId,
+    name: skill.name,
+  }));
+  const skillNames = catalog.map((skill) => skill.name);
+
+  const submit = handleSubmit((values) => {
+    const { ids: skillIds, unknown } = resolveReferenceIds(
+      values.skills,
+      catalog,
+    );
+
+    if (unknown.length > 0) {
+      setError("skills", {
+        message: `Нет в каталоге навыков: ${unknown.join(", ")}`,
+      });
+      return;
+    }
+
+    updateProfile.mutate(
+      {
+        skills: skillIds,
+        soft_skills: values.qualities
+          .map((quality) => quality.trim())
+          .filter(Boolean)
+          .join(", "),
+        about_me: values.about.trim(),
+      },
+      {
+        onSuccess: () => {
+          toast.success("Профиль обновлён");
+          onOpenChange(false);
+        },
+      },
+    );
+  });
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogOverlay />
@@ -37,32 +85,59 @@ export function SetSkillsModal({
         <DialogDescription className="sr-only">
           Форма заполнения навыков, личных качеств и информации о себе
         </DialogDescription>
-        <form onSubmit={onSubmit} className="flex flex-col gap-4 md:gap-6">
-          <TagInput
-            label="Навыки и инструменты"
-            placeholder="Начните вводить здесь"
-            description="Выберите программы, которыми вы владеете"
-            value={formData.skills}
-            onChange={onSkillsChange}
+        <form
+          onSubmit={submit}
+          noValidate
+          className="flex flex-col gap-4 md:gap-6"
+        >
+          <Controller
+            name="skills"
+            control={control}
+            render={({ field, fieldState }) => (
+              <TagInput
+                label="Навыки и инструменты"
+                placeholder="Начните вводить здесь"
+                description="Выберите программы, которыми вы владеете"
+                value={field.value}
+                onChange={field.onChange}
+                suggestions={skillNames}
+                error={fieldState.error?.message}
+              />
+            )}
           />
-          <TagInput
-            label="Личные качества"
-            placeholder="Ваши преимущества"
-            value={formData.qualities}
-            onChange={onQualitiesChange}
+          <Controller
+            name="qualities"
+            control={control}
+            render={({ field }) => (
+              <TagInput
+                label="Личные качества"
+                placeholder="Ваши преимущества"
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
           />
-          <TextInput
-            label="О себе"
-            placeholder="Расскажите о себе"
-            value={formData.about}
-            onChange={onAboutChange}
+          <Controller
+            name="about"
+            control={control}
+            render={({ field }) => (
+              <TextInput
+                name={field.name}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                label="О себе"
+                placeholder="Расскажите о себе"
+              />
+            )}
           />
           <Button
             type="submit"
             variant="default"
+            disabled={updateProfile.isPending || skillsQuery.isPending}
             className="w-full self-center md:mbs-6 md:max-w-33"
           >
-            Сохранить
+            {updateProfile.isPending ? "Сохранение..." : "Сохранить"}
           </Button>
         </form>
       </DialogContent>

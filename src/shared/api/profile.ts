@@ -76,6 +76,8 @@ export type ExperienceCreateRequest = {
   end_date: string | null;
 };
 
+export type ExperienceUpdateRequest = ExperienceCreateRequest;
+
 type ApiObject = Record<string, unknown>;
 
 function isFilledText(value: string | undefined | null): boolean {
@@ -140,6 +142,21 @@ export async function createExperience(payload: ExperienceCreateRequest) {
   return data;
 }
 
+export async function updateExperience(
+  id: string,
+  payload: ExperienceUpdateRequest,
+) {
+  const { data } = await apiClient.put<ApiObject>(
+    `/user/profile/me/experience/${id}/`,
+    payload,
+  );
+  return data;
+}
+
+export async function deleteExperience(id: string): Promise<void> {
+  await apiClient.delete(`/user/profile/me/experience/${id}/`);
+}
+
 export async function uploadCurrentUserAvatar(file: File) {
   const formData = new FormData();
   formData.append("file", file);
@@ -162,4 +179,8 @@ export async function uploadCurrentUserAvatar(file: File) {
   }
 
   return "";
+}
+
+export async function deleteCurrentUserAvatar(): Promise<void> {
+  await apiClient.delete("/user/profile/me/avatar/");
 }

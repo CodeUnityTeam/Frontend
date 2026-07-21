@@ -11,7 +11,7 @@ import { ChatbotNavigate } from "./chatbot-navigate";
 import { ChatbotBtn } from "./chatbot-btn";
 import { ChatbotRender } from "./chatbot-render";
 import { ChatbotMessage } from "./chatbot-message";
-import { formatDate } from "../model/format-date";
+import { formatDate } from "@/shared/lib/format-date";
 import { ProjectsSkeleton } from "./projects-skeleton";
 import { ProjectsError } from "./projects-error";
 

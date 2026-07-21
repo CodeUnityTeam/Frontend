@@ -1,16 +1,17 @@
 import React from "react";
-import { Button } from "@/shared/ui/button";
 import { Icon } from "@iconify/react";
+
+import { Button } from "@/shared/ui/button";
 import { EmptyState } from "@/widgets/account/ui/empty-state";
 import avatarImg from "@/shared/assets/images/account-avatar.jpg";
 import { accountData } from "@/widgets/account/model/account-data";
 import type {
   AccountProfileProps,
-  SkillsFormData,
+  ExperienceItem,
 } from "@/widgets/account/model/types";
-import { SetSkillsModal } from "@/widgets/set-skills-modal";
-
 import { ExperienceModal } from "@/widgets/account/ui/experience-modal";
+import { ProfileHeaderModal } from "@/widgets/account/ui/profile-header-modal";
+import { SetSkillsModal } from "@/widgets/set-skills-modal";
 
 export const AccountProfile = ({
   profile,
@@ -20,11 +21,10 @@ export const AccountProfile = ({
   experience,
 }: AccountProfileProps) => {
   const [tab, setTab] = React.useState<"profile" | "experience">("profile");
-  const [isSkillsModalOpen, setSkillsModalOpen] =
-    React.useState<boolean>(false);
 
-  const [isExperienceModalOpen, setIsExperienceModalOpen] =
-    React.useState(false);
+  const [activeModal, setActiveModal] = React.useState<
+    "header" | "skills" | "experience" | null
+  >(null);
 
   const profileData = profile ?? {
     ...accountData.profile,
@@ -37,33 +37,12 @@ export const AccountProfile = ({
 
   const aboutData = about ?? accountData.about;
 
-  const experienceData = experience ?? accountData.experience;
+  const experienceData: ExperienceItem[] = experience ?? accountData.experience;
 
   const hasProfileData =
     skillsData.length > 0 || qualitiesData.length > 0 || Boolean(aboutData);
 
-  const [skillsFormData, setSkillsFormData] = React.useState<SkillsFormData>({
-    skills: skillsData || [],
-    qualities: qualitiesData || [],
-    about: aboutData || "",
-  });
-
-  const handleSkillsFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    alert("В разработке");
-  };
-
-  const handleSkillsChange = (newSkills: string[]) => {
-    setSkillsFormData((prev) => ({ ...prev, skills: newSkills }));
-  };
-
-  const handleQualitiesChange = (newQualities: string[]) => {
-    setSkillsFormData((prev) => ({ ...prev, qualities: newQualities }));
-  };
-
-  const handleAboutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSkillsFormData((prev) => ({ ...prev, about: e.target.value }));
-  };
+  const editableExperience = experienceData.find((item) => item.id);
 
   return (
     <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[413px_1fr]">
@@ -83,7 +62,7 @@ export const AccountProfile = ({
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => alert("В разработке")}
+            onClick={() => setActiveModal("header")}
             className="h-6 w-6 p-0"
           >
             <Icon
@@ -155,20 +134,12 @@ export const AccountProfile = ({
             </button>
           </div>
 
-          <SetSkillsModal
-            open={isSkillsModalOpen}
-            onOpenChange={setSkillsModalOpen}
-            formData={skillsFormData}
-            onSubmit={handleSkillsFormSubmit}
-            onSkillsChange={handleSkillsChange}
-            onQualitiesChange={handleQualitiesChange}
-            onAboutChange={handleAboutChange}
-          />
           {tab === "experience" && (
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setIsExperienceModalOpen(true)}
+              aria-label="Редактировать опыт работы"
+              onClick={() => setActiveModal("experience")}
               className="text-foreground hover:text-foreground"
             >
               <Icon icon="ph:pencil-simple-line" className="h-5 w-5" />
@@ -179,7 +150,7 @@ export const AccountProfile = ({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setSkillsModalOpen(!isSkillsModalOpen)}
+              onClick={() => setActiveModal("skills")}
               className="text-foreground hover:text-foreground"
             >
               <Icon icon="ph:pencil-simple-line" className="h-5 w-5" />
@@ -254,7 +225,7 @@ export const AccountProfile = ({
                 </div>
               ) : (
                 experienceData.map((item, i) => (
-                  <section key={i}>
+                  <section key={item.id ?? i}>
                     <h4 className="text-[20px] font-semibold">
                       {item.company}
                     </h4>
@@ -279,10 +250,32 @@ export const AccountProfile = ({
         </div>
       </main>
 
-      <ExperienceModal
-        open={isExperienceModalOpen}
-        onOpenChange={setIsExperienceModalOpen}
-      />
+      {activeModal === "header" && (
+        <ProfileHeaderModal
+          open
+          onOpenChange={(open) => setActiveModal(open ? "header" : null)}
+        />
+      )}
+
+      {activeModal === "skills" && (
+        <SetSkillsModal
+          open
+          onOpenChange={(open) => setActiveModal(open ? "skills" : null)}
+          defaultValues={{
+            skills: skillsData,
+            qualities: qualitiesData,
+            about: aboutData,
+          }}
+        />
+      )}
+
+      {activeModal === "experience" && (
+        <ExperienceModal
+          open
+          onOpenChange={(open) => setActiveModal(open ? "experience" : null)}
+          experience={editableExperience}
+        />
+      )}
     </div>
   );
 };
