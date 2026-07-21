@@ -1,22 +1,22 @@
 import { Icon } from "@iconify/react";
 
 import { useLikeAnswer } from "@/entities/question/api/use-like-answer";
-import { useAnswerLikeState } from "@/shared/store/answer-likes-store";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 
 type AnswerLikeButtonProps = {
   answerId: string;
   likesCount: number;
+  isLikedByMe: boolean;
   className?: string;
 };
 
 export function AnswerLikeButton({
   answerId,
   likesCount,
+  isLikedByMe,
   className,
 }: AnswerLikeButtonProps) {
-  const isLikedByMe = useAnswerLikeState(answerId);
   const { mutate: toggleLike, isPending } = useLikeAnswer();
 
   return (

@@ -10,6 +10,7 @@ export type QuestionAnswerDto = {
   likes_count: number;
   images: string[];
   is_owned_by_me: boolean;
+  is_liked_by_me?: boolean;
 };
 
 export type QuestionDetailDto = {

@@ -5,7 +5,6 @@ import { likeAnswer } from "./like-answer";
 import { QUESTION_DETAILS_QUERY_KEY } from "./question-details-query-key";
 import { patchQuestionDetailAnswerLikes } from "./question-answer-cache";
 import type { QuestionDetailDto } from "./get-question";
-import { useAnswerLikesStore } from "@/shared/store/answer-likes-store";
 
 interface LikeAnswerMutationVars {
   answerId: string;
@@ -26,35 +25,24 @@ export function useLikeAnswer() {
       const prevDetails = queryClient.getQueriesData<QuestionDetailDto>({
         queryKey: [QUESTION_DETAILS_QUERY_KEY],
       });
-      const previousLiked =
-        useAnswerLikesStore.getState().likedAnswerIds[answerId] ?? false;
-
-      useAnswerLikesStore.getState().setAnswerLiked(answerId, liked);
 
       queryClient.setQueriesData<QuestionDetailDto>(
         { queryKey: [QUESTION_DETAILS_QUERY_KEY] },
         (detail) => patchQuestionDetailAnswerLikes(detail, answerId, liked),
       );
 
-      return { prevDetails, previousLiked };
+      return { prevDetails };
     },
 
-    onError: (_error, { answerId }, context) => {
+    onError: (_error, _vars, context) => {
       context?.prevDetails.forEach(([key, data]) =>
         queryClient.setQueryData(key, data),
-      );
-
-      useAnswerLikesStore.getState().setAnswerLiked(
-        answerId,
-        context?.previousLiked ?? false,
       );
 
       toast.error("Не удалось обновить лайк ответа. Попробуйте ещё раз.");
     },
 
     onSuccess: (data, { answerId }) => {
-      useAnswerLikesStore.getState().setAnswerLiked(answerId, data.liked);
-
       queryClient.setQueriesData<QuestionDetailDto>(
         { queryKey: [QUESTION_DETAILS_QUERY_KEY] },
         (detail) =>

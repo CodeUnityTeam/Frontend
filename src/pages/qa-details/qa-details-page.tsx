@@ -412,6 +412,7 @@ function QaDetailsPage() {
             <AnswerLikeButton
               answerId={answer.answer_id}
               likesCount={answer.likes_count}
+              isLikedByMe={answer.is_liked_by_me ?? false}
             />
             <Button
               type="button"
@@ -657,7 +658,7 @@ function QaDetailsPage() {
                 }
                 className="h-10 rounded-xl px-4 text-sm font-medium"
               >
-                {showOnlyTopLevelAnswers ? "Только ответы" : "Ответы и обсуждения"}
+                {showOnlyTopLevelAnswers ? "Ответы и обсуждения" : "Только ответы"}
               </Button>
             </div>
 

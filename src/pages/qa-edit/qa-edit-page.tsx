@@ -4,7 +4,12 @@ import { useNavigate, useParams } from "react-router";
 import { Icon } from "@iconify/react";
 import { toast } from "sonner";
 
-import { deleteQuestion, getQuestion, updateQuestion } from "@/entities/question";
+import {
+  deleteQuestion,
+  getQuestion,
+  getQuestionDetailsQueryKey,
+  updateQuestion,
+} from "@/entities/question";
 import type { QuestionFormValues } from "@/entities/question";
 import { ConfirmModal } from "@/features/confirm-modal";
 import { useSkills } from "@/entities/skill";
@@ -27,7 +32,7 @@ function QaEditPage() {
 
   const questionId = id ?? "";
   const questionQuery = useQuery({
-    queryKey: ["question-details", questionId],
+    queryKey: getQuestionDetailsQueryKey(questionId),
     queryFn: () => getQuestion(questionId),
     enabled: Boolean(questionId),
   });

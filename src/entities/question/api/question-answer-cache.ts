@@ -42,6 +42,7 @@ export function patchQuestionDetailAnswerLikes(
       ? answer
       : {
           ...answer,
+          is_liked_by_me: liked,
           likes_count:
             likesCount ?? Math.max(0, answer.likes_count + (liked ? 1 : -1)),
         },
