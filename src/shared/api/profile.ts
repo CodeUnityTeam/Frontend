@@ -45,6 +45,7 @@ export type CurrentUserProfile = {
   workformats: ProfileWorkFormatItem[];
   experiences: ProfileExperienceItem[];
   rating: number;
+  last_login: string | null;
 };
 
 export type OnboardingPrefill = {
