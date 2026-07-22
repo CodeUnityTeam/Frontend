@@ -4,42 +4,14 @@ import type {
   ProjectResponse,
   ResponsesPage,
   ResponseStatus,
+  ResponsesListResponse,
+  ResponseItem,
 } from "@/entities/response/model/types";
-
-interface FeedSkillDto {
-  skill_id?: string;
-  name?: string;
-}
-
-interface FeedItemDto {
-  response_id: string;
-  response_status: string;
-  response_created_at: string;
-  project_id: string;
-  title: string;
-  short_desc: string;
-  location: string | null;
-  status: string;
-  published_at: string | null;
-  participants_count: number;
-  is_liked_by_me: boolean;
-  author_email: string | null;
-  author_phone: string | null;
-  skills: FeedSkillDto[];
-}
-
-interface ResponsesFeedDto {
-  items?: FeedItemDto[];
-  total?: number;
-  has_more?: boolean;
-  results?: FeedItemDto[];
-  count?: number;
-  next?: string | null;
-}
+import { mapResponseItemToProjectResponse } from "@/entities/response/model/types";
 
 const RESPONSE_STATUSES: ResponseStatus[] = [
-  "approved",
   "pending",
+  "approved",
   "rejected",
   "withdrawn",
 ];
@@ -50,57 +22,42 @@ function mapStatus(raw: string): ResponseStatus {
     : "pending";
 }
 
-function mapResponse(dto: FeedItemDto): ProjectResponse {
-  return {
-    responseId: dto.response_id,
-    status: mapStatus(dto.response_status),
-    createdAt: dto.response_created_at,
-    projectId: dto.project_id,
-    title: dto.title,
-    shortDesc: dto.short_desc,
-    location: dto.location ?? "",
-    projectStatus: dto.status,
-    publishedAt: dto.published_at,
-    participantsCount: dto.participants_count,
-    isLikedByMe: dto.is_liked_by_me,
-    authorEmail: dto.author_email,
-    authorPhone: dto.author_phone,
-    skills: (dto.skills ?? [])
-      .filter((skill) => Boolean(skill.name))
-      .map((skill) => ({
-        skillId: skill.skill_id ?? "",
-        name: skill.name ?? "",
-      })),
+function mapResponse(item: ResponseItem): ProjectResponse {
+  const mappedItem: ResponseItem = {
+    ...item,
+    response_status: mapStatus(item.response_status),
   };
+  return mapResponseItemToProjectResponse(mappedItem);
 }
 
 export async function getResponses(
   params: GetResponsesParams = {},
 ): Promise<ResponsesPage> {
-  const { page = 1, limit = 20, status, sortOrder, projectId } = params;
+  const { page = 1, limit = 20, status, sort_order, project_id } = params;
 
   const query: Record<string, string | number> = { page, limit };
 
-  if (status) {
+  if (status && status !== "all") {
     query.status = status;
   }
-  if (sortOrder) {
-    query.sort_order = sortOrder;
+  if (sort_order) {
+    query.sort_order = sort_order;
   }
-  if (projectId) {
-    query.project_id = projectId;
+  if (project_id) {
+    query.project_id = project_id;
   }
 
-  const { data } = await apiClient.get<ResponsesFeedDto>(
+  const { data } = await apiClient.get<ResponsesListResponse>(
     "/projects/responses/",
     { params: query },
   );
 
-  const items = data.items ?? data.results ?? [];
-
   return {
-    items: items.map(mapResponse),
-    total: data.total ?? data.count ?? items.length,
-    hasMore: data.has_more ?? Boolean(data.next),
+    items: data.items.map(mapResponse),
+    total: data.total,
+    hasMore: data.has_more,
+    page: data.page,
+    limit: data.limit,
+    appliedFilters: data.applied_filters,
   };
 }
