@@ -22,7 +22,7 @@ function ProjectDetails() {
     mutate: respond,
     isPending: isResponding,
     isSuccess: hasResponded,
-  } = useRespondToProject();
+  } = useRespondToProject(project?.project_id || "");
 
   if (!project || !Object.keys(project).length) return null;
 
@@ -34,7 +34,7 @@ function ProjectDetails() {
   };
 
   const handleApply = () => {
-    respond(project.project_id);
+    respond();
   };
 
   // TO DO: Добавить проверку на то, что пользователь является участником проекта (#11_июля)
@@ -122,7 +122,7 @@ function ProjectDetails() {
                 onClick={handleApply}
                 variant="outline"
                 type="button"
-                disabled={isResponding || hasResponded}
+                disabled={isResponding || hasResponded || !project?.project_id}
               >
                 <Icon 
                   icon={hasResponded ? "ph:check-circle" : "ph:chats-teardrop-light"} 
