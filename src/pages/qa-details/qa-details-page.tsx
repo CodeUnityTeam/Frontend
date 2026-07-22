@@ -412,7 +412,7 @@ function QaDetailsPage() {
             <AnswerLikeButton
               answerId={answer.answer_id}
               likesCount={answer.likes_count}
-              isLikedByMe={answer.is_liked_by_me ?? false}
+              isLikedByMe={answer.is_liked_by_me}
             />
             <Button
               type="button"
