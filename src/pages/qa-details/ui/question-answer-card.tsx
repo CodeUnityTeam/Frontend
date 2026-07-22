@@ -2,7 +2,7 @@ import { type QuestionAnswerDto } from "@/entities/question";
 import { Card, CardContent } from "@/shared/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Icon } from "@iconify/react";
-import AvatarPlaceholder from "@/shared/assets/images/avatar.png";
+import AvatarPlaceholder from "@/shared/assets/images/avatar-placeholder.svg";
 import { formatRelativeDate } from "@/shared/lib/pluralize";
 
 export function QuestionAnswerCard({ answer }: { answer: QuestionAnswerDto }) {

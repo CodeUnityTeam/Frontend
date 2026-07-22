@@ -3,41 +3,24 @@ import { Icon } from "@iconify/react";
 
 import { Button } from "@/shared/ui/button";
 import { EmptyState } from "@/widgets/account/ui/empty-state";
-import avatarImg from "@/shared/assets/images/account-avatar.jpg";
-import { accountData } from "@/widgets/account/model/account-data";
-import type {
-  AccountProfileProps,
-  ExperienceItem,
-} from "@/widgets/account/model/types";
+import AvatarPlaceholder from "@/shared/assets/images/avatar-placeholder.svg";
+import type { AccountProfileProps } from "@/widgets/account/model/types";
 import { ExperienceModal } from "@/widgets/account/ui/experience-modal";
 import { ProfileHeaderModal } from "@/widgets/account/ui/profile-header-modal";
 import { SetSkillsModal } from "@/widgets/set-skills-modal";
 
 export const AccountProfile = ({
-  profile,
-  skills,
-  qualities,
-  about,
-  experience,
+  profile: profileData,
+  skills: skillsData,
+  qualities: qualitiesData,
+  about: aboutData,
+  experience: experienceData,
 }: AccountProfileProps) => {
   const [tab, setTab] = React.useState<"profile" | "experience">("profile");
 
   const [activeModal, setActiveModal] = React.useState<
     "header" | "skills" | "experience" | null
   >(null);
-
-  const profileData = profile ?? {
-    ...accountData.profile,
-    avatar: accountData.profile.avatar || avatarImg,
-  };
-
-  const skillsData = skills ?? accountData.skills;
-
-  const qualitiesData = qualities ?? accountData.qualities;
-
-  const aboutData = about ?? accountData.about;
-
-  const experienceData: ExperienceItem[] = experience ?? accountData.experience;
 
   const hasProfileData =
     skillsData.length > 0 || qualitiesData.length > 0 || Boolean(aboutData);
@@ -73,13 +56,11 @@ export const AccountProfile = ({
         </div>
 
         <div className="mt-1 flex flex-col items-center text-center">
-          {profileData.avatar && (
-            <img
-              src={profileData.avatar || avatarImg}
-              alt={profileData.name}
-              className="h-32 w-32 rounded-full object-cover sm:h-45 sm:w-45"
-            />
-          )}
+          <img
+            src={profileData.avatar || AvatarPlaceholder}
+            alt={profileData.name}
+            className="h-32 w-32 rounded-full object-cover sm:h-45 sm:w-45"
+          />
 
           {profileData.status && (
             <p className="mt-6 text-[16px] leading-[150%] text-muted-foreground">

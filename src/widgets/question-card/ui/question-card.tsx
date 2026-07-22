@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { Link, generatePath } from "react-router";
 
-import AvatarPlaceholder from "@/shared/assets/images/avatar.png";
+import AvatarPlaceholder from "@/shared/assets/images/avatar-placeholder.svg";
 import { formatRelativeDate } from "@/shared/lib/pluralize";
 import { ROUTES } from "@/shared/model/routes";
 import { Button } from "@/shared/ui/button";

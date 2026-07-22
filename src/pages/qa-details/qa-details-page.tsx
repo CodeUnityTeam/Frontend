@@ -23,7 +23,7 @@ import {
 } from "@/entities/question";
 import { ConfirmModal } from "@/features/confirm-modal";
 import { ROUTES } from "@/shared/model/routes";
-import AvatarPlaceholder from "@/shared/assets/images/avatar.png";
+import AvatarPlaceholder from "@/shared/assets/images/avatar-placeholder.svg";
 import { formatRelativeDate } from "@/shared/lib/pluralize";
 import { cn } from "@/shared/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
