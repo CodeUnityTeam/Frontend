@@ -21,10 +21,10 @@ type ResponseCardProps = {
 
 // Статусы для Worker
 const workerStatusMap: Record<string, { label: string; className: string }> = {
-  pending: { label: "Отклик отправлен", className: "text-blue-500" },
-  approved: { label: "Вас приняли", className: "text-green-500" },
-  rejected: { label: "Вам отказали", className: "text-red-500" },
-  withdrawn: { label: "Ваш отклик", className: "text-gray-400" },
+  pending: { label: "Отклик отправлен", className: "text-muted-foreground" },
+  approved: { label: "Вас приняли", className: "text-foreground" },
+  rejected: { label: "Вам отказали", className: "text-foreground" },
+  withdrawn: { label: "Ваш отклик", className: "text-foreground" },
 };
 
 // Статусы для Employer
