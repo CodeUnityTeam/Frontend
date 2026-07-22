@@ -8,13 +8,12 @@ import { toast } from "sonner";
 import { likeQuestion } from "./like-question";
 import { type QuestionDetailDto } from "./get-question";
 import { QUESTIONS_QUERY_KEY } from "./use-questions";
+import { QUESTION_DETAILS_QUERY_KEY } from "./question-details-query-key";
 import type {
   QuestionItem,
   QuestionsPage,
 } from "@/entities/question/model/types";
 import { useQuestionLikesStore } from "@/shared/store/question-likes-store";
-
-const QUESTION_DETAILS_QUERY_KEY = "question-details" as const;
 
 type QuestionsListData = QuestionsPage | InfiniteData<QuestionsPage>;
 
