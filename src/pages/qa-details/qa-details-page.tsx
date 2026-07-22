@@ -46,6 +46,8 @@ import {
   useQuestionCommentCount as useQuestionAnswerCount,
   useQuestionCommentsStore,
 } from "@/shared/store/question-comments-store";
+import { QuestionError } from "./ui/question-error";
+import { QuestionLoading } from "./ui/question-loading";
 
 const QUESTION_ANSWER_FORM_ID = "question-answer-form";
 
