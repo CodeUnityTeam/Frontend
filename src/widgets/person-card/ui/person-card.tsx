@@ -1,7 +1,12 @@
 import { Icon } from "@iconify/react";
 import { useCallback } from "react";
 
-import { useLikePerson, useRole, type Person, type PersonResponseStatus } from "@/entities/profile";
+import {
+  useLikePerson,
+  useRole,
+  type Person,
+  type PersonResponseStatus,
+} from "@/entities/profile";
 import { useInviteUser } from "@/entities/project";
 import { cn } from "@/shared/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
@@ -55,17 +60,11 @@ export function PersonCard({
     .join(", ");
 
   // Для employer: показываем статус внизу если не pending
-  const showStatusInFooter = isEmployer && responseStatus && responseStatus !== "pending";
+  const showStatusInFooter =
+    isEmployer && responseStatus && responseStatus !== "pending";
   // Для employer: показываем кнопки только если pending
-  const showActions = isEmployer && responseStatus === "pending" && responseId && role;
-
-  // Для отладки
-  console.log('🔍 PersonCard Debug:');
-  console.log('  - isEmployer:', isEmployer);
-  console.log('  - responseStatus:', responseStatus);
-  console.log('  - responseId:', responseId);
-  console.log('  - showActions:', showActions);
-  console.log('  - showStatusInFooter:', showStatusInFooter);
+  const showActions =
+    isEmployer && responseStatus === "pending" && responseId && role;
 
   return (
     <div className="flex h-full w-full flex-col rounded-lg border border-border p-4">
@@ -168,14 +167,16 @@ export function PersonCard({
                 disabled
                 className={cn(
                   "flex h-12 w-full items-center justify-center gap-2 rounded-xl border py-2 text-[16px] font-semibold",
-                  "border-[#9A9BA9] text-[#9A9BA9] cursor-not-allowed"
+                  "cursor-not-allowed border-[#9A9BA9] text-[#9A9BA9]",
                 )}
               >
-                <Icon 
-                  icon={employerStatusMap[responseStatus!]?.icon || "ph:info"} 
-                  className="text-xl" 
+                <Icon
+                  icon={employerStatusMap[responseStatus!]?.icon || "ph:info"}
+                  className="text-xl"
                 />
-                <span>{employerStatusMap[responseStatus!]?.label || responseStatus}</span>
+                <span>
+                  {employerStatusMap[responseStatus!]?.label || responseStatus}
+                </span>
               </Button>
             )}
           </>
