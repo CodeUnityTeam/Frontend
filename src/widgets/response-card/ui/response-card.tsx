@@ -108,7 +108,7 @@ export function ResponseCard({ response }: ResponseCardProps) {
       <div className="mt-2 flex flex-wrap gap-1">
         {response.skills.map((skill) => (
           <Tag
-            key={skill.skillId || skill.name}
+            key={skill.skillId}
             label={skill.name}
             className="rounded-2xl bg-(--secondary-button) text-[13px] font-normal"
           />

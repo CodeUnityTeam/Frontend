@@ -3,6 +3,12 @@ export type SortOrder = "asc" | "desc";
 
 // ============ API ТИПЫ (то что приходит с бэкенда) ============
 
+// Навык из API
+export interface ApiSkill {
+  skill_id: string;
+  name: string;
+}
+
 export interface ResponseItem {
   response_id: string;
   response_status: ResponseStatus;
@@ -10,7 +16,7 @@ export interface ResponseItem {
   project_id: string;
   title: string;
   short_desc: string;
-  skills?: string[]; 
+  skills: ApiSkill[]; 
   location: string;
   status: string;
   published_at: string | null;
@@ -103,9 +109,9 @@ export function mapResponseItemToProjectResponse(item: ResponseItem): ProjectRes
     isLikedByMe: item.is_liked_by_me,
     authorEmail: item.author_email ?? null,
     authorPhone: item.author_phone ?? null,
-    skills: (item.skills ?? []).map(name => ({
-      skillId: name,
-      name: name,
+    skills: item.skills.map(skill => ({
+      skillId: skill.skill_id,
+      name: skill.name,
     })),
   };
 }

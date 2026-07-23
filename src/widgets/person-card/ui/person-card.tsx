@@ -125,7 +125,7 @@ export function PersonCard({
       <div className="mt-2 flex flex-wrap gap-1">
         {person.skills.map((skill) => (
           <Tag
-            key={skill.skillId || skill.name}
+            key={skill.skillId}
             label={skill.name}
             className="rounded-2xl bg-(--secondary-button) text-[13px] font-normal"
           />
