@@ -24,7 +24,7 @@ import {
 } from "@/entities/question";
 import { ConfirmModal } from "@/features/confirm-modal";
 import { ROUTES } from "@/shared/model/routes";
-import AvatarPlaceholder from "@/shared/assets/images/avatar.png";
+import AvatarPlaceholder from "@/shared/assets/images/avatar-placeholder.svg";
 import { formatRelativeDate } from "@/shared/lib/pluralize";
 import { cn } from "@/shared/lib/utils";
 import { MarkdownImageField } from "@/shared/ui/markdown-image-field";
@@ -42,6 +42,12 @@ import {
 import { PageContainer } from "@/shared/ui/page-container";
 import { Tag } from "@/shared/ui/tag";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/ui/dropdown-menu";
+import {
   EMPTY_PENDING_ANSWER_IDS,
   useQuestionCommentCount as useQuestionAnswerCount,
   useQuestionCommentsStore,
@@ -50,6 +56,8 @@ import { QuestionError } from "./ui/question-error";
 import { QuestionLoading } from "./ui/question-loading";
 
 const QUESTION_ANSWER_FORM_ID = "question-answer-form";
+
+type AnswerSortMode = "date" | "likes";
 
 type QuestionAnswerNode = QuestionAnswerDto & {
   replies: QuestionAnswerNode[];
@@ -61,7 +69,25 @@ function compareAnswersByDate(left: QuestionAnswerDto, right: QuestionAnswerDto)
   );
 }
 
-function buildAnswerTree(answers: QuestionAnswerDto[]): QuestionAnswerNode[] {
+function compareAnswers(
+  left: QuestionAnswerDto,
+  right: QuestionAnswerDto,
+  sortMode: AnswerSortMode,
+) {
+  if (sortMode === "likes") {
+    const likesDelta = right.likes_count - left.likes_count;
+    if (likesDelta !== 0) {
+      return likesDelta;
+    }
+  }
+
+  return compareAnswersByDate(left, right);
+}
+
+function buildAnswerTree(
+  answers: QuestionAnswerDto[],
+  sortMode: AnswerSortMode,
+): QuestionAnswerNode[] {
   const nodes = new Map<string, QuestionAnswerNode>();
   const roots: QuestionAnswerNode[] = [];
 
@@ -85,7 +111,7 @@ function buildAnswerTree(answers: QuestionAnswerDto[]): QuestionAnswerNode[] {
   }
 
   const sortTree = (items: QuestionAnswerNode[]) => {
-    items.sort(compareAnswersByDate);
+    items.sort((left, right) => compareAnswers(left, right, sortMode));
     items.forEach((item) => {
       if (item.replies.length > 0) {
         sortTree(item.replies);
@@ -129,7 +155,10 @@ function QuestionAnswerForm({
   return (
     <Card
       id={id}
-      className={cn("rounded-[24px] border border-input", className)}
+      className={cn(
+        "rounded-[24px] border-none bg-transparent shadow-none",
+        className,
+      )}
     >
       <CardHeader className="gap-2 p-6 pb-0">
         <CardTitle className="text-[24px] leading-[1.2] font-semibold">
@@ -185,6 +214,7 @@ function QaDetailsPage() {
   const [replyAnswerContent, setReplyAnswerContent] = useState("");
   const [replyToAnswerId, setReplyToAnswerId] = useState<string | null>(null);
   const [showOnlyTopLevelAnswers, setShowOnlyTopLevelAnswers] = useState(false);
+  const [answerSortMode, setAnswerSortMode] = useState<AnswerSortMode>("date");
   const [answerDeleteTarget, setAnswerDeleteTarget] =
     useState<QuestionAnswerNode | null>(null);
   const [isDeleteOpen, setDeleteOpen] = useState(false);
@@ -218,8 +248,8 @@ function QaDetailsPage() {
   );
 
   const answerThreads = useMemo(
-    () => buildAnswerTree(question?.answers ?? []),
-    [question?.answers],
+    () => buildAnswerTree(question?.answers ?? [], answerSortMode),
+    [answerSortMode, question?.answers],
   );
   const visibleAnswerCount = (question?.answers.length ?? 0) + pendingAnswerCount;
 
@@ -343,8 +373,8 @@ function QaDetailsPage() {
       <div key={answer.answer_id} className={cn(depth > 0 && "pl-5 sm:pl-8")}>
         <Card
           className={cn(
-            "h-fit rounded-2xl border-muted-foreground",
-            depth > 0 && "border-dashed bg-muted/20 shadow-none",
+            "h-fit rounded-2xl border-none bg-transparent shadow-none",
+            depth > 0 && "bg-transparent",
           )}
         >
           <CardHeader className="flex flex-row items-start justify-between gap-4 p-6 pb-3">
@@ -458,13 +488,13 @@ function QaDetailsPage() {
               cancelLabel="Отменить"
               submitLabel="Отправить ответ"
               isSubmitting={createAnswerMutation.isPending}
-              className="border-dashed"
+              className="bg-transparent"
             />
           </div>
         )}
 
         {showReplies && answer.replies.length > 0 && (
-          <div className="mt-4 space-y-4 border-l border-dashed pl-4 sm:pl-6">
+          <div className="mt-4 space-y-4 pl-4 sm:pl-6">
             {answer.replies.map((reply) =>
               renderAnswerThread(reply, depth + 1, showReplies),
             )}
@@ -503,7 +533,7 @@ function QaDetailsPage() {
       </button>
 
       <div className="grid gap-4 xl:grid-cols-[273px_1fr] xl:gap-13">
-        <Card className="h-fit rounded-2xl">
+        <Card className="h-fit rounded-2xl border-none bg-transparent shadow-none">
           <CardContent className="!px-5 !py-6">
             <div className="flex items-start gap-3">
               <Avatar className="size-14">
@@ -562,7 +592,7 @@ function QaDetailsPage() {
         </Card>
 
         <div className="flex min-w-0 flex-col gap-4">
-          <Card className="rounded-2xl">
+          <Card className="rounded-2xl border-none bg-transparent shadow-none">
             <CardContent className="flex flex-col gap-6 !p-6">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="min-w-0 flex-1">
@@ -648,16 +678,53 @@ function QaDetailsPage() {
                 </span>
               </div>
 
-              <Button
-                type="button"
-                variant={showOnlyTopLevelAnswers ? "default" : "outline"}
-                onClick={() =>
-                  setShowOnlyTopLevelAnswers((current) => !current)
-                }
-                className="h-10 rounded-xl px-4 text-sm font-medium"
-              >
-                {showOnlyTopLevelAnswers ? "Только ответы" : "Ответы и обсуждения"}
-              </Button>
+              <div className="flex flex-wrap items-center gap-3">
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    className={cn(
+                      "group flex h-10 min-w-[180px] cursor-pointer items-center justify-between rounded-xl border border-input bg-background px-4 text-sm font-medium text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring data-[state=open]:border-primary",
+                    )}
+                  >
+                    <span>
+                      {answerSortMode === "date" ? "По дате" : "По лайкам"}
+                    </span>
+                    <Icon
+                      icon="lucide:chevron-down"
+                      className="size-5 shrink-0 transition-transform group-data-[state=open]:rotate-180"
+                    />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="w-(--radix-dropdown-menu-trigger-width)"
+                  >
+                    <DropdownMenuItem
+                      onClick={() => setAnswerSortMode("date")}
+                      className="cursor-pointer"
+                    >
+                      По дате
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => setAnswerSortMode("likes")}
+                      className="cursor-pointer"
+                    >
+                      По лайкам
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <Button
+                  type="button"
+                  variant={showOnlyTopLevelAnswers ? "default" : "outline"}
+                  onClick={() =>
+                    setShowOnlyTopLevelAnswers((current) => !current)
+                  }
+                  className="h-10 rounded-xl px-4 text-sm font-medium"
+                >
+                  {showOnlyTopLevelAnswers
+                    ? "Только ответы"
+                    : "Ответы и обсуждения"}
+                </Button>
+              </div>
             </div>
 
             {answerThreads.length > 0 ? (
