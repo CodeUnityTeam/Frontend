@@ -3,24 +3,23 @@ import { apiClient } from "@/shared/api";
 import { toast } from "sonner";
 import type { CreateResponseResponse } from "../model/types";
 
-export function useRespondToProject(projectId: string) {
+export function useInviteToProject(projectId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async (userId: string) => {
       const { data } = await apiClient.post<CreateResponseResponse>(
-        `/projects/${projectId}/responses/`
+        `/projects/${projectId}/invite/${userId}/`
       );
       return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["responses"] });
-      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
-      toast.success("Отклик отправлен");
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      toast.success("Приглашение отправлено");
     },
     onError: (error: any) => {
-      const message = error?.response?.data?.detail || "Не удалось откликнуться на проект";
+      const message = error?.response?.data?.detail || "Не удалось отправить приглашение";
       toast.error(message);
     },
   });
