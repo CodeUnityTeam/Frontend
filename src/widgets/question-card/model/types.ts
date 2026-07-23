@@ -13,6 +13,7 @@ export interface QuestionData {
   createdAt: Date;
   likes: number;
   comments: number;
+  isLikedByMe: boolean;
 }
 
 export interface QuestionCardProps {

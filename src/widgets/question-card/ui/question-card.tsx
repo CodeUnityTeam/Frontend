@@ -74,6 +74,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
           <QuestionLikeButton
             questionId={question.id}
             likesCount={question.likes}
+            isLikedByMe={question.isLikedByMe}
           />
 
           <div className="flex items-center gap-2">

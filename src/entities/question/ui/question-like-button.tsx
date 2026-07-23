@@ -1,22 +1,22 @@
 import { Icon } from "@iconify/react";
 
 import { useLikeQuestion } from "@/entities/question/api/use-like-question";
-import { useQuestionLikeState } from "@/shared/store/question-likes-store";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
 
 type QuestionLikeButtonProps = {
   questionId: string;
   likesCount: number;
+  isLikedByMe: boolean;
   className?: string;
 };
 
 export function QuestionLikeButton({
   questionId,
   likesCount,
+  isLikedByMe,
   className,
 }: QuestionLikeButtonProps) {
-  const isLikedByMe = useQuestionLikeState(questionId);
   const { mutate: toggleLike, isPending } = useLikeQuestion();
 
   return (

@@ -636,6 +636,7 @@ function QaDetailsPage() {
               <QuestionLikeButton
                 questionId={question.question_id}
                 likesCount={question.likes_count}
+                isLikedByMe={question.is_liked_by_me}
               />
               <Button
                 asChild

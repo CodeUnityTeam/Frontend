@@ -22,6 +22,7 @@ export type QuestionDetailDto = {
   author_rating: number;
   created_at: string;
   likes_count: number;
+  is_liked_by_me: boolean;
   images: string[];
   answers: QuestionAnswerDto[];
 };

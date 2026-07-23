@@ -28,6 +28,7 @@ export interface QuestionDto {
   created_at: string;
   likes_count: number;
   answers_count: number;
+  is_liked_by_me: boolean;
 }
 
 export interface GetQuestionsResponse {
@@ -56,6 +57,7 @@ export interface QuestionItem {
   createdAt: string;
   likesCount: number;
   answersCount: number;
+  isLikedByMe: boolean;
 }
 
 export interface QuestionsPage {

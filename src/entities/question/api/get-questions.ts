@@ -25,6 +25,7 @@ function mapQuestionItem(dto: QuestionDto): QuestionsPage["items"][number] {
     createdAt: dto.created_at,
     likesCount: dto.likes_count,
     answersCount: dto.answers_count,
+    isLikedByMe: dto.is_liked_by_me,
   };
 }
 
