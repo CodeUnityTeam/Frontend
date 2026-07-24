@@ -6,6 +6,7 @@ export type QuestionAnswerDto = {
   content: string;
   author_name: string;
   author_rating: number;
+  author_avatar: string;
   created_at: string;
   likes_count: number;
   images: string[];
@@ -20,6 +21,7 @@ export type QuestionDetailDto = {
   tags: string[];
   author_name: string;
   author_rating: number;
+  author_avatar: string;
   created_at: string;
   likes_count: number;
   is_liked_by_me: boolean;

@@ -20,7 +20,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
   });
   const answerHref = `${detailHref}#question-answer-form`;
   const visibleCommentCount = question.comments + pendingCommentCount;
-  const avatarSrc = question.user.avatarUrl || AvatarPlaceholder;
+  const avatarSrc = question.user.avatarUrl || undefined;
 
   return (
     <Card className="h-fit border-muted-foreground">
@@ -30,8 +30,13 @@ export function QuestionCard({ question }: QuestionCardProps) {
             <div className="flex min-w-0 items-center gap-2">
               <Avatar>
                 <AvatarImage src={avatarSrc} alt={question.user.firstName} />
-                <AvatarFallback>
-                  <Icon icon="ph:user" className="size-6" />
+                <AvatarFallback className="bg-transparent p-0">
+                  <img
+                    src={AvatarPlaceholder}
+                    alt=""
+                    aria-hidden="true"
+                    className="h-full w-full object-cover"
+                  />
                 </AvatarFallback>
               </Avatar>
               <span className="text-xl font-semibold">

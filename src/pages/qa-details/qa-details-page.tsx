@@ -368,6 +368,7 @@ function QaDetailsPage() {
     showReplies = true,
   ) => {
     const isReplyOpen = replyToAnswerId === answer.answer_id;
+    const avatarSrc = answer.author_avatar || undefined;
 
     return (
       <div key={answer.answer_id} className={cn(depth > 0 && "pl-5 sm:pl-8")}>
@@ -380,9 +381,14 @@ function QaDetailsPage() {
           <CardHeader className="flex flex-row items-start justify-between gap-4 p-6 pb-3">
             <div className="flex min-w-0 flex-1 items-start gap-3">
               <Avatar className="size-12">
-                <AvatarImage src={AvatarPlaceholder} alt={answer.author_name} />
-                <AvatarFallback>
-                  <Icon icon="ph:user" className="size-6" />
+                <AvatarImage src={avatarSrc} alt={answer.author_name} />
+                <AvatarFallback className="bg-transparent p-0">
+                  <img
+                    src={AvatarPlaceholder}
+                    alt=""
+                    aria-hidden="true"
+                    className="h-full w-full object-cover"
+                  />
                 </AvatarFallback>
               </Avatar>
 
@@ -538,11 +544,16 @@ function QaDetailsPage() {
             <div className="flex items-start gap-3">
               <Avatar className="size-14">
                 <AvatarImage
-                  src={AvatarPlaceholder}
+                  src={question.author_avatar || undefined}
                   alt={question.author_name}
                 />
-                <AvatarFallback>
-                  <Icon icon="ph:user" className="size-6" />
+                <AvatarFallback className="bg-transparent p-0">
+                  <img
+                    src={AvatarPlaceholder}
+                    alt=""
+                    aria-hidden="true"
+                    className="h-full w-full object-cover"
+                  />
                 </AvatarFallback>
               </Avatar>
 

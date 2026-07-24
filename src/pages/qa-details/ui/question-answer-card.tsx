@@ -7,15 +7,21 @@ import { formatRelativeDate } from "@/shared/lib/pluralize";
 
 export function QuestionAnswerCard({ answer }: { answer: QuestionAnswerDto }) {
   const images = answer.images ?? [];
+  const avatarSrc = answer.author_avatar || undefined;
 
   return (
     <Card className="rounded-[24px] border border-muted-foreground">
       <CardContent className="!p-6">
         <div className="flex items-start gap-3">
           <Avatar className="size-12">
-            <AvatarImage src={AvatarPlaceholder} alt={answer.author_name} />
-            <AvatarFallback>
-              <Icon icon="ph:user" className="size-6" />
+            <AvatarImage src={avatarSrc} alt={answer.author_name} />
+            <AvatarFallback className="bg-transparent p-0">
+              <img
+                src={AvatarPlaceholder}
+                alt=""
+                aria-hidden="true"
+                className="h-full w-full object-cover"
+              />
             </AvatarFallback>
           </Avatar>
 

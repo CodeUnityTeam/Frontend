@@ -13,7 +13,7 @@ export function mapQuestion(item: QuestionItem): QuestionData {
     isLikedByMe: item.isLikedByMe,
     user: {
       firstName: item.authorName,
-      avatarUrl: "",
+      avatarUrl: item.authorAvatar,
       rating: item.authorRating,
     },
   };

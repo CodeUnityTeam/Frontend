@@ -25,6 +25,7 @@ export interface QuestionDto {
   tags: string[];
   author_name: string;
   author_rating: number;
+  author_avatar: string;
   created_at: string;
   likes_count: number;
   answers_count: number;
@@ -54,6 +55,7 @@ export interface QuestionItem {
   tags: string[];
   authorName: string;
   authorRating: number;
+  authorAvatar: string;
   createdAt: string;
   likesCount: number;
   answersCount: number;

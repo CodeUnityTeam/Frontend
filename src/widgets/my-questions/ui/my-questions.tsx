@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Icon } from "@iconify/react";
 import { Link, generatePath } from "react-router";
 
@@ -24,17 +25,23 @@ export function MyQuestionsCard({
   const detailHref = generatePath(ROUTES.QA_DETAILS, {
     id: question.id,
   });
-  const avatarSrc = question.user.avatarUrl || AvatarPlaceholder;
+  const avatarSrc = question.user.avatarUrl || undefined;
 
   return (
     <article className="mt-5 w-full max-w-[955px] rounded-[var(--radius-lg)] border border-1 border-[var(--color-gray)] bg-[var(--color-white)] px-8 py-9">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
-          <img
-            src={avatarSrc}
-            alt={question.user.firstName}
-            className="h-10 w-10 rounded-full object-cover"
-          />
+          <Avatar className="h-10 w-10">
+            <AvatarImage src={avatarSrc} alt={question.user.firstName} />
+            <AvatarFallback className="bg-transparent p-0">
+              <img
+                src={AvatarPlaceholder}
+                alt=""
+                aria-hidden="true"
+                className="h-full w-full object-cover"
+              />
+            </AvatarFallback>
+          </Avatar>
           <div className="flex items-center gap-3">
             <span className="text-[20px] font-semibold text-[var(--color-black)]">
               {question.user.firstName}
