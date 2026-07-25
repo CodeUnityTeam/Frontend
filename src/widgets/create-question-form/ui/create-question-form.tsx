@@ -12,9 +12,9 @@ import {
   type FormEvent,
 } from "react";
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router";
-
 import { uploadQuestionFile } from "@/entities/question";
+import { useSafeGoBack } from "@/shared/lib/hooks";
+import { ROUTES } from "@/shared/model/routes";
 import { useFileUploadQueue } from "@/shared/lib/use-file-upload-queue";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
@@ -455,8 +455,8 @@ export function CreateQuestionForm({
   onSubmit,
   isSubmitting = false,
 }: CreateQuestionFormProps) {
-  const navigate = useNavigate();
   const anonymousId = useId();
+  const goBack = useSafeGoBack({ fallbackTo: ROUTES.QA });
   const {
     title,
     setTitle,
@@ -527,7 +527,7 @@ export function CreateQuestionForm({
           variant="outline"
           className="min-w-0 flex-1"
           disabled={isSubmitting}
-          onClick={() => navigate(-1)}
+          onClick={goBack}
         >
           Отменить
         </Button>

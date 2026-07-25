@@ -1,7 +1,8 @@
 import { Icon } from "@iconify/react";
-import { generatePath, useNavigate, useParams } from "react-router";
+import { generatePath, useParams } from "react-router";
 
 import { ConfirmModal } from "@/features/confirm-modal";
+import { useSafeGoBack } from "@/shared/lib/hooks";
 import { ROUTES } from "@/shared/model/routes";
 import { PageContainer } from "@/shared/ui/page-container";
 
@@ -15,10 +16,10 @@ import { QuestionError } from "./ui/question-error";
 import { QuestionLoading } from "./ui/question-loading";
 
 function QaDetailsPage() {
-  const navigate = useNavigate();
   const { id } = useParams();
   const questionId = id ?? "";
   const page = useQaDetailsPage(questionId);
+  const goBack = useSafeGoBack({ fallbackTo: ROUTES.QA });
   const answerFormHref = `${generatePath(ROUTES.QA_DETAILS, { id: questionId })}#${QUESTION_ANSWER_FORM_ID}`;
 
   if (page.isQuestionPending) {
@@ -33,7 +34,7 @@ function QaDetailsPage() {
     <PageContainer className="py-8 max-md:px-4 md:py-10">
       <button
         type="button"
-        onClick={() => navigate(-1)}
+        onClick={goBack}
         className="mb-5 hidden cursor-pointer items-center gap-2 text-base font-semibold text-foreground transition-colors hover:text-primary md:inline-flex"
       >
         <Icon icon="ph:arrow-left" className="size-6" />
@@ -42,7 +43,7 @@ function QaDetailsPage() {
 
       <button
         type="button"
-        onClick={() => navigate(-1)}
+        onClick={goBack}
         aria-label="Назад"
         className="mb-5 inline-flex cursor-pointer items-center gap-2 text-foreground transition-colors hover:text-primary md:hidden"
       >
