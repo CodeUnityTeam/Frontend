@@ -133,7 +133,7 @@ function QaDetailsPage() {
         isLoading={page.isAnswerDeleting}
         loadingText="Удаление..."
       />
-    </PageContainer>
+    </PageContainer> // 136 вместо 780
   );
 }
 
