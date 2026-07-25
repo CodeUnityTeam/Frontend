@@ -97,11 +97,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.PROJECTS,
-        element: (
-          <ProtectedRoute>
-            <ProjectsPage />
-          </ProtectedRoute>
-        ),
+        element: <ProjectsPage />,
       },
       {
         path: "projects/:id",
@@ -113,11 +109,7 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.QA,
-        element: (
-          <ProtectedRoute>
-            <QAPage />
-          </ProtectedRoute>
-        ),
+        element: <QAPage />,
       },
       {
         path: ROUTES.QA_DETAILS,

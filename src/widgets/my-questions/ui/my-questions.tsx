@@ -10,7 +10,7 @@ import type { QuestionData } from "@/widgets/question-card";
 type MyQuestionsCardProps = {
   question: QuestionData;
   editHref: string;
-  onDelete: () => void;
+  onDelete?: () => void;
   isDeleting?: boolean;
 };
 
@@ -84,15 +84,17 @@ export function MyQuestionsCard({
         <Button asChild variant="outline" className="font-[18px] font-semibold">
           <Link to={editHref}>Редактировать</Link>
         </Button>
-        <Button
-          type="button"
-          variant="destructive"
-          className="font-[18px] font-semibold"
-          onClick={onDelete}
-          disabled={isDeleting}
-        >
-          {isDeleting ? "Удаление..." : "Удалить"}
-        </Button>
+        {onDelete && (
+          <Button
+            type="button"
+            variant="destructive"
+            className="font-[18px] font-semibold"
+            onClick={onDelete}
+            disabled={isDeleting}
+          >
+            {isDeleting ? "Удаление..." : "Удалить"}
+          </Button>
+        )}
       </div>
     </article>
   );

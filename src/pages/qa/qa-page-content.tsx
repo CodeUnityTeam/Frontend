@@ -16,17 +16,29 @@ import { mapQuestion } from "@/pages/qa/model/question-mapper";
 import { qaTabs } from "@/widgets/filter-tabs/model/tabs-data";
 import { TAB_TO_FILTER } from "@/pages/qa/model/tabs";
 import { QaList } from "@/pages/qa/ui/qa-list";
+import { useIsAuthed } from "@/shared/lib/auth";
 
 export function QAPageContent() {
   const navigate = useNavigate();
+  const isAuthed = useIsAuthed();
   const [tab, setTab] = useState("new");
   const [search, setSearch] = useState("");
   const [questionToDelete, setQuestionToDelete] = useState<QuestionData | null>(null);
   const { selected, reset } = useFilters();
   const tags = selected["tags"] ?? [];
 
+  const visibleTabs = isAuthed
+    ? qaTabs
+    : qaTabs.filter((item) => item.value === "new");
+  
+  const activeTab = isAuthed ? tab : "new";
+
+  const filter = isAuthed 
+    ? TAB_TO_FILTER[activeTab] 
+    : TAB_TO_FILTER["new"];
+
   const questionsQuery = useQuestions({
-    filter: TAB_TO_FILTER[tab],
+    filter: filter,
     search,
     tags,
   });
@@ -48,6 +60,7 @@ export function QAPageContent() {
   const isMyTab = tab === "my-questions";
   const totalQuestions = questionsQuery.data?.pages[0]?.total ?? questions.length;
   const remainingQuestions = Math.max(totalQuestions - questions.length, 0);
+  const showAskButton = isAuthed;
 
   return (
     <PageContainer className="py-8">
@@ -81,24 +94,28 @@ export function QAPageContent() {
         <main className="flex-1 flex flex-col md:gap-8.5">
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <FilterTabs items={qaTabs} value={tab} onValueChange={setTab} />
+              <FilterTabs items={visibleTabs} value={activeTab} onValueChange={isAuthed ? setTab : () => {}} />
             </div>
-            <Button
-              variant="ghost"
-              size="lg"
-              className="hidden shrink-0 text-[16px] md:flex lg:text-lg"
-              onClick={() => navigate(ROUTES.QA_CREATE)}
-            >
-              Задать вопрос
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="fixed top-1/2 right-[clamp(1rem,calc(1rem+(100vw-20rem)*64/1120),5rem)] z-50 md:hidden"
-              onClick={() => navigate(ROUTES.QA_CREATE)}
-            >
-              Задать вопрос
-            </Button>
+            {showAskButton && (
+              <Button
+                variant="ghost"
+                size="lg"
+                className="hidden shrink-0 text-[16px] md:flex lg:text-lg"
+                onClick={() => navigate(ROUTES.QA_CREATE)}
+              >
+                Задать вопрос
+              </Button>
+            )}
+            {showAskButton && (
+              <Button
+                variant="outline"
+                size="lg"
+                className="fixed top-1/2 right-[clamp(1rem,calc(1rem+(100vw-20rem)*64/1120),5rem)] z-50 md:hidden"
+                onClick={() => navigate(ROUTES.QA_CREATE)}
+              >
+                Задать вопрос
+              </Button>
+            )}
           </div>
 
           <QaList
@@ -106,7 +123,7 @@ export function QAPageContent() {
             isLoading={questionsQuery.isPending}
             isError={questionsQuery.isError}
             isMyTab={isMyTab}
-            onDelete={setQuestionToDelete}
+            onDelete={isAuthed ? setQuestionToDelete : undefined}
             deletingId={deleteMutation.isPending ? (questionToDelete?.id ?? undefined) : undefined}
             hasNextPage={questionsQuery.hasNextPage}
             onLoadMore={() => questionsQuery.fetchNextPage()}
@@ -116,22 +133,24 @@ export function QAPageContent() {
         </main>
       </div>
 
-      <ConfirmModal
-        open={Boolean(questionToDelete)}
-        onOpenChange={(open) => { if (!open) setQuestionToDelete(null); }}
-        icon="ph:trash"
-        title="Удалить вопрос?"
-        description={
-          questionToDelete
-            ? `Вопрос «${questionToDelete.title}» будет удалён без возможности восстановления.`
-            : "Вопрос будет удалён без возможности восстановления."
-        }
-        confirmText="Удалить"
-        cancelText="Отменить"
-        onConfirm={() => { if (questionToDelete) deleteMutation.mutate(questionToDelete.id); }}
-        isLoading={deleteMutation.isPending}
-        loadingText="Удаление..."
-      />
+      {isAuthed && (
+        <ConfirmModal
+          open={Boolean(questionToDelete)}
+          onOpenChange={(open) => { if (!open) setQuestionToDelete(null); }}
+          icon="ph:trash"
+          title="Удалить вопрос?"
+          description={
+            questionToDelete
+              ? `Вопрос «${questionToDelete.title}» будет удалён без возможности восстановления.`
+              : "Вопрос будет удалён без возможности восстановления."
+          }
+          confirmText="Удалить"
+          cancelText="Отменить"
+          onConfirm={() => { if (questionToDelete) deleteMutation.mutate(questionToDelete.id); }}
+          isLoading={deleteMutation.isPending}
+          loadingText="Удаление..."
+        />
+      )}
     </PageContainer>
   );
 }
