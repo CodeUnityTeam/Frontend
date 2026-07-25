@@ -15,6 +15,30 @@ import { QuestionDetailsSidebar } from "./ui/question-details-sidebar";
 import { QuestionError } from "./ui/question-error";
 import { QuestionLoading } from "./ui/question-loading";
 
+function QaDetailsBackButtons({ onBack }: { onBack: () => void }) {
+  return (
+    <>
+      <button
+        type="button"
+        onClick={onBack}
+        className="mb-5 hidden cursor-pointer items-center gap-2 text-base font-semibold text-foreground transition-colors hover:text-primary md:inline-flex"
+      >
+        <Icon icon="ph:arrow-left" className="size-6" />
+        Назад
+      </button>
+
+      <button
+        type="button"
+        onClick={onBack}
+        aria-label="Назад"
+        className="mb-5 inline-flex cursor-pointer items-center gap-2 text-foreground transition-colors hover:text-primary md:hidden"
+      >
+        <Icon icon="ph:arrow-left" className="size-6" />
+      </button>
+    </>
+  );
+}
+
 function QaDetailsPage() {
   const { id } = useParams();
   const questionId = id ?? "";
@@ -32,23 +56,7 @@ function QaDetailsPage() {
 
   return (
     <PageContainer className="py-8 max-md:px-4 md:py-10">
-      <button
-        type="button"
-        onClick={goBack}
-        className="mb-5 hidden cursor-pointer items-center gap-2 text-base font-semibold text-foreground transition-colors hover:text-primary md:inline-flex"
-      >
-        <Icon icon="ph:arrow-left" className="size-6" />
-        Назад
-      </button>
-
-      <button
-        type="button"
-        onClick={goBack}
-        aria-label="Назад"
-        className="mb-5 inline-flex cursor-pointer items-center gap-2 text-foreground transition-colors hover:text-primary md:hidden"
-      >
-        <Icon icon="ph:arrow-left" className="size-6" />
-      </button>
+      <QaDetailsBackButtons onBack={goBack} />
 
       <div className="grid gap-4 xl:grid-cols-[273px_1fr] xl:gap-13">
         <QuestionDetailsSidebar
@@ -133,7 +141,7 @@ function QaDetailsPage() {
         isLoading={page.isAnswerDeleting}
         loadingText="Удаление..."
       />
-    </PageContainer> // 136 вместо 780
+    </PageContainer>
   );
 }
 
