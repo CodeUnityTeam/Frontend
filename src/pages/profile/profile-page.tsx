@@ -23,7 +23,7 @@ function ProfilePage() {
 
       {profileQuery.isError && (
         <p className="py-10 text-center text-muted-foreground">
-          {profileQuery.error.message}
+          {"Не удалось загрузить профиль: " + profileQuery.error.message}
         </p>
       )}
 

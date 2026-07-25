@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { Link, generatePath } from "react-router";
 
-import AvatarPlaceholder from "@/shared/assets/images/avatar.png";
+import AvatarPlaceholder from "@/shared/assets/images/avatar-placeholder.svg";
 import { formatRelativeDate } from "@/shared/lib/pluralize";
 import { ROUTES } from "@/shared/model/routes";
 import { Button } from "@/shared/ui/button";
@@ -72,6 +72,12 @@ export function MyQuestionsCard({
       </div>
 
       <div className="mt-7 flex flex-wrap justify-end gap-3">
+        <Button asChild variant="ghost" className="font-[18px] font-semibold">
+          <Link to={`${detailHref}#question-answer-form`}>
+            <Icon icon="ph:arrow-bend-down-right" className="h-5 w-5" />
+            <span>Ответить</span>
+          </Link>
+        </Button>
         <Button asChild variant="ghost" className="font-[18px] font-semibold">
           <Link to={detailHref}>Подробнее</Link>
         </Button>

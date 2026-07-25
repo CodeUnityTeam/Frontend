@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router";
 import { Icon } from "@iconify/react";
 
-import Avatar from "@/shared/assets/images/avatar.png";
+import AvatarPlaceholder from "@/shared/assets/images/avatar-placeholder.svg";
 import { ROUTES } from "@/shared/model/routes";
 import { useCurrentProfile } from "@/entities/profile";
 import { clearTokens } from "@/shared/lib/auth";
@@ -35,7 +35,7 @@ export function ProfileMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger className="flex cursor-pointer items-center gap-2 outline-none">
         <img
-          src={profile?.avatar_url || Avatar}
+          src={profile?.avatar_url || AvatarPlaceholder}
           alt="avatar"
           className="h-8 w-8 rounded-full object-cover md:h-10 md:w-10"
         />

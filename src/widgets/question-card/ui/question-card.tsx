@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { Link, generatePath } from "react-router";
 
-import AvatarPlaceholder from "@/shared/assets/images/avatar.png";
+import AvatarPlaceholder from "@/shared/assets/images/avatar-placeholder.svg";
 import { formatRelativeDate } from "@/shared/lib/pluralize";
 import { ROUTES } from "@/shared/model/routes";
 import { Button } from "@/shared/ui/button";
@@ -17,6 +17,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
   const detailHref = generatePath(ROUTES.QA_DETAILS, {
     id: question.id,
   });
+  const answerHref = `${detailHref}#question-answer-form`;
   const visibleCommentCount = question.comments + pendingCommentCount;
   const avatarSrc = question.user.avatarUrl || AvatarPlaceholder;
 
@@ -78,9 +79,18 @@ export function QuestionCard({ question }: QuestionCardProps) {
           </div>
         </div>
 
-        <Button asChild variant="ghost" className="font-semibold">
-          <Link to={detailHref}>Подробнее</Link>
-        </Button>
+        <div className="flex flex-wrap gap-3">
+          <Button asChild variant="ghost" className="font-semibold">
+            <Link to={answerHref}>
+              <Icon icon="ph:arrow-bend-down-right" className="size-5" />
+              <span>Ответить</span>
+            </Link>
+          </Button>
+
+          <Button asChild variant="ghost" className="font-semibold">
+            <Link to={detailHref}>Подробнее</Link>
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );

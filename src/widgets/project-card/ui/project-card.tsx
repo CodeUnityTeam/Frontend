@@ -42,7 +42,7 @@ export function ProjectCard({
     mutate: respond,
     isPending: isResponding,
     isSuccess: hasResponded,
-  } = useRespondToProject();
+  } = useRespondToProject(projectId);
 
   const handleFavorite = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -55,7 +55,7 @@ export function ProjectCard({
   const handleApply = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      respond(projectId);
+      respond();
     },
     [respond, projectId],
   );

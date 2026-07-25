@@ -23,7 +23,7 @@ function ProjectDetails() {
     mutate: respond,
     isPending: isResponding,
     isSuccess: hasResponded,
-  } = useRespondToProject();
+  } = useRespondToProject(project?.project_id || "");
 
   if (!project || !Object.keys(project).length) return null;
 
@@ -35,7 +35,7 @@ function ProjectDetails() {
   };
 
   const handleApply = () => {
-    respond(project.project_id);
+    respond();
   };
 
   return (
@@ -118,7 +118,7 @@ function ProjectDetails() {
                 onClick={handleApply}
                 variant="outline"
                 type="button"
-                disabled={isResponding || hasResponded}
+                disabled={isResponding || hasResponded || !project?.project_id}
               >
                 <Icon
                   icon={

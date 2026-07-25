@@ -374,6 +374,9 @@ function PeopleResponsesList() {
                   ? "Приглашение в проект"
                   : "Отклик на проект"
               } «${response.projectTitle}»`}
+              responseId={response.responseId}
+              responseStatus={response.status}
+              onAction={() => refetch()}
             />
           </li>
         ))}

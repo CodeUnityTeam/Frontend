@@ -1,12 +1,18 @@
 import { Icon } from "@iconify/react";
 import { useCallback } from "react";
 
-import { useLikePerson, type Person } from "@/entities/profile";
+import {
+  useLikePerson,
+  useRole,
+  type Person,
+  type PersonResponseStatus,
+} from "@/entities/profile";
 import { useInviteUser } from "@/entities/project";
 import { cn } from "@/shared/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
 import { Tag } from "@/shared/ui/tag";
+import { ResponseActions } from "@/features/response-actions";
 
 type PersonCardProps = {
   person: Person;
@@ -14,6 +20,16 @@ type PersonCardProps = {
   badge?: string;
   badgeClassName?: string;
   note?: string;
+  responseId?: string;
+  responseStatus?: PersonResponseStatus;
+  onAction?: () => void;
+};
+
+// Статусы для Employer (внизу карточки)
+const employerStatusMap: Record<string, { label: string; icon: string }> = {
+  approved: { label: "Отклик одобрен", icon: "ph:check-circle" },
+  rejected: { label: "Отклик отклонен", icon: "ph:x-circle" },
+  withdrawn: { label: "Отклик отозван", icon: "ph:arrow-counter-clockwise" },
 };
 
 export function PersonCard({
@@ -22,7 +38,12 @@ export function PersonCard({
   badge,
   badgeClassName,
   note,
+  responseId,
+  responseStatus,
+  onAction,
 }: PersonCardProps) {
+  const { role } = useRole();
+  const isEmployer = role === "employer";
   const { mutate: toggleLike } = useLikePerson();
   const { mutate: invite, isPending: isInviting } = useInviteUser();
 
@@ -38,10 +59,18 @@ export function PersonCard({
     .map((spec) => spec.name)
     .join(", ");
 
+  // Для employer: показываем статус внизу если не pending
+  const showStatusInFooter =
+    isEmployer && responseStatus && responseStatus !== "pending";
+  // Для employer: показываем кнопки только если pending
+  const showActions =
+    isEmployer && responseStatus === "pending" && responseId && role;
+
   return (
     <div className="flex h-full w-full flex-col rounded-lg border border-border p-4">
       <div className="mb-3 flex items-center justify-between gap-2">
-        {badge ? (
+        {/* Скрываем badge для employer */}
+        {!isEmployer && badge ? (
           <span
             className={cn(
               "rounded-2xl border border-border bg-background px-3 py-1 text-[13px] font-semibold",
@@ -96,7 +125,7 @@ export function PersonCard({
       <div className="mt-2 flex flex-wrap gap-1">
         {person.skills.map((skill) => (
           <Tag
-            key={skill.skillId || skill.name}
+            key={skill.skillId}
             label={skill.name}
             className="rounded-2xl bg-(--secondary-button) text-[13px] font-normal"
           />
@@ -114,17 +143,59 @@ export function PersonCard({
           </div>
         )}
 
-        <Button
-          variant="ghost"
-          type="button"
-          title="Бэк пока не отдаёт контакты соискателя"
-          disabled={!projectId || isInviting}
-          className="flex w-full items-center justify-center gap-1 rounded-xl border border-primary py-2 text-[16px] font-semibold text-foreground disabled:border-(--color-light-gray-200) disabled:bg-muted disabled:text-muted-foreground"
-          onClick={() => projectId && invite({ projectId, userId })}
-        >
-          <Icon icon="ph:chats-teardrop-light" className="text-xl" />
-          <span>Связаться</span>
-        </Button>
+        {/* Для employer: 
+            - если pending → показываем кнопки "Одобрить/Отклонить"
+            - если approved/rejected/withdrawn → показываем неактивную кнопку со статусом
+        */}
+        {isEmployer && (
+          <>
+            {showActions && (
+              <div className="flex justify-end">
+                <ResponseActions
+                  responseId={responseId!}
+                  currentStatus={responseStatus!}
+                  userRole={role}
+                  onAction={onAction}
+                />
+              </div>
+            )}
+
+            {showStatusInFooter && (
+              <Button
+                variant="ghost"
+                type="button"
+                disabled
+                className={cn(
+                  "flex h-12 w-full items-center justify-center gap-2 rounded-xl border py-2 text-[16px] font-semibold",
+                  "cursor-not-allowed border-[#9A9BA9] text-[#9A9BA9]",
+                )}
+              >
+                <Icon
+                  icon={employerStatusMap[responseStatus!]?.icon || "ph:info"}
+                  className="text-xl"
+                />
+                <span>
+                  {employerStatusMap[responseStatus!]?.label || responseStatus}
+                </span>
+              </Button>
+            )}
+          </>
+        )}
+
+        {/* Для worker: кнопка "Связаться" */}
+        {!isEmployer && (
+          <Button
+            variant="ghost"
+            type="button"
+            title="Бэк пока не отдаёт контакты соискателя"
+            disabled={!projectId || isInviting}
+            className="flex w-full items-center justify-center gap-1 rounded-xl border border-primary py-2 text-[16px] font-semibold text-foreground disabled:border-(--color-light-gray-200) disabled:bg-muted disabled:text-muted-foreground"
+            onClick={() => projectId && invite({ projectId, userId })}
+          >
+            <Icon icon="ph:chats-teardrop-light" className="text-xl" />
+            <span>Связаться</span>
+          </Button>
+        )}
       </div>
     </div>
   );
