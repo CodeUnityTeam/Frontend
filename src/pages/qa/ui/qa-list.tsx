@@ -14,7 +14,7 @@ type QaListProps = {
   isLoading: boolean;
   isError: boolean;
   isMyTab: boolean;
-  onDelete: (question: QuestionData) => void;
+  onDelete?: (question: QuestionData) => void;
   deletingId?: string;
   hasNextPage?: boolean;
   onLoadMore?: () => void;
@@ -47,7 +47,7 @@ export function QaList({
               <MyQuestionsCard
                 question={question}
                 editHref={generatePath(ROUTES.QA_EDIT, { id: question.id })}
-                onDelete={() => onDelete(question)}
+                onDelete={onDelete ? () => onDelete(question) : undefined}
                 isDeleting={deletingId === question.id}
               />
             </li>
