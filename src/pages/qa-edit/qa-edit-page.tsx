@@ -13,21 +13,15 @@ import {
 import type { QuestionFormValues } from "@/entities/question";
 import { ConfirmModal } from "@/features/confirm-modal";
 import { useSkills } from "@/entities/skill";
+import { useSafeGoBack } from "@/shared/lib/hooks";
 import { ROUTES } from "@/shared/model/routes";
 import { PageContainer } from "@/shared/ui/page-container";
 import { QuestionForm } from "@/widgets/question-form";
 
 function QaEditPage() {
-  const navigate = useNavigate();
   const { id } = useParams();
-  const goBack = () => {
-    if (window.history.state?.idx > 0) {
-      navigate(-1);
-      return;
-    }
-
-    navigate(ROUTES.QA, { replace: true });
-  };
+  const navigate = useNavigate();
+  const goBack = useSafeGoBack({ fallbackTo: ROUTES.QA });
   const [isDeleteOpen, setDeleteOpen] = useState(false);
 
   const questionId = id ?? "";

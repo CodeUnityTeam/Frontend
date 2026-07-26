@@ -1,8 +1,10 @@
 import type { FormEvent } from "react";
 
 import type { QuestionFormValues } from "@/entities/question";
+import { uploadQuestionFile } from "@/entities/question";
 import { cn } from "@/shared/lib/utils";
 import { Button } from "@/shared/ui/button";
+import { MarkdownImageField } from "@/shared/ui/markdown-image-field";
 import { Textarea } from "@/shared/ui/textarea";
 
 import { useQuestionForm } from "../model/use-question-form";
@@ -52,14 +54,16 @@ export function QuestionForm({
           label="Заголовок вопроса"
           value={title}
           onChange={(event) => setTitle(event.target.value)}
-          className="rounded-2xl border-foreground [&>textarea]:min-h-[113px] [&>textarea]:min-w-0 [&>textarea]:overflow-auto md:[&>textarea]:min-h-[86px]"
+          className="rounded-2xl border-foreground [&>textarea]:min-h-28.25 [&>textarea]:min-w-0 [&>textarea]:overflow-auto md:[&>textarea]:min-h-21.5"
         />
 
-        <Textarea
+        <MarkdownImageField
           label="Суть вопроса"
-          value={details}
-          onChange={(event) => setDetails(event.target.value)}
-          className="rounded-2xl border-foreground [&>textarea]:min-h-[466px] [&>textarea]:min-w-0 [&>textarea]:overflow-auto md:[&>textarea]:min-h-[250px]"
+          description="Поддерживаются Markdown и изображения."
+          markdown={details}
+          onChange={setDetails}
+          imageUploadHandler={uploadQuestionFile}
+          textareaClassName="min-h-[320px] rounded-2xl md:min-h-[420px]"
         />
 
         <TagsSelect

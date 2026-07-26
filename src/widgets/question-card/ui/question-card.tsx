@@ -6,8 +6,9 @@ import { formatRelativeDate } from "@/shared/lib/pluralize";
 import { ROUTES } from "@/shared/model/routes";
 import { Button } from "@/shared/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/shared/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/shared/ui/card";
 import { Tag } from "@/shared/ui/tag";
+import { MarkdownViewer } from "@/shared/ui/markdown-viewer";
 import { useQuestionCommentCount } from "@/shared/store/question-comments-store";
 import { QuestionLikeButton } from "@/entities/question";
 import type { QuestionCardProps } from "../model/types";
@@ -19,7 +20,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
   });
   const answerHref = `${detailHref}#question-answer-form`;
   const visibleCommentCount = question.comments + pendingCommentCount;
-  const avatarSrc = question.user.avatarUrl || AvatarPlaceholder;
+  const avatarSrc = question.user.avatarUrl || undefined;
 
   return (
     <Card className="h-fit border-muted-foreground">
@@ -29,8 +30,13 @@ export function QuestionCard({ question }: QuestionCardProps) {
             <div className="flex min-w-0 items-center gap-2">
               <Avatar>
                 <AvatarImage src={avatarSrc} alt={question.user.firstName} />
-                <AvatarFallback>
-                  <Icon icon="ph:user" className="size-6" />
+                <AvatarFallback className="bg-transparent p-0">
+                  <img
+                    src={AvatarPlaceholder}
+                    alt=""
+                    aria-hidden="true"
+                    className="h-full w-full object-cover"
+                  />
                 </AvatarFallback>
               </Avatar>
               <span className="text-xl font-semibold">
@@ -61,9 +67,11 @@ export function QuestionCard({ question }: QuestionCardProps) {
       </CardHeader>
 
       <CardContent className="p-6 pt-0">
-        <CardDescription className="line-clamp-2 text-lg text-foreground">
-          {question.description}
-        </CardDescription>
+        <MarkdownViewer
+          markdown={question.description}
+          className="max-h-24 overflow-hidden text-lg text-foreground"
+          imageVariant="thumbnail"
+        />
       </CardContent>
 
       <CardFooter className="flex flex-wrap items-center justify-between gap-4 p-6 pt-0">
@@ -71,6 +79,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
           <QuestionLikeButton
             questionId={question.id}
             likesCount={question.likes}
+            isLikedByMe={question.isLikedByMe}
           />
 
           <div className="flex items-center gap-2">

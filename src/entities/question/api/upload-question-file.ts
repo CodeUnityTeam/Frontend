@@ -1,4 +1,4 @@
-import { apiClient } from "@/shared/api";
+import { uploadMultipartFile } from "@/shared/api";
 
 export type UploadQuestionFileResponse = {
   imageUrl: string;
@@ -17,17 +17,9 @@ type UploadQuestionFileResponseDto = {
 export async function uploadQuestionFile(
   file: File,
 ): Promise<UploadQuestionFileResponse> {
-  const formData = new FormData();
-  formData.append("file", file);
-
-  const { data } = await apiClient.post<UploadQuestionFileResponseDto>(
+  const data = await uploadMultipartFile<UploadQuestionFileResponseDto>(
     "/qna/files/upload/",
-    formData,
-    {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  },
+    file,
   );
 
   return {
