@@ -50,20 +50,37 @@ export function buildProfileUpdatePayload(
   data: RegisterFormData,
   catalogs: OnboardingCatalogs,
 ): ProfileUpdateRequest {
-  return {
-    first_name: data.name.trim(),
-    last_name: data.surname.trim(),
+  // Registration already persisted the user's name fields.
+  // Onboarding finish only updates profile details that are optional here.
+  const payload: ProfileUpdateRequest = {
     projects_relation: data.employmentRole,
-    country: data.country?.trim() ?? "",
-    city: data.city?.trim() ?? "",
-    soft_skills: (data.qualities ?? [])
-      .map((quality) => quality.trim())
-      .filter(Boolean)
-      .join(", "),
-    about_me: data.about.trim(),
     skills: resolveSkillIds(data.skills ?? [], catalogs.skills),
-
     specializations: [],
     workformats: resolveWorkformatIds(data.format, catalogs.formats),
   };
+
+  const country = data.country?.trim() ?? "";
+  if (country) {
+    payload.country = country;
+  }
+
+  const city = data.city?.trim() ?? "";
+  if (city) {
+    payload.city = city;
+  }
+
+  const softSkills = (data.qualities ?? [])
+    .map((quality) => quality.trim())
+    .filter(Boolean)
+    .join(", ");
+  if (softSkills) {
+    payload.soft_skills = softSkills;
+  }
+
+  const about = data.about.trim();
+  if (about) {
+    payload.about_me = about;
+  }
+
+  return payload;
 }

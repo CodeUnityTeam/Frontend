@@ -43,6 +43,14 @@ function CheckEmailPage() {
   const [manualStatus, setManualStatus] = useState<ManualVerifyStatus>("idle");
   const [manualMessage, setManualMessage] = useState<string>("");
   const hasPrefillEmail = Boolean(email);
+  const isVerified = manualStatus === "success";
+  const primaryButtonLabel = isVerified
+    ? hasPrefillEmail
+      ? "Продолжить"
+      : "Войти и продолжить"
+    : manualStatus === "loading"
+      ? "Проверяем..."
+      : "Подтвердить email";
 
   const handleContinue = async () => {
     if (email && password) {
@@ -223,24 +231,13 @@ function CheckEmailPage() {
 
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
                 <Button
-                  type="submit"
+                  type={isVerified ? "button" : "submit"}
                   className="w-full sm:order-2 sm:w-auto"
                   disabled={manualStatus === "loading"}
+                  onClick={isVerified ? handleContinue : undefined}
                 >
-                  {manualStatus === "loading"
-                    ? "Проверяем..."
-                    : "Подтвердить email"}
+                  {primaryButtonLabel}
                 </Button>
-
-                {manualStatus === "success" && (
-                  <Button
-                    type="button"
-                    className="w-full sm:order-1 sm:w-auto"
-                    onClick={handleContinue}
-                  >
-                    {hasPrefillEmail ? "Продолжить" : "Войти и продолжить"}
-                  </Button>
-                )}
               </div>
 
               {manualStatus === "success" && (
