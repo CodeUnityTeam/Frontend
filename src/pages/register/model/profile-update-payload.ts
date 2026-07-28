@@ -54,10 +54,13 @@ export function buildProfileUpdatePayload(
   // Onboarding finish only updates profile details that are optional here.
   const payload: ProfileUpdateRequest = {
     projects_relation: data.employmentRole,
-    skills: resolveSkillIds(data.skills ?? [], catalogs.skills),
-    specializations: [],
     workformats: resolveWorkformatIds(data.format, catalogs.formats),
   };
+
+  const skills = resolveSkillIds(data.skills ?? [], catalogs.skills);
+  if (skills.length > 0) {
+    payload.skills = skills;
+  }
 
   const country = data.country?.trim() ?? "";
   if (country) {
@@ -71,10 +74,9 @@ export function buildProfileUpdatePayload(
 
   const softSkills = (data.qualities ?? [])
     .map((quality) => quality.trim())
-    .filter(Boolean)
-    .join(", ");
-  if (softSkills) {
-    payload.soft_skills = softSkills;
+    .filter(Boolean);
+  if (softSkills.length > 0) {
+    payload.soft_skills = softSkills.join(", ");
   }
 
   const about = data.about.trim();
