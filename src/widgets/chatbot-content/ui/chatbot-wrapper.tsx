@@ -4,13 +4,16 @@ import { useProjects, useRecommendations } from "@/entities/project";
 import type { Project } from "@/entities/project";
 import type { TChatbotWrapper } from "@/entities/review/model/types";
 import { useIsAuthed } from "@/shared/lib/auth";
-import { Button } from "@/shared/ui/button";
 import type { CarouselApi } from "@/shared/ui/carousel";
 import { ProjectCard } from "@/widgets/project-card";
 import { ChatbotTabs } from "./chatbot-tabs";
 import { ChatbotNavigate } from "./chatbot-navigate";
 import { ChatbotBtn } from "./chatbot-btn";
 import { ChatbotRender } from "./chatbot-render";
+import { ChatbotMessage } from "./chatbot-message";
+import { formatDate } from "@/shared/lib/format-date";
+import { ProjectsSkeleton } from "./projects-skeleton";
+import { ProjectsError } from "./projects-error";
 
 export type TTabId = "popular" | "recommended" | "profile";
 
@@ -21,54 +24,6 @@ const TABS: { id: TTabId; label: string }[] = [
   { id: "recommended", label: "Рекомендации" },
   { id: "profile", label: "Профили" },
 ];
-
-const dateFormatter = new Intl.DateTimeFormat("ru", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-});
-
-function formatDate(iso: string | null): string {
-  if (!iso) {
-    return "";
-  }
-  const date = new Date(iso);
-  return Number.isNaN(date.getTime()) ? "" : dateFormatter.format(date);
-}
-
-function ProjectsSkeleton() {
-  return (
-    <div className="flex gap-4 overflow-hidden">
-      {Array.from({ length: 4 }).map((_, index) => (
-        <div
-          key={`projects-skeleton-${index}`}
-          className="h-[300px] w-[273px] shrink-0 animate-pulse rounded-[var(--radius-lg)] bg-muted"
-        />
-      ))}
-    </div>
-  );
-}
-
-function ProjectsError({ onRetry }: { onRetry: () => void }) {
-  return (
-    <div className="flex flex-col items-center gap-4 py-12 text-center">
-      <p className="text-muted-foreground">
-        Не удалось загрузить проекты. Попробуйте ещё раз.
-      </p>
-      <Button type="button" onClick={onRetry}>
-        Повторить
-      </Button>
-    </div>
-  );
-}
-
-function ChatbotMessage({ text }: { text: string }) {
-  return (
-    <div className="flex items-center justify-center py-12 text-center">
-      <p className="text-muted-foreground">{text}</p>
-    </div>
-  );
-}
 
 type ProjectsCarouselProps = {
   isPending: boolean;

@@ -4,13 +4,14 @@ import { useNavigate } from "react-router";
 import { Icon } from "@iconify/react";
 
 import { createQuestion } from "@/entities/question";
+import { useSafeGoBack } from "@/shared/lib/hooks";
 import { ROUTES } from "@/shared/model/routes";
 import { PageContainer } from "@/shared/ui/page-container";
 import { CreateQuestionForm } from "@/widgets/create-question-form";
 
 function QaCreatePage() {
   const navigate = useNavigate();
-  const goBack = () => navigate(-1);
+  const goBack = useSafeGoBack({ fallbackTo: ROUTES.QA });
   const createMutation = useMutation({
     mutationFn: createQuestion,
     onSuccess: () => {

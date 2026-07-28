@@ -6,6 +6,7 @@ import { useRole } from "@/entities/profile";
 import { useLikeProject } from "@/entities/project";
 import { RESPONSES_QUERY_KEY, type ProjectResponse } from "@/entities/response";
 import { cn } from "@/shared/lib/utils";
+import { formatDate } from "@/shared/lib/format-date";
 import { Button } from "@/shared/ui/button";
 import { Tag } from "@/shared/ui/tag";
 import {
@@ -13,30 +14,28 @@ import {
   statusBadgeClass,
 } from "@/widgets/response-card/model/status";
 
-const dateFormatter = new Intl.DateTimeFormat("ru", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-});
-
-function formatDate(iso: string | null): string {
-  if (!iso) {
-    return "";
-  }
-  const date = new Date(iso);
-  return Number.isNaN(date.getTime()) ? "" : dateFormatter.format(date);
-}
-
-const contactButtonClass =
-  "flex w-full items-center justify-center gap-1 rounded-xl border border-primary py-2 text-[16px] font-semibold text-foreground";
 
 type ResponseCardProps = {
   response: ProjectResponse;
 };
 
+// Статусы для Worker
+const workerStatusMap: Record<string, { label: string; className: string }> = {
+  pending: { label: "Отклик отправлен", className: "text-muted-foreground" },
+  approved: { label: "Вас приняли", className: "text-foreground" },
+  rejected: { label: "Вам отказали", className: "text-foreground" },
+  withdrawn: { label: "Ваш отклик", className: "text-foreground" },
+};
+
+// Статусы для Employer
+const contactButtonClass =
+  "flex w-full items-center justify-center gap-1 rounded-xl border border-primary py-2 text-[16px] font-semibold text-foreground";
+
+
 export function ResponseCard({ response }: ResponseCardProps) {
   const { role } = useRole();
   const isEmployer = role === "employer";
+  const isWorker = role === "worker";
 
   const queryClient = useQueryClient();
   const { mutate: toggleLike } = useLikeProject();
@@ -54,20 +53,34 @@ export function ResponseCard({ response }: ResponseCardProps) {
   }, [toggleLike, queryClient, projectId, isLikedByMe]);
 
   const date = formatDate(response.createdAt);
-  const canContact =
-    response.status === "approved" && Boolean(response.authorEmail);
 
+  // Для Worker: кнопка активна только если статус "approved"
+  const isContactActive = isWorker && response.status === "approved";
+  const contactButtonStyles = isContactActive
+    ? "border-primary text-foreground hover:bg-primary/5"
+    : "border-(--color-light-gray-200) bg-muted text-muted-foreground cursor-not-allowed";
   return (
     <div className="flex h-full w-full flex-col rounded-lg border border-border p-4">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <span
-          className={cn(
-            "rounded-2xl border bg-background px-3 py-1 text-[13px] font-semibold",
-            statusBadgeClass[response.status],
-          )}
-        >
-          {statusLabels[response.status]}
-        </span>
+        {isWorker && response.status ? (
+          <span
+            className={cn(
+              "rounded-2xl border bg-background px-3 py-1 text-[13px] font-semibold",
+              workerStatusMap[response.status]?.className || ""
+            )}
+          >
+            {workerStatusMap[response.status]?.label || response.status}
+          </span>
+        ) : (
+          <span
+            className={cn(
+              "rounded-2xl border bg-background px-3 py-1 text-[13px] font-semibold",
+              statusBadgeClass[response.status],
+            )}
+          >
+            {statusLabels[response.status]}
+          </span>
+        )}
 
         <Button
           variant="ghost"
@@ -95,7 +108,7 @@ export function ResponseCard({ response }: ResponseCardProps) {
       <div className="mt-2 flex flex-wrap gap-1">
         {response.skills.map((skill) => (
           <Tag
-            key={skill.skillId || skill.name}
+            key={skill.skillId}
             label={skill.name}
             className="rounded-2xl bg-(--secondary-button) text-[13px] font-normal"
           />
@@ -127,27 +140,37 @@ export function ResponseCard({ response }: ResponseCardProps) {
           )}
         </div>
 
-        {isEmployer && (canContact ? (
-          <Button variant="ghost" className={contactButtonClass} asChild>
+        {/* Для Worker: кнопка "Связаться" - активна только если "Вас приняли" */}
+        {isWorker && (
+          <Button
+            variant="ghost"
+            type="button"
+            disabled={!isContactActive}
+            className={cn(contactButtonClass, contactButtonStyles)}
+            onClick={() => {
+              if (isContactActive && response.authorEmail) {
+                window.location.href = `mailto:${response.authorEmail}`;
+              }
+            }}
+          >
+            <Icon icon="ph:chats-teardrop-light" className="text-xl" />
+            <span>Связаться</span>
+          </Button>
+        )}
+
+        {/* Для Employer: кнопка "Связаться" - активна только если approved */}
+        {isEmployer && response.status === "approved" && Boolean(response.authorEmail) && (
+          <Button
+            variant="ghost"
+            className={cn(contactButtonClass, "border-primary text-foreground hover:bg-primary/5")}
+            asChild
+          >
             <a href={`mailto:${response.authorEmail}`}>
               <Icon icon="ph:chats-teardrop-light" className="text-xl" />
               <span>Связаться</span>
             </a>
           </Button>
-        ) : (
-          <Button
-            variant="ghost"
-            type="button"
-            disabled
-            className={cn(
-              contactButtonClass,
-              "disabled:border-(--color-light-gray-200) disabled:bg-muted disabled:text-muted-foreground",
-            )}
-          >
-            <Icon icon="ph:chats-teardrop-light" className="text-xl" />
-            <span>Связаться</span>
-          </Button>
-        ))}
+        )}
       </div>
     </div>
   );

@@ -1,9 +1,7 @@
-import { useIsAuthed } from "@/shared/lib/auth";
 import { Button } from "@/shared/ui/button";
 import { openAuthRegister } from "@/widgets/registration/model/auth-modal-actions";
 
-export function Banner() {
-  const isAuthed = useIsAuthed();
+export function Banner({ isAuthed }: { isAuthed: boolean }) {
 
   return (
     <section

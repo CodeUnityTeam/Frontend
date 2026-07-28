@@ -1,3 +1,5 @@
+import type { ProjectsRelation } from "@/entities/profile/model/types";
+
 export interface Skill {
   skill_id: string;
   name: string;
@@ -112,6 +114,6 @@ export type ProjectRole = "employer" | "worker";
 export interface UserProfile {
   pk: string;
   email: string;
-  role: string;
-  projects_relation: "employer" | "worker";
+  role: ProjectsRelation;
+  projects_relation: ProjectsRelation;
 }

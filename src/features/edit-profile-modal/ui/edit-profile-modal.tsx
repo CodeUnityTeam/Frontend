@@ -8,6 +8,7 @@ import { Modal } from "@/shared/ui/modal/modal";
 import { DialogClose } from "@/shared/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
 import { cn } from "@/shared/lib/utils";
+import AvatarPlaceholder from "@/shared/assets/images/avatar-placeholder.svg";
 
 import type { EditProfileFormData } from "../model/types";
 import {
@@ -128,7 +129,7 @@ export function EditProfileModal({
         <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
           <div className="flex justify-center sm:block sm:shrink-0">
             <img
-              src={userData?.avatar_url || "https://i.pravatar.cc/150?img=47"}
+              src={userData?.avatar_url || AvatarPlaceholder}
               alt="avatar"
               className="size-24 rounded-full object-cover sm:size-32"
             />

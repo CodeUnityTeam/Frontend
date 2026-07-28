@@ -1,52 +1,25 @@
-import { Icon } from "@iconify/react";
+import { useMemo } from "react";
+
 import { generatePath } from "react-router";
 
 import { ROUTES } from "@/shared/model/routes";
 import { Button } from "@/shared/ui/button";
 import { QuestionCard, type QuestionData } from "@/widgets/question-card";
 import { MyQuestionsCard } from "@/widgets/my-questions/ui/my-questions";
+import type { QaTab, QaUnansweredSort } from "@/pages/qa/model/tabs";
+import { QaListSkeleton } from "./qa-list-skeleton";
+import { QaListEmpty } from "./qa-list-empty";
+import { QaListError } from "./qa-list-error";
 
-function QaListSkeleton() {
-  return (
-    <div className="flex flex-col gap-8.5">
-      {Array.from({ length: 4 }).map((_, index) => (
-        <div
-          key={`question-skeleton-${index}`}
-          className="h-55 w-full animate-pulse rounded-lg bg-muted"
-        />
-      ))}
-    </div>
-  );
-}
-
-function QaListEmpty() {
-  return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-2xl bg-muted px-6 py-16 text-center">
-      <Icon icon="ph:chat-circle-dots" className="size-12 text-muted-foreground" />
-      <h3 className="text-xl font-semibold text-foreground">Вопросов не найдено</h3>
-      <p className="max-w-md text-sm text-muted-foreground">
-        Попробуйте изменить фильтры или поисковый запрос
-      </p>
-    </div>
-  );
-}
-
-function QaListError() {
-  return (
-    <div className="flex flex-col items-center gap-4 py-16 text-center">
-      <p className="text-muted-foreground">
-        Не удалось загрузить список вопросов. Попробуйте перезагрузить страницу.
-      </p>
-    </div>
-  );
-}
 
 type QaListProps = {
   questions: QuestionData[];
   isLoading: boolean;
   isError: boolean;
+  tab: QaTab;
+  unansweredSort: QaUnansweredSort;
   isMyTab: boolean;
-  onDelete: (question: QuestionData) => void;
+  onDelete?: (question: QuestionData) => void;
   deletingId?: string;
   hasNextPage?: boolean;
   onLoadMore?: () => void;
@@ -58,6 +31,8 @@ export function QaList({
   questions,
   isLoading,
   isError,
+  tab,
+  unansweredSort,
   isMyTab,
   onDelete,
   deletingId,
@@ -66,20 +41,46 @@ export function QaList({
   isFetchingNextPage,
   remainingCount,
 }: QaListProps) {
+  const sortedQuestions = useMemo(() => {
+    const items = [...questions];
+    const sortByDate = (left: QuestionData, right: QuestionData) =>
+      right.createdAt.getTime() - left.createdAt.getTime();
+    const sortByLikes = (left: QuestionData, right: QuestionData) => {
+      const likesDelta = right.likes - left.likes;
+      if (likesDelta !== 0) {
+        return likesDelta;
+      }
+
+      return sortByDate(left, right);
+    };
+
+    if (tab === "unanswered") {
+      return items
+        .filter((question) => question.comments === 0)
+        .sort(unansweredSort === "likes" ? sortByLikes : sortByDate);
+    }
+
+    if (tab === "popular") {
+      return items.sort(sortByLikes);
+    }
+
+    return items.sort(sortByDate);
+  }, [questions, tab, unansweredSort]);
+
   if (isLoading) return <QaListSkeleton />;
   if (isError) return <QaListError />;
-  if (questions.length === 0) return <QaListEmpty />;
+  if (sortedQuestions.length === 0) return <QaListEmpty />;
 
   return (
     <div className="flex flex-col gap-6 lg:gap-8.5">
       <ul className="flex flex-col gap-6 lg:gap-8.5">
-        {questions.map((question) =>
+        {sortedQuestions.map((question) =>
           isMyTab ? (
             <li key={question.id}>
               <MyQuestionsCard
                 question={question}
                 editHref={generatePath(ROUTES.QA_EDIT, { id: question.id })}
-                onDelete={() => onDelete(question)}
+                onDelete={onDelete ? () => onDelete(question) : undefined}
                 isDeleting={deletingId === question.id}
               />
             </li>
@@ -99,7 +100,9 @@ export function QaList({
             onClick={onLoadMore}
             disabled={isFetchingNextPage}
           >
-            {isFetchingNextPage ? "Загрузка..." : `Загрузить ещё ${remainingCount}`}
+            {isFetchingNextPage
+              ? "Загрузка..."
+              : `Загрузить ещё ${remainingCount}`}
           </Button>
         </div>
       )}

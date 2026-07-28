@@ -1,3 +1,5 @@
+import type { ProjectsRelation } from "@/entities/profile";
+
 export interface LoginCredentials {
   email: string;
   password: string;
@@ -20,9 +22,9 @@ export interface UserDetailsDto {
   email: string;
   first_name: string;
   last_name: string;
-  role: string; // TO DO: Добавить роли из бэка (#11_июля)
+  role: ProjectsRelation; 
   rating: number;
-  projects_relation: string; // TO DO: Добавить relation из бэка (#11_июля)
+  projects_relation: ProjectsRelation;
   phone_number: string;
   additional_contact: string;
   country: string;
@@ -48,6 +50,14 @@ export interface LoginResponseDto {
   access: string;
   refresh: string;
   user: UserDetailsDto;
+}
+
+export interface SocialAuthResponse {
+  access: string;
+  refresh: string;
+  user: UserDetailsDto;
+  access_expiration: string;
+  refresh_expiration: string;
 }
 
 export function mapUserDetails(dto: UserDetailsDto): AuthUser {

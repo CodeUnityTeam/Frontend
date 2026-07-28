@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 
+import { Modal } from "@/shared/ui/modal/modal";
+import { Icon as AppIcon } from "@/shared/ui/icon";
+import { Input } from "@/shared/ui/input";
+import { Button } from "@/shared/ui/button";
+import { Checkbox } from "@/shared/ui/checkbox";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
+  DialogClose,
   DialogDescription,
+  DialogTitle,
 } from "@/shared/ui/dialog";
 import {
   Sheet,
@@ -15,10 +18,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/shared/ui/sheet/sheet";
-import yandexSvg from "@/shared/assets/icons/yandex.svg";
-import { Input } from "@/shared/ui/input";
-import { Button } from "@/shared/ui/button";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   registrationSchema,
@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { ROUTES } from "@/shared/model/routes";
 import { getProviderUrl, type RegistrationRequest } from "@/shared/api/auth";
+import { useDocuments } from "@/entities/document";
 
 interface RegistrationModalProps {
   open: boolean;
@@ -83,7 +84,9 @@ export function RegistrationModal({
   const [providerLoading, setProviderLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  React.useEffect(() => {
+  const { data: documents } = useDocuments();
+
+  useEffect(() => {
     if (typeof window === "undefined") return;
     const mq = window.matchMedia("(max-width: 768px)");
     const update = () => setIsMobile(mq.matches);
@@ -96,13 +99,20 @@ export function RegistrationModal({
   const mutation = useRegisterMutation();
 
   const {
+    control,
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<RegistrationFormValues>({
     resolver: zodResolver(registrationSchema),
     mode: "onTouched",
+    defaultValues: {
+      consent: false,
+    },
   });
+
+  const consentValue = watch("consent");
 
   const onSubmit = (values: RegistrationFormValues) => {
     const payload: RegistrationRequest = {
@@ -123,7 +133,6 @@ export function RegistrationModal({
               surname: values.lastName,
               email: values.email,
             },
-
             password: values.password,
           },
         });
@@ -139,7 +148,6 @@ export function RegistrationModal({
     try {
       const url = await getProviderUrl(providerId);
       if (!url) throw new Error("No url returned");
-      // Redirect to provider
       window.location.assign(url);
     } catch {
       toast.error("Не удалось начать аутентификацию провайдера");
@@ -147,155 +155,230 @@ export function RegistrationModal({
     }
   };
 
-  const providers = [
-    {
-      id: "yandex",
-      label: "Yandex",
-      icon: yandexSvg,
-    },
-  ];
+  const privacyPolicy = documents?.find(doc => doc.slug === "personal_data_processing");
+  const platformRules = documents?.find(doc => doc.slug === "platform_rules");
+  const privacyPolicyFull = documents?.find(doc => doc.slug === "privacy_policy");
 
-  const providersButtons = (
-    <div className="mt-6 flex flex-col items-center gap-5">
-      <div className="h-px w-full bg-primary/70" />
+  const renderContent = () => (
+    <>
+      <div className="flex flex-col items-center gap-2 pb-6 text-center">
+        <DialogTitle className="text-3xl font-semibold tracking-normal text-foreground sm:text-4xl">
+          Регистрация
+        </DialogTitle>
+        <DialogDescription className="text-[18px] text-foreground">
+          Регистрация профиля
+        </DialogDescription>
+      </div>
 
-      <div className="flex items-center justify-center gap-4">
-        {providers.map((p) => (
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="grid w-full max-w-[480px] grid-cols-1 gap-5 md:grid-cols-2"
+      >
+        <div>
+          <Input
+            label="Имя"
+            placeholder="Введите имя"
+            {...register("firstName")}
+            error={errors.firstName?.message}
+            className="h-[60px] rounded-lg border-[#C9CBD8]"
+          />
+        </div>
+
+        <div>
+          <Input
+            label="Фамилия"
+            placeholder="Введите фамилию"
+            {...register("lastName")}
+            error={errors.lastName?.message}
+            className="h-[60px] rounded-lg border-[#C9CBD8]"
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <Input
+            label="E-mail"
+            placeholder="Введите E-mail"
+            type="email"
+            {...register("email")}
+            error={errors.email?.message}
+            className="h-[60px] rounded-lg border-[#C9CBD8]"
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <Input
+            label="Пароль"
+            placeholder="Введите пароль"
+            type={showPassword ? "text" : "password"}
+            {...register("password")}
+            error={errors.password?.message}
+            className="h-[60px] rounded-lg border-[#C9CBD8]"
+            rightElement={
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
+                onClick={() => setShowPassword((s) => !s)}
+              >
+                <Icon icon={showPassword ? "ph:eye-slash" : "ph:eye"} />
+              </Button>
+            }
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <Controller
+            name="consent"
+            control={control}
+            render={({ field, fieldState }) => (
+              <div className="flex flex-col gap-2">
+                <div className="flex items-start gap-3">
+                  <Checkbox
+                    id="consent"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    className="border-2 border-foreground data-[state=checked]:bg-background data-[state=checked]:text-foreground"
+                  />
+                  <label
+                    htmlFor="consent"
+                    className="mt-1 cursor-pointer text-sm leading-relaxed text-muted-foreground"
+                  >
+                    Соглашаюсь на{" "}
+                    <a
+                      href={privacyPolicy?.file_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cursor-pointer text-primary underline hover:no-underline"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      обработку персональных данных
+                    </a>
+                    {platformRules && (
+                      <>
+                        ,{" "}
+                        <a
+                          href={platformRules.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="cursor-pointer text-primary underline hover:no-underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          правила пользования платформой
+                        </a>
+                      </>
+                    )}
+                    {privacyPolicyFull && (
+                      <>
+                        {" "}
+                        и{" "}
+                        <a
+                          href={privacyPolicyFull.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="cursor-pointer text-primary underline hover:no-underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          политику конфиденциальности
+                        </a>
+                      </>
+                    )}
+                  </label>
+                </div>
+                {fieldState.error && (
+                  <p className="text-sm text-destructive">
+                    {fieldState.error.message}
+                  </p>
+                )}
+              </div>
+            )}
+          />
+        </div>
+
+        <div className="md:col-span-2">
           <Button
-            key={p.id}
-            type="button"
-            aria-label={p.label}
-            variant="outline"
-            size="icon_lg"
-            className="h-12 w-12 rounded-full border-0 bg-[#252728] p-0 text-white hover:bg-[#373a3b] focus-visible:bg-[#373a3b]"
-            onClick={() => handleProvider(p.id)}
-            disabled={providerLoading}
+            type="submit"
+            size="lg"
+            className="w-full"
+            disabled={
+              !consentValue || mutation.status === "pending" || isSubmitting
+            }
           >
-            <img src={p.icon} alt="" aria-hidden="true" className="h-6 w-6" />
+            {mutation.status === "pending" || isSubmitting ? (
+              <>
+                <Icon icon="ph:spinner" className="mr-2 animate-spin" />
+                Регистрация...
+              </>
+            ) : (
+              "Зарегистрироваться"
+            )}
           </Button>
-        ))}
-      </div>
-    </div>
-  );
+        </div>
+      </form>
 
-  const form = (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2"
-    >
-      <div>
-        <Input
-          label="Имя"
-          placeholder="Введите имя"
-          {...register("firstName")}
-          error={errors.firstName?.message}
-          className="h-12 rounded-lg"
-        />
-      </div>
+      <p className="mt-8 text-[18px] text-foreground">
+        Зарегистрироваться через
+      </p>
+      <div className="flex w-full flex-col items-center gap-5">
+        <div className="h-px w-full bg-primary/70" />
 
-      <div>
-        <Input
-          label="Фамилия"
-          placeholder="Введите фамилию"
-          {...register("lastName")}
-          error={errors.lastName?.message}
-          className="h-12 rounded-lg"
-        />
-      </div>
+        <div className="flex items-center justify-center gap-4">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label="Войти через Яндекс"
+            onClick={() => handleProvider("yandex")}
+            disabled={providerLoading}
+            className="p-0 transition-opacity hover:opacity-80 [&_svg]:size-8"
+          >
+            <AppIcon name="yandex" size={32} />
+          </Button>
 
-      <div className="md:col-span-2">
-        <Input
-          label="E-mail"
-          placeholder="Введите E-mail"
-          type="email"
-          {...register("email")}
-          error={errors.email?.message}
-          className="h-12 rounded-lg"
-        />
-      </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label="Войти через Mail.ru"
+            onClick={() => handleProvider("mailru")}
+            disabled={providerLoading}
+            className="p-0 transition-opacity hover:opacity-80 [&_svg]:size-8"
+          >
+            <AppIcon name="mail-ru" size={32} />
+          </Button>
+        </div>
 
-      <div className="md:col-span-2">
-        <Input
-          label="Пароль"
-          placeholder="Введите пароль"
-          type={showPassword ? "text" : "password"}
-          {...register("password")}
-          error={errors.password?.message}
-          className="h-12 rounded-lg"
-          rightElement={
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
-              onClick={() => setShowPassword((s) => !s)}
-            >
-              <Icon icon={showPassword ? "ph:eye-slash" : "ph:eye"} />
-            </Button>
-          }
-        />
-      </div>
-
-      <div className="md:col-span-2">
         <Button
-          type="submit"
-          size="lg"
-          className="w-full"
-          disabled={mutation.status === "pending" || isSubmitting}
+          type="button"
+          variant="ghost"
+          size="sm"
+          className="font-normal text-foreground"
+          onClick={() => {
+            onOpenChange(false);
+            onOpenLogin?.();
+          }}
         >
-          {mutation.status === "pending" || isSubmitting ? (
-            <>
-              <Icon icon="ph:spinner" className="mr-2 animate-spin" />
-              Регистрация...
-            </>
-          ) : (
-            "Зарегистрироваться"
-          )}
+          Уже есть профиль?
         </Button>
       </div>
-    </form>
-  );
-
-  const switchLine = (
-    <div className="mt-4 text-center">
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        className="h-auto p-0 text-sm text-muted-foreground underline"
-        onClick={() => {
-          onOpenChange(false);
-          onOpenLogin?.();
-        }}
-      >
-        Уже есть профиль?
-      </Button>
-    </div>
+    </>
   );
 
   if (isMobile) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent side="bottom" showClose className="h-full">
-          <div className="flex h-full flex-col px-[5%] pt-6 pb-6">
+          <div className="flex h-full flex-col overflow-y-auto px-[5%] pt-6 pb-6">
             <SheetHeader>
-              <SheetTitle className="text-2xl">Регистрация</SheetTitle>
-              <SheetDescription className="mt-1">
+              <SheetTitle className="text-3xl font-semibold tracking-normal text-foreground">
+                Регистрация
+              </SheetTitle>
+              <SheetDescription className="text-[18px] text-foreground">
                 Регистрация профиля
               </SheetDescription>
             </SheetHeader>
 
-            <div className="mt-2 flex-1 overflow-auto">
-              {form}
-
-              <div className="mt-6">
-                <div className="mb-4 text-center text-sm text-muted-foreground">
-                  Зарегистрироваться через
-                </div>
-                {providersButtons}
-                {switchLine}
-              </div>
-            </div>
+            <div className="mt-2 flex-1">{renderContent()}</div>
           </div>
         </SheetContent>
       </Sheet>
@@ -303,26 +386,24 @@ export function RegistrationModal({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl">
-        <DialogHeader>
-          <DialogTitle className="text-2xl">Регистрация</DialogTitle>
-          <DialogDescription className="mt-1">
-            Регистрация профиля
-          </DialogDescription>
-        </DialogHeader>
-
-        {form}
-
-        <div className="mt-6">
-          <div className="mb-4 text-center text-xl text-muted-foreground">
-            Зарегистрироваться через
-          </div>
-          {providersButtons}
-          {switchLine}
+    <Modal
+      open={open}
+      onOpenChange={onOpenChange}
+      className="max-w-145 gap-0 p-5 sm:px-15 sm:py-12"
+    >
+      <div className="flex w-full flex-col items-center gap-3">
+        <div className="flex w-full justify-end">
+          <DialogClose
+            aria-label="Закрыть"
+            className="flex cursor-pointer text-foreground transition-opacity hover:opacity-70"
+          >
+            <AppIcon name="ph:x" size={24} />
+          </DialogClose>
         </div>
-      </DialogContent>
-    </Dialog>
+
+        {renderContent()}
+      </div>
+    </Modal>
   );
 }
 

@@ -12,16 +12,15 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const location = useLocation();
   const { openModal, setRedirectPath } = useAuthModalStore();
 
+  const redirectUrl = location.pathname + location.search;
+
   useEffect(() => {
     if (!isAuthed) {
-      // Сохраняем путь для редиректа после логина
-      setRedirectPath(location.pathname + location.search);
-      // Открываем модалку
+      setRedirectPath(redirectUrl);
       openModal();
     }
-  }, [isAuthed, location, openModal, setRedirectPath]);
+  }, [isAuthed, redirectUrl, openModal, setRedirectPath]);
 
-  // Если не авторизован - показываем null, модалка откроется
   if (!isAuthed) {
     return null;
   }

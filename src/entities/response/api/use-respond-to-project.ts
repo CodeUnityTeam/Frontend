@@ -1,22 +1,27 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "@/shared/api";
 import { toast } from "sonner";
+import type { CreateResponseResponse } from "../model/types";
 
-import { respondToProject } from "@/entities/response/api/respond-to-project";
-import { RESPONSES_QUERY_KEY } from "@/entities/response/api/use-responses";
-
-export function useRespondToProject() {
+export function useRespondToProject(projectId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (projectId: string) => respondToProject(projectId),
-
-    onSuccess: () => {
-      toast.success("Отклик отправлен");
-      queryClient.invalidateQueries({ queryKey: [RESPONSES_QUERY_KEY] });
+    mutationFn: async () => {
+      const { data } = await apiClient.post<CreateResponseResponse>(
+        `/projects/${projectId}/responses/`
+      );
+      return data;
     },
-
-    onError: (error) => {
-      toast.error(error.message);
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["responses"] });
+      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      toast.success("Отклик отправлен");
+    },
+    onError: (error: any) => {
+      const message = error?.response?.data?.detail || "Не удалось откликнуться на проект";
+      toast.error(message);
     },
   });
 }

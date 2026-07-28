@@ -4,23 +4,29 @@ import { useNavigate, useParams } from "react-router";
 import { Icon } from "@iconify/react";
 import { toast } from "sonner";
 
-import { deleteQuestion, getQuestion, updateQuestion } from "@/entities/question";
+import {
+  deleteQuestion,
+  getQuestion,
+  getQuestionDetailsQueryKey,
+  updateQuestion,
+} from "@/entities/question";
 import type { QuestionFormValues } from "@/entities/question";
 import { ConfirmModal } from "@/features/confirm-modal";
 import { useSkills } from "@/entities/skill";
+import { useSafeGoBack } from "@/shared/lib/hooks";
 import { ROUTES } from "@/shared/model/routes";
 import { PageContainer } from "@/shared/ui/page-container";
 import { QuestionForm } from "@/widgets/question-form";
 
 function QaEditPage() {
-  const navigate = useNavigate();
   const { id } = useParams();
-  const goBack = () => navigate(-1);
+  const navigate = useNavigate();
+  const goBack = useSafeGoBack({ fallbackTo: ROUTES.QA });
   const [isDeleteOpen, setDeleteOpen] = useState(false);
 
   const questionId = id ?? "";
   const questionQuery = useQuery({
-    queryKey: ["question-details", questionId],
+    queryKey: getQuestionDetailsQueryKey(questionId),
     queryFn: () => getQuestion(questionId),
     enabled: Boolean(questionId),
   });

@@ -3,6 +3,7 @@ import type {
   ProfileExperienceItem,
 } from "@/shared/api/profile";
 import type { AccountProfileProps, ExperienceItem } from "@/widgets/account";
+import { formatLastSeen } from "@/shared/lib/format-last-seen";
 
 function formatMonthYear(isoDate: string): string {
   const date = new Date(isoDate);
@@ -18,11 +19,14 @@ function formatMonthYear(isoDate: string): string {
 
 function mapExperience(item: ProfileExperienceItem): ExperienceItem {
   return {
+    id: item.pk,
     company: item.company,
     position: item.position,
     responsibilities: item.responsibilities,
     from: formatMonthYear(item.start_date),
     to: item.end_date ? formatMonthYear(item.end_date) : undefined,
+    startDate: item.start_date,
+    endDate: item.end_date,
   };
 }
 
@@ -31,9 +35,14 @@ export function buildAccountProfileProps(
 ): AccountProfileProps {
   return {
     profile: {
+      rating: profile.rating,
+      status: profile.last_login
+        ? `Онлайн ${formatLastSeen(profile.last_login)}`
+        : undefined,
       avatar: profile.avatar_url,
       name: [profile.first_name, profile.last_name].filter(Boolean).join(" "),
-      role: profile.specializations[0]?.name,
+      profession: profile.specializations[0]?.name,
+      role: profile.projects_relation,
       location: [profile.city, profile.country].filter(Boolean).join(", "),
     },
     skills: profile.skills.map((skill) => skill.name),

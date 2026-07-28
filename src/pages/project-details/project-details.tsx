@@ -2,18 +2,28 @@ import { useNavigate } from "react-router";
 import { Icon } from "@iconify/react";
 import { useProject } from "./hooks";
 import { useLikeProject } from "@/entities/project";
+import { useRespondToProject } from "@/entities/response";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar/avatar";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent } from "@/shared/ui/card/card";
 import { PageContainer } from "@/shared/ui/page-container/page-container";
 import { Tag } from "@/shared/ui/tag";
+import { cn } from "@/shared/lib/utils";
+import { formatLastSeen } from "@/shared/lib/format-last-seen";
+import { useIsAuthed } from "@/shared/lib/auth";
 
 function ProjectDetails() {
   const navigate = useNavigate();
+  const isAuthed = useIsAuthed();
 
-  const { data: project } = useProject()
-  
+  const { data: project } = useProject();
+
   const { mutate: toggleLike } = useLikeProject();
+  const {
+    mutate: respond,
+    isPending: isResponding,
+    isSuccess: hasResponded,
+  } = useRespondToProject(project?.project_id || "");
 
   if (!project || !Object.keys(project).length) return null;
 
@@ -22,6 +32,10 @@ function ProjectDetails() {
       projectId: project.project_id,
       liked: !project.is_liked_by_me,
     });
+  };
+
+  const handleApply = () => {
+    respond();
   };
 
   return (
@@ -51,12 +65,9 @@ function ProjectDetails() {
 
                   <div className="text-sm text-muted-foreground">
                     {project.author.last_activity_at
-                      ? `был(а) • ${new Date(
+                      ? `был(а) • ${formatLastSeen(
                           project.author.last_activity_at,
-                        ).toLocaleDateString("ru-RU", {
-                          day: "numeric",
-                          month: "long",
-                        })}`
+                        )}`
                       : "недавно"}
                   </div>
                 </div>
@@ -96,10 +107,28 @@ function ProjectDetails() {
               </div>
             </div>
 
-            {/* TO DO: Добавить проверку на то, что пользователь является участником проекта (#11_июля) */}
-            <Button variant="outline" className="mt-6 h-10 w-full">
-             Откликнуться
-            </Button>
+            {isAuthed && (
+              <Button
+                className={cn(
+                  "mt-6 h-10 w-full",
+                  hasResponded
+                    ? "border-(--color-light-gray-200) bg-muted text-muted-foreground"
+                    : "border-primary text-foreground hover:bg-primary/5",
+                )}
+                onClick={handleApply}
+                variant="outline"
+                type="button"
+                disabled={isResponding || hasResponded || !project?.project_id}
+              >
+                <Icon
+                  icon={
+                    hasResponded ? "ph:check-circle" : "ph:chats-teardrop-light"
+                  }
+                  className="mr-2 text-xl"
+                />
+                {hasResponded ? "Отклик отправлен" : "Откликнуться"}
+              </Button>
+            )}
           </CardContent>
         </Card>
 
@@ -126,7 +155,9 @@ function ProjectDetails() {
               >
                 <Icon
                   icon={project.is_liked_by_me ? "ph:heart-fill" : "ph:heart"}
-                  className={project.is_liked_by_me ? "text-primary" : undefined}
+                  className={
+                    project.is_liked_by_me ? "text-primary" : undefined
+                  }
                 />
               </Button>
             </div>
@@ -183,9 +214,7 @@ function ProjectDetails() {
                     >
                       <AvatarImage src={participant?.avatar_url} />
 
-                      <AvatarFallback>
-                        {participant?.full_name}
-                      </AvatarFallback>
+                      <AvatarFallback>{participant?.full_name}</AvatarFallback>
                     </Avatar>
                   ))}
                 </div>

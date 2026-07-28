@@ -6,10 +6,12 @@ export type QuestionAnswerDto = {
   content: string;
   author_name: string;
   author_rating: number;
+  author_avatar: string;
   created_at: string;
   likes_count: number;
   images: string[];
   is_owned_by_me: boolean;
+  is_liked_by_me: boolean;
 };
 
 export type QuestionDetailDto = {
@@ -19,8 +21,10 @@ export type QuestionDetailDto = {
   tags: string[];
   author_name: string;
   author_rating: number;
+  author_avatar: string;
   created_at: string;
   likes_count: number;
+  is_liked_by_me: boolean;
   images: string[];
   answers: QuestionAnswerDto[];
 };

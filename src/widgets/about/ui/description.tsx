@@ -1,23 +1,5 @@
-import { Icon } from "@iconify/react";
-
-function Header3({ text }: { text: string }) {
-  return (
-    <h3 className="mbe-4 md:mbe-6 text-4xl font-semibold">
-      {text}
-    </h3>
-  );
-}
-
-function SectionWhy({ image, text }: { image: string, text: string }) {
-  return (
-    <div className="flex gap-2 md:gap-4 mbe-2">
-      <Icon icon={image} height="24" />
-      <p>
-        {text}
-      </p>
-    </div>
-  );
-}
+import { SectionWhy } from "./section-why";
+import { Header3 } from "./header3";
 
 export function Description() {
   return (

@@ -6,10 +6,25 @@ import {
   useRole,
   type GetPeopleParams,
 } from "@/entities/profile";
-import { useProjects, type GetProjectsParams } from "@/entities/project";
+import {
+  useDeleteProject,
+  useProject,
+  useProjects,
+  type GetProjectsParams,
+} from "@/entities/project";
 import { useResponses } from "@/entities/response";
+import { ProjectModal } from "@/features/project-modal";
 import { useIsAuthed } from "@/shared/lib/auth";
 import { Button } from "@/shared/ui/button";
+import {
+  AlertModal,
+  AlertModalHeader,
+  AlertModalTitle,
+  AlertModalDescription,
+  AlertModalFooter,
+  AlertModalAction,
+  AlertModalCancel,
+} from "@/shared/ui/modal/alert-modal";
 import { PageContainer } from "@/shared/ui/page-container";
 import {
   FiltersProvider,
@@ -33,6 +48,10 @@ import { FilterTabs, projectTabs } from "@/widgets/filter-tabs";
 import { useState } from "react";
 import { useProjectStatus } from "@/shared/lib/hooks";
 
+import { formatDate } from "@/shared/lib/format-date";
+import { ProjectsGridSkeleton } from "./ui/projects-grid-skeleton";
+import { ProjectsError } from "./ui/projects-error";
+import { ProjectsEmpty } from "./ui/projects-empty";
 
 const PAGE_SIZE = 20;
 
@@ -48,67 +67,6 @@ const PEOPLE_SORT_MAP: Record<string, GetPeopleParams["sortBy"]> = {
   relevance: "relevance",
 };
 
-const dateFormatter = new Intl.DateTimeFormat("ru", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-});
-
-function formatDate(iso: string | null): string {
-
-  if (!iso) {
-    return "";
-  }
-  const date = new Date(iso);
-  return Number.isNaN(date.getTime()) ? "" : dateFormatter.format(date);
-}
-
-function ProjectsGridSkeleton() {
-  return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-[repeat(auto-fill,minmax(273px,1fr))] md:gap-x-3.5">
-      {Array.from({ length: 6 }).map((_, index) => (
-        <div
-          key={`project-skeleton-${index}`}
-          className="h-[370px] w-full animate-pulse rounded-lg bg-muted"
-        />
-      ))}
-    </div>
-  );
-}
-
-function ProjectsError({
-  onRetry,
-  message = "Не удалось загрузить проекты. Попробуйте ещё раз.",
-}: {
-  onRetry: () => void;
-  message?: string;
-}) {
-  return (
-    <div className="flex flex-col items-center gap-4 py-16 text-center">
-      <p className="text-muted-foreground">{message}</p>
-      <Button type="button" onClick={onRetry}>
-        Повторить
-      </Button>
-    </div>
-  );
-}
-
-function ProjectsEmpty({
-  title = "Пока нет проектов",
-  description = "Здесь появятся проекты, как только их опубликуют. Загляните чуть позже.",
-}: {
-  title?: string;
-  description?: string;
-}) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-2xl bg-muted px-6 py-16 text-center">
-      <Icon icon="ph:folder-dashed" className="size-12 text-muted-foreground" />
-      <h3 className="text-xl font-semibold text-foreground">{title}</h3>
-      <p className="max-w-md text-sm text-muted-foreground">{description}</p>
-    </div>
-  );
-}
-
 type ProjectsListProps = {
   search: string;
   favourites?: boolean;
@@ -117,6 +75,8 @@ type ProjectsListProps = {
   emptyDescription?: string;
   isOwner?: boolean;
   status?: GetProjectsParams['status'];
+  onEdit?: (projectId: string) => void;
+  onDelete?: (projectId: string) => void;
 };
 
 function ProjectsList({
@@ -127,6 +87,8 @@ function ProjectsList({
   emptyDescription,
   isOwner,
   status
+  onEdit,
+  onDelete,
 }: ProjectsListProps) {
   const { sort, selected, duration } = useFilters();
 
@@ -184,6 +146,9 @@ function ProjectsList({
               location={project.location}
               isFavoriteByMe={project.isFavoriteByMe}
               isOwner={isOwner}
+              participantsCount={project.participantsCount}
+              onEdit={onEdit}
+              onDelete={onDelete}
             />
           </li>
         ))}
@@ -414,6 +379,9 @@ function PeopleResponsesList() {
                   ? "Приглашение в проект"
                   : "Отклик на проект"
               } «${response.projectTitle}»`}
+              responseId={response.responseId}
+              responseStatus={response.status}
+              onAction={() => refetch()}
             />
           </li>
         ))}
@@ -444,15 +412,21 @@ function ProjectsPage() {
   const { role, isRolePending } = useRole();
   const [tab, setTab] = useState("catalog");
   const [search, setSearch] = useState("");
+  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
+  const [editProjectId, setEditProjectId] = useState<string | null>(null);
+  const [deleteProjectId, setDeleteProjectId] = useState<string | null>(null);
+
+  const { data: editProject } = useProject(editProjectId ?? undefined);
+  const { mutate: removeProject } = useDeleteProject();
 
   const isEmployer = role === "employer";
   const status = useProjectStatus(tab, isEmployer);
 
   const visibleTabs = isAuthed
-  ? isEmployer
-    ? projectTabs
-    : projectTabs.filter((item) => item.value !== "my-projects")
-  : projectTabs.filter((item) => item.value === "catalog");
+    ? isEmployer
+      ? projectTabs
+      : projectTabs.filter((item) => item.value !== "my-projects")
+    : projectTabs.filter((item) => item.value === "catalog");
   const activeTab = isAuthed ? tab : "catalog";
 
   const catalogContent = isEmployer ? (
@@ -496,7 +470,7 @@ function ProjectsPage() {
         <FiltersBar className="mb-6 hidden md:flex" />
 
         <div className="md:flex md:items-start md:gap-5">
-          <FiltersSidebar className="hidden md:block" />
+          <FiltersSidebar className="hidden md:flex" />
           <div className="flex-1">
             <div className="flex items-center justify-between gap-4">
               <FilterTabs
@@ -505,14 +479,27 @@ function ProjectsPage() {
                 onValueChange={setTab}
               />
               {activeTab === "my-projects" && isEmployer && (
-                <Button
-                  variant="ghost"
-                  type="button"
-                  className="hidden h-auto shrink-0 p-0 text-[18px] font-semibold md:flex"
-                >
-                  Создать проект
-                  <Icon icon="ph:plus-circle" />
-                </Button>
+                <>
+                  <Button
+                    variant="ghost"
+                    type="button"
+                    className="hidden h-auto shrink-0 p-0 text-[18px] font-semibold md:flex"
+                    onClick={() => setCreateModalOpen(true)}
+                  >
+                    Создать проект
+                    <Icon icon="ph:plus-circle" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    type="button"
+                    size="icon"
+                    className="shrink-0 md:hidden"
+                    aria-label="Создать проект"
+                    onClick={() => setCreateModalOpen(true)}
+                  >
+                    <Icon icon="ph:plus-circle" />
+                  </Button>
+                </>
               )}
             </div>
             {isRolePending ? (
@@ -531,12 +518,61 @@ function ProjectsPage() {
                     emptyTitle="У вас пока нет проектов"
                     emptyDescription="Создайте проект или присоединитесь к существующему — они появятся здесь."
                     isOwner
+                    onEdit={isEmployer ? setEditProjectId : undefined}
+                    onDelete={isEmployer ? setDeleteProjectId : undefined}
                   />
                 }
               />
             )}
           </div>
         </div>
+
+        <ProjectModal
+          open={isCreateModalOpen}
+          onOpenChange={setCreateModalOpen}
+          mode="create"
+        />
+
+        <ProjectModal
+          open={Boolean(editProjectId)}
+          onOpenChange={(open) => {
+            if (!open) {
+              setEditProjectId(null);
+            }
+          }}
+          mode="edit"
+          project={editProject}
+        />
+
+        <AlertModal
+          open={Boolean(deleteProjectId)}
+          onOpenChange={(open) => {
+            if (!open) {
+              setDeleteProjectId(null);
+            }
+          }}
+        >
+          <AlertModalHeader className="gap-2">
+            <Icon icon="ph:trash" className="size-16 text-foreground" />
+            <AlertModalTitle>Удалить проект?</AlertModalTitle>
+            <AlertModalDescription className="text-base">
+              Это действие приведёт к безвозвратному удалению всей информации о
+              проекте
+            </AlertModalDescription>
+          </AlertModalHeader>
+          <AlertModalFooter>
+            <AlertModalAction
+              onClick={() => {
+                if (deleteProjectId) {
+                  removeProject(deleteProjectId);
+                }
+              }}
+            >
+              Удалить
+            </AlertModalAction>
+            <AlertModalCancel>Отменить</AlertModalCancel>
+          </AlertModalFooter>
+        </AlertModal>
       </PageContainer>
     </FiltersProvider>
   );

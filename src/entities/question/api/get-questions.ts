@@ -22,9 +22,11 @@ function mapQuestionItem(dto: QuestionDto): QuestionsPage["items"][number] {
     tags: dto.tags,
     authorName: dto.author_name,
     authorRating: dto.author_rating,
+    authorAvatar: dto.author_avatar,
     createdAt: dto.created_at,
     likesCount: dto.likes_count,
     answersCount: dto.answers_count,
+    isLikedByMe: dto.is_liked_by_me,
   };
 }
 

@@ -1,69 +1,31 @@
 import React from "react";
-import { Button } from "@/shared/ui/button";
 import { Icon } from "@iconify/react";
+
+import { Button } from "@/shared/ui/button";
 import { EmptyState } from "@/widgets/account/ui/empty-state";
-import avatarImg from "@/shared/assets/images/account-avatar.jpg";
-import { accountData } from "@/widgets/account/model/account-data";
-import type {
-  AccountProfileProps,
-  SkillsFormData,
-} from "@/widgets/account/model/types";
+import AvatarPlaceholder from "@/shared/assets/images/avatar-placeholder.svg";
+import type { AccountProfileProps } from "@/widgets/account/model/types";
+import { ExperienceModal } from "@/widgets/account/ui/experience-modal";
+import { ProfileHeaderModal } from "@/widgets/account/ui/profile-header-modal";
 import { SetSkillsModal } from "@/widgets/set-skills-modal";
 
-import { ExperienceModal } from "@/widgets/account/ui/experience-modal";
-
 export const AccountProfile = ({
-  profile,
-  skills,
-  qualities,
-  about,
-  experience,
+  profile: profileData,
+  skills: skillsData,
+  qualities: qualitiesData,
+  about: aboutData,
+  experience: experienceData,
 }: AccountProfileProps) => {
   const [tab, setTab] = React.useState<"profile" | "experience">("profile");
-  const [isSkillsModalOpen, setSkillsModalOpen] =
-    React.useState<boolean>(false);
 
-  const [isExperienceModalOpen, setIsExperienceModalOpen] =
-    React.useState(false);
-
-  const profileData = profile ?? {
-    ...accountData.profile,
-    avatar: accountData.profile.avatar || avatarImg,
-  };
-
-  const skillsData = skills ?? accountData.skills;
-
-  const qualitiesData = qualities ?? accountData.qualities;
-
-  const aboutData = about ?? accountData.about;
-
-  const experienceData = experience ?? accountData.experience;
+  const [activeModal, setActiveModal] = React.useState<
+    "header" | "skills" | "experience" | null
+  >(null);
 
   const hasProfileData =
     skillsData.length > 0 || qualitiesData.length > 0 || Boolean(aboutData);
 
-  const [skillsFormData, setSkillsFormData] = React.useState<SkillsFormData>({
-    skills: skillsData || [],
-    qualities: qualitiesData || [],
-    about: aboutData || "",
-  });
-
-  const handleSkillsFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    alert("В разработке");
-  };
-
-  const handleSkillsChange = (newSkills: string[]) => {
-    setSkillsFormData((prev) => ({ ...prev, skills: newSkills }));
-  };
-
-  const handleQualitiesChange = (newQualities: string[]) => {
-    setSkillsFormData((prev) => ({ ...prev, qualities: newQualities }));
-  };
-
-  const handleAboutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSkillsFormData((prev) => ({ ...prev, about: e.target.value }));
-  };
+  const editableExperience = experienceData.find((item) => item.id);
 
   return (
     <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[413px_1fr]">
@@ -83,7 +45,7 @@ export const AccountProfile = ({
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => alert("В разработке")}
+            onClick={() => setActiveModal("header")}
             className="h-6 w-6 p-0"
           >
             <Icon
@@ -94,13 +56,11 @@ export const AccountProfile = ({
         </div>
 
         <div className="mt-1 flex flex-col items-center text-center">
-          {profileData.avatar && (
-            <img
-              src={profileData.avatar || avatarImg}
-              alt={profileData.name}
-              className="h-32 w-32 rounded-full object-cover sm:h-45 sm:w-45"
-            />
-          )}
+          <img
+            src={profileData.avatar || AvatarPlaceholder}
+            alt={profileData.name}
+            className="h-32 w-32 rounded-full object-cover sm:h-45 sm:w-45"
+          />
 
           {profileData.status && (
             <p className="mt-6 text-[16px] leading-[150%] text-muted-foreground">
@@ -155,20 +115,12 @@ export const AccountProfile = ({
             </button>
           </div>
 
-          <SetSkillsModal
-            open={isSkillsModalOpen}
-            onOpenChange={setSkillsModalOpen}
-            formData={skillsFormData}
-            onSubmit={handleSkillsFormSubmit}
-            onSkillsChange={handleSkillsChange}
-            onQualitiesChange={handleQualitiesChange}
-            onAboutChange={handleAboutChange}
-          />
           {tab === "experience" && (
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setIsExperienceModalOpen(true)}
+              aria-label="Редактировать опыт работы"
+              onClick={() => setActiveModal("experience")}
               className="text-foreground hover:text-foreground"
             >
               <Icon icon="ph:pencil-simple-line" className="h-5 w-5" />
@@ -179,7 +131,7 @@ export const AccountProfile = ({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setSkillsModalOpen(!isSkillsModalOpen)}
+              onClick={() => setActiveModal("skills")}
               className="text-foreground hover:text-foreground"
             >
               <Icon icon="ph:pencil-simple-line" className="h-5 w-5" />
@@ -254,7 +206,7 @@ export const AccountProfile = ({
                 </div>
               ) : (
                 experienceData.map((item, i) => (
-                  <section key={i}>
+                  <section key={item.id ?? i}>
                     <h4 className="text-[20px] font-semibold">
                       {item.company}
                     </h4>
@@ -279,10 +231,32 @@ export const AccountProfile = ({
         </div>
       </main>
 
-      <ExperienceModal
-        open={isExperienceModalOpen}
-        onOpenChange={setIsExperienceModalOpen}
-      />
+      {activeModal === "header" && (
+        <ProfileHeaderModal
+          open
+          onOpenChange={(open) => setActiveModal(open ? "header" : null)}
+        />
+      )}
+
+      {activeModal === "skills" && (
+        <SetSkillsModal
+          open
+          onOpenChange={(open) => setActiveModal(open ? "skills" : null)}
+          defaultValues={{
+            skills: skillsData,
+            qualities: qualitiesData,
+            about: aboutData,
+          }}
+        />
+      )}
+
+      {activeModal === "experience" && (
+        <ExperienceModal
+          open
+          onOpenChange={(open) => setActiveModal(open ? "experience" : null)}
+          experience={editableExperience}
+        />
+      )}
     </div>
   );
 };

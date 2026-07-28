@@ -8,13 +8,11 @@ import { toast } from "sonner";
 import { likeQuestion } from "./like-question";
 import { type QuestionDetailDto } from "./get-question";
 import { QUESTIONS_QUERY_KEY } from "./use-questions";
+import { QUESTION_DETAILS_QUERY_KEY } from "./question-details-query-key";
 import type {
   QuestionItem,
   QuestionsPage,
 } from "@/entities/question/model/types";
-import { useQuestionLikesStore } from "@/shared/store/question-likes-store";
-
-const QUESTION_DETAILS_QUERY_KEY = "question-details" as const;
 
 type QuestionsListData = QuestionsPage | InfiniteData<QuestionsPage>;
 
@@ -41,6 +39,7 @@ function patchListLiked(
         item.id === questionId
           ? {
               ...item,
+              isLikedByMe: liked,
               likesCount:
                 likesCount ?? Math.max(0, item.likesCount + (liked ? 1 : -1)),
             }
@@ -66,6 +65,7 @@ function patchDetailLiked(
       ? detail
       : {
           ...detail,
+          is_liked_by_me: liked,
           likes_count:
             likesCount ?? Math.max(0, detail.likes_count + (liked ? 1 : -1)),
         };
@@ -91,11 +91,6 @@ export function useLikeQuestion() {
         queryKey: [QUESTION_DETAILS_QUERY_KEY],
       });
 
-      const previousLiked =
-        useQuestionLikesStore.getState().likedQuestionIds[questionId] ?? false;
-
-      useQuestionLikesStore.getState().setQuestionLiked(questionId, liked);
-
       queryClient.setQueriesData<QuestionsListData>(
         { queryKey: [QUESTIONS_QUERY_KEY] },
         patchListLiked(questionId, liked),
@@ -105,10 +100,10 @@ export function useLikeQuestion() {
         patchDetailLiked(questionId, liked),
       );
 
-      return { prevLists, prevDetails, previousLiked };
+      return { prevLists, prevDetails };
     },
 
-    onError: (_error, { questionId }, context) => {
+    onError: (_error, _vars, context) => {
       context?.prevLists.forEach(([key, data]) =>
         queryClient.setQueryData(key, data),
       );
@@ -116,17 +111,10 @@ export function useLikeQuestion() {
         queryClient.setQueryData(key, data),
       );
 
-      useQuestionLikesStore.getState().setQuestionLiked(
-        questionId,
-        context?.previousLiked ?? false,
-      );
-
       toast.error("Не удалось обновить лайк. Попробуйте ещё раз.");
     },
 
     onSuccess: (data, { questionId }) => {
-      useQuestionLikesStore.getState().setQuestionLiked(questionId, data.liked);
-
       queryClient.setQueriesData<QuestionsListData>(
         { queryKey: [QUESTIONS_QUERY_KEY] },
         patchListLiked(questionId, data.liked, data.likesCount),

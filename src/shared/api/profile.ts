@@ -1,5 +1,7 @@
 import { apiClient } from "./index";
 
+export type ProjectsRelation = "employer" | "worker";
+
 export type ProfileSkillItem = {
   skill_id: string;
   name: string;
@@ -29,8 +31,8 @@ export type CurrentUserProfile = {
   email: string;
   first_name: string;
   last_name: string;
-  role: string;
-  projects_relation: "employer" | "worker";
+  role: ProjectsRelation;
+  projects_relation: ProjectsRelation;
   phone_number: string;
   additional_contact: string;
   country: string;
@@ -43,6 +45,7 @@ export type CurrentUserProfile = {
   workformats: ProfileWorkFormatItem[];
   experiences: ProfileExperienceItem[];
   rating: number;
+  last_login: string | null;
 };
 
 export type OnboardingPrefill = {
@@ -54,7 +57,7 @@ export type OnboardingPrefill = {
 export type ProfileUpdateRequest = {
   first_name?: string;
   last_name?: string;
-  projects_relation?: "employer" | "worker";
+  projects_relation?: ProjectsRelation;
   phone_number?: string;
   additional_contact?: string;
   country?: string;
@@ -73,6 +76,8 @@ export type ExperienceCreateRequest = {
   start_date: string;
   end_date: string | null;
 };
+
+export type ExperienceUpdateRequest = ExperienceCreateRequest;
 
 type ApiObject = Record<string, unknown>;
 
@@ -138,6 +143,21 @@ export async function createExperience(payload: ExperienceCreateRequest) {
   return data;
 }
 
+export async function updateExperience(
+  id: string,
+  payload: ExperienceUpdateRequest,
+) {
+  const { data } = await apiClient.put<ApiObject>(
+    `/user/profile/me/experience/${id}/`,
+    payload,
+  );
+  return data;
+}
+
+export async function deleteExperience(id: string): Promise<void> {
+  await apiClient.delete(`/user/profile/me/experience/${id}/`);
+}
+
 export async function uploadCurrentUserAvatar(file: File) {
   const formData = new FormData();
   formData.append("file", file);
@@ -160,4 +180,8 @@ export async function uploadCurrentUserAvatar(file: File) {
   }
 
   return "";
+}
+
+export async function deleteCurrentUserAvatar(): Promise<void> {
+  await apiClient.delete("/user/profile/me/avatar/");
 }

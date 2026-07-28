@@ -13,7 +13,7 @@ import {
 
 import { cn } from "@/shared/lib/utils";
 
-import { buttonVariants } from "../button/button";
+import { buttonVariants } from "@/shared/ui/button/styles";
 
 const AlertDialog = Root;
 
