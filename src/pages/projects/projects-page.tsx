@@ -46,6 +46,8 @@ import { ResponseCard } from "@/widgets/response-card";
 import { Search } from "@/widgets/search";
 import { FilterTabs, projectTabs } from "@/widgets/filter-tabs";
 import { useState } from "react";
+import { useProjectStatus } from "@/shared/lib/hooks";
+
 import { formatDate } from "@/shared/lib/format-date";
 import { ProjectsGridSkeleton } from "./ui/projects-grid-skeleton";
 import { ProjectsError } from "./ui/projects-error";
@@ -72,6 +74,7 @@ type ProjectsListProps = {
   emptyTitle?: string;
   emptyDescription?: string;
   isOwner?: boolean;
+  status?: GetProjectsParams['status'];
   onEdit?: (projectId: string) => void;
   onDelete?: (projectId: string) => void;
 };
@@ -83,6 +86,7 @@ function ProjectsList({
   emptyTitle,
   emptyDescription,
   isOwner,
+  status
   onEdit,
   onDelete,
 }: ProjectsListProps) {
@@ -108,6 +112,7 @@ function ProjectsList({
     favourites,
     myProject,
     search,
+    status
   });
 
   if (isPending) {
@@ -415,6 +420,7 @@ function ProjectsPage() {
   const { mutate: removeProject } = useDeleteProject();
 
   const isEmployer = role === "employer";
+  const status = useProjectStatus(tab, isEmployer);
 
   const visibleTabs = isAuthed
     ? isEmployer
@@ -426,7 +432,7 @@ function ProjectsPage() {
   const catalogContent = isEmployer ? (
     <PeopleList search={search} />
   ) : (
-    <ProjectsList search={search} />
+    <ProjectsList search={search} status={status} />
   );
 
   const favoritesContent = isEmployer ? (
@@ -439,6 +445,7 @@ function ProjectsPage() {
   ) : (
     <ProjectsList
       search={search}
+      status={status}
       favourites
       emptyTitle="В избранном пусто"
       emptyDescription="Добавляйте проекты в избранное — нажимайте на сердечко в карточке."
@@ -506,6 +513,7 @@ function ProjectsPage() {
                 myProjects={
                   <ProjectsList
                     search={search}
+                    status={status}
                     myProject
                     emptyTitle="У вас пока нет проектов"
                     emptyDescription="Создайте проект или присоединитесь к существующему — они появятся здесь."
