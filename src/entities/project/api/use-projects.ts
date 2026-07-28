@@ -10,10 +10,28 @@ export const PROJECTS_QUERY_KEY = "entities/project/list" as const;
 export function useProjects(params: GetProjectsParams = {}) {
   const pageSize = params.pageSize ?? DEFAULT_PAGE_SIZE;
 
+  const queryKey = [
+    PROJECTS_QUERY_KEY,
+    {
+      favourites: !!params.favourites,
+      myProject: !!params.myProject,
+      search: params.search ?? "",
+      sortBy: params.sortBy ?? "published_at",
+      formatId: params.formatId,
+      specId: params.specId,
+      skillsId: params.skillsId,
+      duration: params.duration,
+    },
+  ];
+  
   return useInfiniteQuery({
-    queryKey: [PROJECTS_QUERY_KEY, { ...params, pageSize }],
-    queryFn: ({ pageParam }) =>
-      getProjects({ ...params, page: pageParam, pageSize }),
+    queryKey,
+    queryFn: ({ pageParam = 1 }) => 
+      getProjects({
+        ...params,
+        page: pageParam,
+        pageSize,
+      }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) =>
       lastPage.hasMore ? allPages.length + 1 : undefined,

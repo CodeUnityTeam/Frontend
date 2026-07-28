@@ -21,7 +21,8 @@ export async function getProjects(
     duration,
     favourites,
     myProject,
-    search
+    search,
+    status,
   } = params;
 
   const { data } = await apiClient.get<ProjectsResponseDto>("/projects/", {
@@ -29,15 +30,16 @@ export async function getProjects(
       page,
       limit: pageSize,
       ...(sortBy && { sort_by: sortBy }),
-      ...(skillsId && skillsId?.length > 0 && { skills_id: skillsId.join(",") }),
-      ...(formatId && formatId?.length > 0 && { format_id: formatId.join(",") }),
-      ...(specId && specId?.length > 0 && { spec_id: specId.join(",") }),
+      ...(skillsId && skillsId.length > 0 && { skills_id: skillsId.join(",") }),
+      ...(formatId && formatId.length > 0 && { format_id: formatId.join(",") }),
+      ...(specId && specId.length > 0 && { spec_id: specId.join(",") }),
       ...(duration?.operator && { duration_operator: duration.operator }),
       ...(duration?.min && { duration_min: duration.min }),
       ...(duration?.max && { duration_max: duration.max }),
       ...(favourites && { favourites }),
       ...(myProject && { my_project: "true" }),
       ...(search?.trim() && { search: search.trim() }),
+      ...(status && { status }),
       /*
         TO DO: ДОБАВИТЬ ПАРАМЕТРЫ ДЛЯ БЭКОВ (#11_июля)
 

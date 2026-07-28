@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useRole } from "@/entities/profile";
 
 import { useLikeProject } from "@/entities/project";
@@ -13,7 +13,7 @@ import {
   statusLabels,
   statusBadgeClass,
 } from "@/widgets/response-card/model/status";
-
+import { useWithdrawResponse } from "@/entities/response/api/use-withdraw-response";
 
 type ResponseCardProps = {
   response: ProjectResponse;
@@ -22,9 +22,9 @@ type ResponseCardProps = {
 // Статусы для Worker
 const workerStatusMap: Record<string, { label: string; className: string }> = {
   pending: { label: "Отклик отправлен", className: "text-muted-foreground" },
-  approved: { label: "Вас приняли", className: "text-foreground" },
-  rejected: { label: "Вам отказали", className: "text-foreground" },
-  withdrawn: { label: "Ваш отклик", className: "text-foreground" },
+  approved: { label: "Отклик принят", className: "text-foreground" },
+  rejected: { label: "Отклик отказан", className: "text-foreground" },
+  withdrawn: { label: "Отклик отозван", className: "text-foreground" },
 };
 
 // Статусы для Employer
@@ -39,8 +39,10 @@ export function ResponseCard({ response }: ResponseCardProps) {
 
   const queryClient = useQueryClient();
   const { mutate: toggleLike } = useLikeProject();
+  const { mutate: withdraw, isPending: isWithdrawPending } = useWithdrawResponse();
+  const [isWithdrawn, setIsWithdrawn] = useState(false);
 
-  const { projectId, isLikedByMe } = response;
+  const { projectId, isLikedByMe, responseId, status } = response;
 
   const handleLike = useCallback(() => {
     toggleLike(
@@ -52,13 +54,35 @@ export function ResponseCard({ response }: ResponseCardProps) {
     );
   }, [toggleLike, queryClient, projectId, isLikedByMe]);
 
+  const handleWithdraw = useCallback(() => {
+    if (window.confirm("Вы уверены, что хотите отозвать свой отклик?")) {
+      withdraw(
+        { responseId },
+        {
+          onSuccess: () => {
+            setIsWithdrawn(true);
+            queryClient.invalidateQueries({ queryKey: [RESPONSES_QUERY_KEY] });
+          },
+        }
+      );
+    }
+  }, [withdraw, responseId, queryClient]);
+
   const date = formatDate(response.createdAt);
 
-  // Для Worker: кнопка активна только если статус "approved"
-  const isContactActive = isWorker && response.status === "approved";
+  // Отклик уже отозван (через API или локально)
+  const isResponseWithdrawn = status === "withdrawn" || isWithdrawn;
+
+  // Для Worker: кнопка активна только если статус "approved" и не отозван
+  const isContactActive = isWorker && response.status === "approved" && !isResponseWithdrawn;
+
+  // Для Worker: показываем кнопку "Отозвать" только если статус "pending" и не отозван
+  const showWithdrawButton = isWorker && status === "pending" && !isResponseWithdrawn;
+
   const contactButtonStyles = isContactActive
     ? "border-primary text-foreground hover:bg-primary/5"
     : "border-(--color-light-gray-200) bg-muted text-muted-foreground cursor-not-allowed";
+    
   return (
     <div className="flex h-full w-full flex-col rounded-lg border border-border p-4">
       <div className="mb-3 flex items-center justify-between gap-2">
@@ -140,22 +164,50 @@ export function ResponseCard({ response }: ResponseCardProps) {
           )}
         </div>
 
-        {/* Для Worker: кнопка "Связаться" - активна только если "Вас приняли" */}
+        {/* Блок кнопок для Worker */}
         {isWorker && (
-          <Button
-            variant="ghost"
-            type="button"
-            disabled={!isContactActive}
-            className={cn(contactButtonClass, contactButtonStyles)}
-            onClick={() => {
-              if (isContactActive && response.authorEmail) {
-                window.location.href = `mailto:${response.authorEmail}`;
-              }
-            }}
-          >
-            <Icon icon="ph:chats-teardrop-light" className="text-xl" />
-            <span>Связаться</span>
-          </Button>
+          <div className="flex gap-2">
+            {/* Кнопка "Связаться" */}
+            <Button
+              variant="ghost"
+              type="button"
+              disabled={!isContactActive}
+              className={cn(contactButtonClass, contactButtonStyles)}
+              onClick={() => {
+                if (isContactActive && response.authorEmail) {
+                  window.location.href = `mailto:${response.authorEmail}`;
+                }
+              }}
+            >
+              <Icon icon="ph:chats-teardrop-light" className="text-xl" />
+              <span>Связаться</span>
+            </Button>
+
+            {/* Кнопка "Отозвать отклик" */}
+            {showWithdrawButton && (
+              <Button
+                variant="outline"
+                type="button"
+                disabled={isWithdrawPending}
+                className="flex w-full items-center justify-center gap-1 rounded-xl border-(--color-light-gray-200) py-2 text-[16px] font-semibold text-destructive hover:bg-destructive/10"
+                onClick={handleWithdraw}
+              >
+                <Icon 
+                  icon={isWithdrawPending ? "ph:spinner" : "ph:x"} 
+                  className={cn("text-xl", isWithdrawPending && "animate-spin")}
+                />
+                <span>{isWithdrawPending ? "Отзыв..." : "Отозвать"}</span>
+              </Button>
+            )}
+
+            {/* Если отклик уже отозван - показываем статус */}
+            {isResponseWithdrawn && (
+              <div className="flex w-full items-center justify-center gap-1 rounded-xl border border-muted bg-muted/50 py-2 text-[16px] font-medium text-muted-foreground">
+                <Icon icon="ph:check-circle" className="text-xl" />
+                <span>Отклик отозван</span>
+              </div>
+            )}
+          </div>
         )}
 
         {/* Для Employer: кнопка "Связаться" - активна только если approved */}

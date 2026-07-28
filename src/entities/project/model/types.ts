@@ -10,7 +10,7 @@ export interface Project {
   title: string;
   shortDesc: string;
   location: string;
-  status: string;
+  status: ProjectStatus;
   publishedAt: string | null;
   participantsCount: number;
   isLikedByMe: boolean;
@@ -58,6 +58,7 @@ export interface GetProjectsParams {
   search?: string;
   favourites?: boolean;
   myProject?: boolean;
+  status?: "draft" | "published" | "recruiting_closed";
 }
 
 export interface GetRecommendationsParams {
@@ -115,3 +116,15 @@ export interface UserProfile {
   role: ProjectsRelation;
   projects_relation: ProjectsRelation;
 }
+
+export type ProjectStatus =
+  | "draft"
+  | "published"
+  | "recruiting_closed"
+  | "archived"
+  | "blocked";
+
+export type InviteProject = Pick<
+  Project,
+  "projectId" | "title" | "shortDesc"
+>;

@@ -7,7 +7,6 @@ import {
   type Person,
   type PersonResponseStatus,
 } from "@/entities/profile";
-import { useInviteUser } from "@/entities/project";
 import { cn } from "@/shared/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
@@ -16,13 +15,13 @@ import { ResponseActions } from "@/features/response-actions";
 
 type PersonCardProps = {
   person: Person;
-  projectId?: string;
   badge?: string;
   badgeClassName?: string;
   note?: string;
   responseId?: string;
   responseStatus?: PersonResponseStatus;
   onAction?: () => void;
+  onInvite?: (userId: string) => void;
 };
 
 // Статусы для Employer (внизу карточки)
@@ -34,18 +33,17 @@ const employerStatusMap: Record<string, { label: string; icon: string }> = {
 
 export function PersonCard({
   person,
-  projectId,
   badge,
   badgeClassName,
   note,
   responseId,
   responseStatus,
   onAction,
+  onInvite,
 }: PersonCardProps) {
   const { role } = useRole();
   const isEmployer = role === "employer";
   const { mutate: toggleLike } = useLikePerson();
-  const { mutate: invite, isPending: isInviting } = useInviteUser();
 
   const { userId, isLiked } = person;
 
@@ -182,18 +180,28 @@ export function PersonCard({
           </>
         )}
 
-        {/* Для worker: кнопка "Связаться" */}
+        {isEmployer && !responseStatus && onInvite && (
+          <Button
+            variant="ghost"
+            type="button"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-primary py-2 text-[16px] font-semibold"
+            onClick={() => onInvite(userId)}
+          >
+            <Icon icon="ph:paper-plane-tilt" className="text-xl" />
+            Пригласить
+          </Button>
+        )}
+
         {!isEmployer && (
           <Button
             variant="ghost"
             type="button"
-            title="Бэк пока не отдаёт контакты соискателя"
-            disabled={!projectId || isInviting}
-            className="flex w-full items-center justify-center gap-1 rounded-xl border border-primary py-2 text-[16px] font-semibold text-foreground disabled:border-(--color-light-gray-200) disabled:bg-muted disabled:text-muted-foreground"
-            onClick={() => projectId && invite({ projectId, userId })}
+            disabled
+            title="Контакты будут доступны после реализации API"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-primary py-2 text-[16px] font-semibold"
           >
             <Icon icon="ph:chats-teardrop-light" className="text-xl" />
-            <span>Связаться</span>
+            Связаться
           </Button>
         )}
       </div>
