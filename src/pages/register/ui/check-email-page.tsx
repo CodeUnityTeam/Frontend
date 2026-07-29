@@ -225,6 +225,12 @@ function CheckEmailPage() {
                     setManualMessage("");
                   }
                 }}
+                onKeyDown={(event) => {
+                  if (isVerified && event.key === "Enter") {
+                    event.preventDefault();
+                    void handleContinue();
+                  }
+                }}
                 error={manualStatus === "error" ? manualMessage : undefined}
                 className="h-12 rounded-lg"
               />
