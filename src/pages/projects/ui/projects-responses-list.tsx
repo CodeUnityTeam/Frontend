@@ -6,6 +6,7 @@ import { ProjectsEmpty } from "../ui/projects-empty";
 import { useResponses } from "@/entities/response";
 import { PAGE_SIZE } from "../lib/constants"
 import { ResponseCard } from "@/widgets/response-card";
+import { useRole } from "@/entities/profile";
 
 export function ProjectsResponsesList() {
   const {
@@ -17,9 +18,20 @@ export function ProjectsResponsesList() {
     fetchNextPage,
     refetch,
   } = useResponses({ limit: PAGE_SIZE });
+  
+  console.log(
+    "PROJECT RESPONSES ITEMS:",
+    data?.pages.flatMap((page) => page.items)
+  );
 
-  if (isPending) {
+  const { role, isRolePending } = useRole();
+
+  if (isPending || isRolePending) {
     return <ProjectsGridSkeleton />;
+  }
+
+  if (!role) {
+    return null;
   }
 
   if (isError) {
@@ -50,7 +62,7 @@ export function ProjectsResponsesList() {
       <ul className="grid grid-cols-1 gap-4 md:auto-rows-fr md:grid-cols-[repeat(auto-fill,minmax(273px,1fr))] md:gap-x-3.5">
         {responses.map((response) => (
           <li key={response.responseId}>
-            <ResponseCard response={response} />
+            <ResponseCard response={response} role={role} />
           </li>
         ))}
       </ul>
