@@ -86,7 +86,7 @@ function ProjectsList({
   emptyTitle,
   emptyDescription,
   isOwner,
-  status
+  status,
   onEdit,
   onDelete,
 }: ProjectsListProps) {
