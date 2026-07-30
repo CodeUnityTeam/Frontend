@@ -50,8 +50,6 @@ export function buildProfileUpdatePayload(
   data: RegisterFormData,
   catalogs: OnboardingCatalogs,
 ): ProfileUpdateRequest {
-  // Registration already persisted the user's name fields.
-  // Onboarding finish only updates profile details that are optional here.
   const payload: ProfileUpdateRequest = {
     projects_relation: data.employmentRole,
     workformats: resolveWorkformatIds(data.format, catalogs.formats),

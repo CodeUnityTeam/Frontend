@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { Icon } from "@iconify/react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -42,6 +42,7 @@ function CheckEmailPage() {
   const [manualKey, setManualKey] = useState("");
   const [manualStatus, setManualStatus] = useState<ManualVerifyStatus>("idle");
   const [manualMessage, setManualMessage] = useState<string>("");
+  const continueSubmissionRef = useRef(false);
   const hasPrefillEmail = Boolean(email);
   const isVerified = manualStatus === "success";
   const primaryButtonLabel = isVerified
@@ -53,24 +54,34 @@ function CheckEmailPage() {
       : "Подтвердить email";
 
   const handleContinue = async () => {
-    if (email && password) {
-      try {
-        await loginMutation.mutateAsync({ email, password });
-        navigate(ROUTES.ONBOARDING, { state: { prefill } });
-        return;
-      } catch {
-        toast.error("Не удалось войти автоматически. Войдите вручную.");
-        openAuthLogin();
-        return;
-      }
-    }
-
-    if (hasPrefillEmail) {
-      navigate(ROUTES.ONBOARDING, { state: { prefill } });
+    if (continueSubmissionRef.current || loginMutation.isPending) {
       return;
     }
 
-    openAuthLogin();
+    continueSubmissionRef.current = true;
+
+    try {
+      if (email && password) {
+        try {
+          await loginMutation.mutateAsync({ email, password });
+          navigate(ROUTES.ONBOARDING, { state: { prefill } });
+          return;
+        } catch {
+          toast.error("Не удалось войти автоматически. Войдите вручную.");
+          openAuthLogin();
+          return;
+        }
+      }
+
+      if (hasPrefillEmail) {
+        navigate(ROUTES.ONBOARDING, { state: { prefill } });
+        return;
+      }
+
+      openAuthLogin();
+    } finally {
+      continueSubmissionRef.current = false;
+    }
   };
 
   const handleManualSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -239,7 +250,7 @@ function CheckEmailPage() {
                 <Button
                   type={isVerified ? "button" : "submit"}
                   className="w-full sm:order-2 sm:w-auto"
-                  disabled={manualStatus === "loading"}
+                  disabled={manualStatus === "loading" || loginMutation.isPending}
                   onClick={isVerified ? handleContinue : undefined}
                 >
                   {primaryButtonLabel}
