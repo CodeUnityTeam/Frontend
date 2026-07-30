@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/shared/api";
 import { RESPONSES_QUERY_KEY } from "@/entities/response";
+import { PEOPLE_RESPONSES_QUERY_KEY } from "@/entities/profile";
 
 type WithdrawResponseParams = {
   responseId: string;
@@ -19,7 +20,13 @@ export const useWithdrawResponse = () => {
     },
     onSuccess: () => {
       // Инвалидируем ленту откликов после отзыва
-      queryClient.invalidateQueries({ queryKey: [RESPONSES_QUERY_KEY] });
+      queryClient.invalidateQueries({
+        queryKey: [RESPONSES_QUERY_KEY]
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [PEOPLE_RESPONSES_QUERY_KEY],
+  });
     },
   });
 };

@@ -19,11 +19,6 @@ export function PeopleResponsesList() {
     refetch,
   } = usePeopleResponses({ limit: PAGE_SIZE });
 
-  console.log(
-    "PEOPLE RESPONSES:",
-    data?.pages.flatMap((page) => page.items)
-  );
-
   if (isPending) {
     return <ProjectsGridSkeleton />;
   }

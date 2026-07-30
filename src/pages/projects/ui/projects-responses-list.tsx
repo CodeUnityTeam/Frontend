@@ -19,11 +19,6 @@ export function ProjectsResponsesList() {
     refetch,
   } = useResponses({ limit: PAGE_SIZE });
   
-  console.log(
-    "PROJECT RESPONSES ITEMS:",
-    data?.pages.flatMap((page) => page.items)
-  );
-
   const { role, isRolePending } = useRole();
 
   if (isPending || isRolePending) {
