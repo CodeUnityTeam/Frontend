@@ -19,6 +19,7 @@ type ProjectsListProps = {
   search: string;
   favourites?: boolean;
   myProject?: boolean;
+  status?: GetProjectsParams["status"];
   emptyTitle?: string;
   emptyDescription?: string;
   isOwner?: boolean;
@@ -31,6 +32,7 @@ export function ProjectsList({
   search,
   favourites,
   myProject,
+  status,
   emptyTitle,
   emptyDescription,
   isOwner,
@@ -60,6 +62,7 @@ export function ProjectsList({
     favourites,
     myProject,
     search,
+    status,
   });
 
   if (isPending) {
