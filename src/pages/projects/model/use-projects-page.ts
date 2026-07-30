@@ -1,9 +1,7 @@
-import { useMemo, useState } from "react";
-
+import { useState } from "react";
 import {
   useDeleteProject,
   useProject,
-  useProjects
 } from "@/entities/project";
 
 export function useProjectsPage() {
@@ -31,21 +29,6 @@ export function useProjectsPage() {
   const { mutate: removeProject } = useDeleteProject();
 
   const { data: editProject } = useProject(editProjectId ?? undefined);
-
-  const { data: myProjectsData } = useProjects({
-    myProject: true,
-    status: "published",
-    pageSize: 100,
-  });
-
-  // ==========================
-  // Memo
-  // ==========================
-
-  const inviteProjects = useMemo(
-    () => myProjectsData?.pages.flatMap((page) => page.items) ?? [],
-    [myProjectsData],
-  );
 
   // ==========================
   // Actions
@@ -124,7 +107,6 @@ export function useProjectsPage() {
 
     // invite
     inviteModal,
-    inviteProjects,
     openInviteModal,
     closeInviteModal,
   };

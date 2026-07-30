@@ -59,7 +59,7 @@ function ProjectsPage() {
     confirmDeleteProject,
 
     inviteModal,
-    inviteProjects,
+    // inviteProjects,
     openInviteModal,
     closeInviteModal,
   } = useProjectsPage();
@@ -169,6 +169,7 @@ function ProjectsPage() {
                     search={search}
                     myProject
                     isOwner={isEmployer}
+                    showResponseButton={false}
                     emptyTitle={
                       isEmployer
                         ? "У вас пока нет проектов"
@@ -205,7 +206,6 @@ function ProjectsPage() {
           open={inviteModal.open}
           onOpenChange={(open) => !open && closeInviteModal()}
           userId={inviteModal.userId}
-          projects={inviteProjects}
         />
 
         <AlertModal

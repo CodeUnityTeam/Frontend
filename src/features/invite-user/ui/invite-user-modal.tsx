@@ -42,6 +42,9 @@ export function InviteUserModal({
       status: "published",
       pageSize: 100,
     },
+    {
+      enabled: open,
+    }
   );
 
   const {

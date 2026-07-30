@@ -3,12 +3,10 @@ import { cn } from "@/shared/lib/utils";
 import { formatDate } from "@/shared/lib/format-date";
 import { Button } from "@/shared/ui/button";
 import { Tag } from "@/shared/ui/tag";
-import { useQueryClient } from "@tanstack/react-query";
 import { useLikeProject } from "@/entities/project";
 import { useWithdrawResponse } from "@/entities/response/api/use-withdraw-response";
 import { useUpdateResponseStatus } from "@/entities/response/api/use-update-response-status";
 import {
-  RESPONSES_QUERY_KEY,
   type ProjectResponse
 } from "@/entities/response";
 import { getResponseCardState } from "../model/response-card";
@@ -32,14 +30,13 @@ export function ResponseCard({
     role,
   );
 
-  const queryClient = useQueryClient();
-
   const { mutate: toggleLike } = useLikeProject();
 
   const {
     mutate: withdraw,
     isPending: isWithdrawPending
   } = useWithdrawResponse();
+
   const {
     mutate: updateStatus,
     isPending: isStatusUpdating
@@ -57,13 +54,9 @@ export function ResponseCard({
 } = response;
 
   const handleLike = () => {
-    toggleLike(
-      { projectId, liked: !isLikedByMe },
-      {
-        onSuccess: () =>
-          queryClient.invalidateQueries({ queryKey: [RESPONSES_QUERY_KEY] }),
-      },
-    );
+    toggleLike({
+      projectId, liked: !isLikedByMe
+    });
   };
 
   const handleWithdraw = () => {
@@ -71,25 +64,19 @@ export function ResponseCard({
       return;
     }
 
-    withdraw(
-      { responseId },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: [RESPONSES_QUERY_KEY],
-          });
-        },
-      },
-    );
+    withdraw({
+      responseId,
+    });
   };
 
-  const handleStatusChange =
-    (status: "approved" | "rejected") => {
-      updateStatus({
-        responseId,
-        status,
-      });
-    };
+  const handleStatusChange = (
+    status: "approved" | "rejected"
+  ) => {
+    updateStatus({
+      responseId,
+      status,
+    });
+  };
 
   const formattedDate = formatDate(createdAt);
     

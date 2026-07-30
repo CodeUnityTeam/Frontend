@@ -22,6 +22,7 @@ type ProjectsListProps = {
   emptyTitle?: string;
   emptyDescription?: string;
   isOwner?: boolean;
+  showResponseButton?: boolean;
   onEdit?: (projectId: string) => void;
   onDelete?: (projectId: string) => void;
 };
@@ -33,6 +34,7 @@ export function ProjectsList({
   emptyTitle,
   emptyDescription,
   isOwner,
+  showResponseButton,
   onEdit,
   onDelete,
 }: ProjectsListProps) {
@@ -91,6 +93,7 @@ export function ProjectsList({
               location={project.location}
               isFavoriteByMe={project.isFavoriteByMe}
               isOwner={isOwner}
+              showResponseButton={showResponseButton}
               participantsCount={project.participantsCount}
               onEdit={onEdit}
               onDelete={onDelete}

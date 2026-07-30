@@ -14,7 +14,7 @@ type PeopleListProps = {
   favourites?: boolean;
   emptyTitle?: string;
   emptyDescription?: string;
-  onInvite?: (userId: string) => void;
+  onInvite: (userId: string) => void;
 };
 
 export function PeopleList({
@@ -66,6 +66,9 @@ export function PeopleList({
   const total = data.pages[0]?.total ?? people.length;
   const remaining = Math.max(total - people.length, 0);
 
+  const contactButtonClass =
+  "flex w-full items-center justify-center gap-1 rounded-xl border border-primary py-2 text-[16px] font-semibold hover:bg-primary/5";
+
   return (
     <>
       <ul className="grid grid-cols-1 gap-4 md:auto-rows-fr md:grid-cols-[repeat(auto-fill,minmax(273px,1fr))] md:gap-x-3.5">
@@ -73,8 +76,20 @@ export function PeopleList({
           <li key={person.userId}>
             <PersonCard
               person={person}
-              onInvite={onInvite}
-            />
+              footer={
+                <Button
+                  variant="outline"
+                  className={contactButtonClass}
+                  onClick={() => onInvite(person.userId)}
+                >
+                  <Icon
+                    icon="ph:paper-plane-tilt"
+                    className="text-lg"
+                  />
+                  Пригласить
+                </Button>
+              }
+              />
           </li>
         ))}
       </ul>

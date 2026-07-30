@@ -1,4 +1,3 @@
-import type { ProjectResponse } from "@/entities/response";
 import {
   employerInviteStatusMap,
   employerResponseStatusMap,
@@ -7,6 +6,11 @@ import {
   type StatusConfig,
 } from "./status";
 import type { ProjectsRelation } from "@/entities/profile";
+
+import type {
+  ResponseStatus,
+  ResponseInitiatorType,
+} from "@/entities/response";
 
 type ResponseCardState = {
   status: StatusConfig;
@@ -19,8 +23,14 @@ type ResponseCardState = {
   };
 };
 
+type ResponseCardStateInput = {
+  status: ResponseStatus;
+  initiatorType: ResponseInitiatorType;
+};
+
+
 export function getResponseCardState(
-  response: ProjectResponse,
+  response: ResponseCardStateInput,
   role: ProjectsRelation,
 ): ResponseCardState {
   const { status, initiatorType } = response;

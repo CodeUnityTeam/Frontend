@@ -2,25 +2,35 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/shared/api";
 import { toast } from "sonner";
 import type { ResponseStatus } from "../model/types";
+import { RESPONSES_QUERY_KEY } from "./use-responses";
 
-export function useUpdateResponseStatus(responseId: string) {
+type UpdateResponseStatusParams = {
+  responseId: string;
+  status: ResponseStatus;
+};
+
+export function useUpdateResponseStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (status: ResponseStatus) => {
-      const { data } = await apiClient.patch<{ status: ResponseStatus }>(
+    mutationFn: async ({
+      responseId,
+      status,
+    }: UpdateResponseStatusParams) => {
+      const { data } = await apiClient.patch(
         `/projects/responses/${responseId}/status/`,
-        { status }
+        { status },
       );
+
       return data;
     },
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["responses"] });
+      queryClient.invalidateQueries({
+        queryKey: [RESPONSES_QUERY_KEY],
+      });
+
       toast.success("Статус отклика обновлен");
-    },
-    onError: (error: any) => {
-      const message = error?.response?.data?.detail || "Не удалось обновить статус отклика";
-      toast.error(message);
     },
   });
 }

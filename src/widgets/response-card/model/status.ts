@@ -49,11 +49,11 @@ export const employerResponseStatusMap: Record<ResponseStatus, StatusConfig> = {
     className: "text-muted-foreground",
   },
   approved: {
-    label: "Кандидат принят",
+    label: "Отклик одобрен",
     className: "text-foreground",
   },
   rejected: {
-    label: "Кандидат отклонен",
+    label: "Отклик отклонен",
     className: "text-foreground",
   },
   withdrawn: {

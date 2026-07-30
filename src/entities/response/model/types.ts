@@ -1,5 +1,8 @@
 export type ResponseStatus = "pending" | "approved" | "rejected" | "withdrawn";
 export type SortOrder = "asc" | "desc";
+export type ResponseInitiatorType =
+  | "author"
+  | "applicant";
 
 // ============ API ТИПЫ (то что приходит с бэкенда) ============
 

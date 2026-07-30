@@ -5,11 +5,7 @@ import { ProjectsError } from "../ui/projects-error";
 import { ProjectsEmpty } from "../ui/projects-empty";
 import { usePeopleResponses } from "@/entities/profile";
 import { PAGE_SIZE } from "../lib/constants"
-import {
-  PersonCard,
-  personResponseStatusLabels,
-  personResponseStatusTextClass,
-} from "@/widgets/person-card";
+import { PersonResponseCard } from "@/widgets/response-card/ui/person-response-card";
 
 
 export function PeopleResponsesList() {
@@ -60,18 +56,8 @@ export function PeopleResponsesList() {
       <ul className="grid grid-cols-1 gap-4 md:auto-rows-fr md:grid-cols-[repeat(auto-fill,minmax(273px,1fr))] md:gap-x-3.5">
         {responses.map((response) => (
           <li key={response.responseId}>
-            <PersonCard
-              person={response.person}
-              badge={personResponseStatusLabels[response.status]}
-              badgeClassName={personResponseStatusTextClass[response.status]}
-              note={`${
-                response.initiator === "author"
-                  ? "Приглашение в проект"
-                  : "Отклик на проект"
-              } «${response.projectTitle}»`}
-              responseId={response.responseId}
-              responseStatus={response.status}
-              onAction={() => refetch()}
+            <PersonResponseCard
+              response={response}
             />
           </li>
         ))}
