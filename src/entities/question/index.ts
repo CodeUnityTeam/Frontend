@@ -49,10 +49,10 @@ export {
   type UpdateQuestionRequest,
 } from "./api/update-question";
 export { deleteQuestion } from "./api/delete-question";
-export { QuestionLikeButton } from "./ui/question-like-button";
-export { AnswerLikeButton } from "./ui/answer-like-button";
 export {
   uploadQuestionFile,
   type UploadQuestionFileResponse,
 } from "./api/upload-question-file";
 export { useUploadQuestionFile } from "./api/use-upload-question-file";
+export { QuestionLikeButton } from "./ui/question-like-button";
+export { AnswerLikeButton } from "./ui/answer-like-button";

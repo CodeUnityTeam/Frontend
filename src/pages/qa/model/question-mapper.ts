@@ -10,10 +10,11 @@ export function mapQuestion(item: QuestionItem): QuestionData {
     createdAt: new Date(item.createdAt),
     likes: item.likesCount,
     comments: item.answersCount,
+    isLikedByMe: item.isLikedByMe,
     user: {
       firstName: item.authorName,
-      avatarUrl: "",
-      rating: item.authorRating
-    }
-  }
+      avatarUrl: item.authorAvatar,
+      rating: item.authorRating,
+    },
+  };
 }

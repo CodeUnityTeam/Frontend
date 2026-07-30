@@ -41,3 +41,4 @@ oxlint.config.mjs
 oxlint.config.ts
 .env
 reports/*
+.vscode/settings.json

@@ -14,7 +14,7 @@ export async function getProjects(
   const {
     page = 1,
     pageSize = 20,
-    sortBy,
+    sortBy = "published_at",
     skillsId,
     formatId,
     specId,
@@ -22,23 +22,30 @@ export async function getProjects(
     favourites,
     myProject,
     search,
-    status,
+    loadMore,
+    status
   } = params;
+
+  let finalSortBy = sortBy;
+  if (sortBy === "relevance" && !search?.trim()) {
+    finalSortBy = "published_at";
+  }
 
   const { data } = await apiClient.get<ProjectsResponseDto>("/projects/", {
     params: {
       page,
       limit: pageSize,
-      ...(sortBy && { sort_by: sortBy }),
-      ...(skillsId && skillsId.length > 0 && { skills_id: skillsId.join(",") }),
-      ...(formatId && formatId.length > 0 && { format_id: formatId.join(",") }),
-      ...(specId && specId.length > 0 && { spec_id: specId.join(",") }),
+      ...(finalSortBy && { sort_by: finalSortBy }),
+      ...(skillsId && skillsId?.length > 0 && { skills_id: skillsId.join(",") }),
+      ...(formatId && formatId?.length > 0 && { format_id: formatId.join(",") }),
+      ...(specId && specId?.length > 0 && { spec_id: specId.join(",") }),
       ...(duration?.operator && { duration_operator: duration.operator }),
       ...(duration?.min && { duration_min: duration.min }),
       ...(duration?.max && { duration_max: duration.max }),
       ...(favourites && { favourites }),
       ...(myProject && { my_project: "true" }),
       ...(search?.trim() && { search: search.trim() }),
+      ...(loadMore !== undefined && { load_more: loadMore }),
       ...(status && { status }),
     },
   });

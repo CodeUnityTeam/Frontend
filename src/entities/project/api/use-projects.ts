@@ -39,6 +39,7 @@ export function useProjects(
         ...params,
         page: pageParam,
         pageSize,
+        loadMore: pageParam > 1,
       }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) =>
