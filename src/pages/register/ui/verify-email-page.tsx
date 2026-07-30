@@ -15,32 +15,16 @@ import {
 import { Button } from "@/shared/ui/button";
 import { PageContainer } from "@/shared/ui/page-container";
 import {
+  EMAIL_VERIFICATION_EXPIRED_MESSAGE,
+  EMAIL_VERIFICATION_LOADING_MESSAGE,
+  getEmailVerificationMessageFromData,
+} from "@/pages/register/model/email-verification-messages";
+import {
   openAuthLogin,
   openAuthRegister,
 } from "@/widgets/registration/model/auth-modal-actions";
 
 type VerifyStatus = "loading" | "success" | "error";
-
-function getMessageFromData(data: unknown, fallback: string): string {
-  if (typeof data !== "object" || data === null) {
-    return fallback;
-  }
-
-  if ("detail" in data) {
-    const detail = (data as { detail?: unknown }).detail;
-    if (typeof detail === "string" && detail.trim()) {
-      return detail;
-    }
-  }
-
-  const values = Object.values(data).flat();
-  const firstMessage = values.find((item) => typeof item === "string");
-  if (typeof firstMessage === "string" && firstMessage.trim()) {
-    return firstMessage;
-  }
-
-  return fallback;
-}
 
 function getErrorMessage(error: unknown): string {
   if (typeof error !== "object" || error === null) {
@@ -52,17 +36,17 @@ function getErrorMessage(error: unknown): string {
   const data = "data" in error ? (error as { data?: unknown }).data : undefined;
 
   if (status === 404) {
-    return "Ссылка подтверждения устарела или уже использована. Запросите новое письмо.";
+    return EMAIL_VERIFICATION_EXPIRED_MESSAGE;
   }
 
   if (status === 400 && data) {
-    return getMessageFromData(
+    return getEmailVerificationMessageFromData(
       data,
       "Ссылка подтверждения не прошла проверку. Попробуйте еще раз.",
     );
   }
 
-  return getMessageFromData(
+  return getEmailVerificationMessageFromData(
     data,
     "Не удалось подтвердить email. Попробуйте открыть ссылку еще раз.",
   );
@@ -72,7 +56,7 @@ function VerifyEmailPage() {
   const { key } = useParams();
   const [status, setStatus] = useState<VerifyStatus>("loading");
   const [message, setMessage] = useState<string>(
-    "Подтверждаем email, пожалуйста подождите.",
+    EMAIL_VERIFICATION_LOADING_MESSAGE,
   );
 
   useEffect(() => {
@@ -86,7 +70,7 @@ function VerifyEmailPage() {
 
     const run = async () => {
       setStatus("loading");
-      setMessage("Подтверждаем email, пожалуйста подождите.");
+      setMessage(EMAIL_VERIFICATION_LOADING_MESSAGE);
 
       try {
         const data = await verifyEmail({ key });
@@ -96,7 +80,7 @@ function VerifyEmailPage() {
 
         setStatus("success");
         setMessage(
-          getMessageFromData(
+          getEmailVerificationMessageFromData(
             data,
             "Email подтвержден. Теперь можно войти в аккаунт.",
           ),

@@ -17,6 +17,11 @@ import {
 } from "@/shared/ui/card";
 import { Input } from "@/shared/ui/input";
 import { PageContainer } from "@/shared/ui/page-container";
+import {
+  EMAIL_VERIFICATION_EXPIRED_MESSAGE,
+  EMAIL_VERIFICATION_LOADING_MESSAGE,
+  getEmailVerificationMessageFromData,
+} from "@/pages/register/model/email-verification-messages";
 import { openAuthLogin } from "@/widgets/registration/model/auth-modal-actions";
 
 type ManualVerifyStatus = "idle" | "loading" | "success" | "error";
@@ -95,7 +100,7 @@ function CheckEmailPage() {
     }
 
     setManualStatus("loading");
-    setManualMessage("Подтверждаем email, пожалуйста подождите.");
+    setManualMessage(EMAIL_VERIFICATION_LOADING_MESSAGE);
 
     try {
       const data = await verifyEmail({ key });
@@ -125,16 +130,13 @@ function CheckEmailPage() {
           : undefined;
 
       if (status === 404) {
+        setManualMessage(EMAIL_VERIFICATION_EXPIRED_MESSAGE);
+      } else if (status === 400) {
         setManualMessage(
-          "Ссылка подтверждения устарела или уже использована. Запросите новое письмо.",
-        );
-      } else if (status === 400 && typeof data === "object" && data !== null) {
-        const values = Object.values(data).flat();
-        const firstMessage = values.find((item) => typeof item === "string");
-        setManualMessage(
-          typeof firstMessage === "string" && firstMessage.trim()
-            ? firstMessage
-            : "Ссылка подтверждения не прошла проверку.",
+          getEmailVerificationMessageFromData(
+            data,
+            "Ссылка подтверждения не прошла проверку.",
+          ),
         );
       } else {
         setManualMessage("Не удалось подтвердить email. Попробуйте еще раз.");
@@ -208,7 +210,7 @@ function CheckEmailPage() {
 
             <p className="text-sm leading-6 text-muted-foreground">
               Этот шаг нужен только для регистрации по e-mail. Если вы входите
-              через Yandex, Gmail или другой OAuth-провайдер, подтверждение
+              через Яндекс, Мейлру или другой OAuth-провайдер, подтверждение
               письма не требуется.
             </p>
 
