@@ -40,23 +40,6 @@ export async function getProjects(
       ...(myProject && { my_project: "true" }),
       ...(search?.trim() && { search: search.trim() }),
       ...(status && { status }),
-      /*
-        TO DO: ДОБАВИТЬ ПАРАМЕТРЫ ДЛЯ БЭКОВ (#11_июля)
-
-        load_more	
-        boolean
-        Флаг подгрузки (бесконечный скролл)
-
-        sort_by	
-        string
-        Enum: "like" "published_at" "relevance"
-        Сортировка: like (по лайкам),published_at (по дате публикации), relevance (по релевантности — только при наличии search).По умолчанию: published_at.
-
-        status	
-        string
-        Enum: "draft" "published" "recruiting_closed"
-        Статус проекта: draft, published, recruiting_closed. При фильтрации по специализации проекты со статусом recruiting_closed не отображаются.
-      */ 
     },
   });
 

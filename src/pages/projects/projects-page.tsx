@@ -36,9 +36,11 @@ import { ProjectsResponsesList } from "./ui/projects-responses-list";
 function ProjectsPage() {
   const isAuthed = useIsAuthed();
   const { role, isRolePending } = useRole();
+  const isEmployer = role === "employer";
 
   const {
-    tab,
+    activeTab,
+    status,
     setTab,
 
     search,
@@ -62,15 +64,11 @@ function ProjectsPage() {
     // inviteProjects,
     openInviteModal,
     closeInviteModal,
-  } = useProjectsPage();
-
-  const isEmployer = role === "employer";
+  } = useProjectsPage(isEmployer, isAuthed);
 
   const visibleTabs = isAuthed
     ? projectTabs
     : projectTabs.filter((item) => item.value === "catalog");
-
-  const activeTab = isAuthed ? tab : "catalog";
 
   return (
     <FiltersProvider>
@@ -136,7 +134,7 @@ function ProjectsPage() {
                       onInvite={openInviteModal}
                     />
                   ) : (
-                    <ProjectsList search={search} />
+                    <ProjectsList search={search} status={status} />
                   )
                 }
                 favorites={
@@ -152,6 +150,7 @@ function ProjectsPage() {
                     <ProjectsList
                       search={search}
                       favourites
+                      status={status}
                       emptyTitle="В избранном пусто"
                       emptyDescription="Добавляйте проекты в избранное — нажимайте на сердечко в карточке."
                     />
@@ -167,6 +166,7 @@ function ProjectsPage() {
                 myProjects={
                   <ProjectsList
                     search={search}
+                    status={status}
                     myProject
                     isOwner={isEmployer}
                     showResponseButton={false}

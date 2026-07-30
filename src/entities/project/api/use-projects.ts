@@ -34,7 +34,7 @@ export function useProjects(
   
   return useInfiniteQuery({
     queryKey,
-    queryFn: ({ pageParam = 1 }) => 
+    queryFn: ({ pageParam }) => 
       getProjects({
         ...params,
         page: pageParam,

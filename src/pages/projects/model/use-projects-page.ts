@@ -3,9 +3,12 @@ import {
   useDeleteProject,
   useProject,
 } from "@/entities/project";
+import { useProjectStatus } from "@/shared/lib/hooks";
 
-export function useProjectsPage() {
+export function useProjectsPage(isEmployer: boolean, isAuthed: boolean) {
   const [tab, setTab] = useState("catalog");
+  const activeTab = isAuthed ? tab : "catalog";
+  const status = useProjectStatus(activeTab, isEmployer);
   const [search, setSearch] = useState("");
 
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
@@ -84,6 +87,8 @@ export function useProjectsPage() {
     // filters
     tab,
     setTab,
+    activeTab,
+    status,
 
     search,
     setSearch,
