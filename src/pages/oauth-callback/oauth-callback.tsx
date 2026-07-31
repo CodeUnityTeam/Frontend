@@ -1,48 +1,50 @@
 import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router";
-import { useSocialAuth } from "@/entities/auth";
-import { getOAuthProvider } from "@/shared/lib/cookies";
+import { setTokens } from "@/shared/lib/auth/token-storage";
 import { ROUTES } from "@/shared/model/routes";
+
+const USER_ID_KEY = "ku_user_id";
 
 export function OAuthCallback() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { 
-    yandexAuth, 
-    mailRuAuth, 
-    isYandexPending, 
-    isMailRuPending 
-} = useSocialAuth();
 
-  const code = searchParams.get("code");
-  const provider = getOAuthProvider();
+  const access = searchParams.get("access");
+  const refresh = searchParams.get("refresh");
+  const userId = searchParams.get("user_id");
 
   useEffect(() => {
-    if (!code) {
+    if (!access || !refresh) {
+      console.warn("OAuth callback: missing access or refresh token");
       navigate(ROUTES.HOME);
       return;
     }
 
-    if (provider === "yandex") {
-      yandexAuth(code);
-    } else if (provider === "mailru") {
-      mailRuAuth(code);
-    } else {
-      navigate(ROUTES.HOME);
+    // Сохраняем токены через существующий API
+    setTokens({ access, refresh });
+
+    // Отдельно сохраняем user_id (если есть)
+    try {
+      if (userId) {
+        localStorage.setItem(USER_ID_KEY, userId);
+      } else {
+        localStorage.removeItem(USER_ID_KEY);
+      }
+    } catch {
+      // localStorage недоступен (приватный режим)
     }
-  }, [code, provider, yandexAuth, mailRuAuth, navigate]);
 
-  if (isYandexPending || isMailRuPending) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg">Авторизация через {provider}...</p>
-        </div>
+    // Редирект на onboarding. replace: true — чтобы нельзя было вернуться назад
+    navigate(ROUTES.ONBOARDING, { replace: true });
+  }, [access, refresh, userId, navigate]);
+
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="text-center">
+        <p className="text-lg">Обработка авторизации…</p>
       </div>
-    );
-  }
-
-  return null;
+    </div>
+  );
 }
 
 export const Component = OAuthCallback;
