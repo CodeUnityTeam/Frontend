@@ -156,7 +156,7 @@ export function OnboardingStep4({
                 Сохраняем...
               </>
             ) : (
-              "Завершить заполнение"
+              "Завершить"
             )}
           </Button>
         </div>

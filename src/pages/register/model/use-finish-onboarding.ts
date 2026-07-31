@@ -9,7 +9,7 @@ import {
 import {
   buildProfileUpdatePayload,
   type OnboardingCatalogs,
-} from "@/pages/register/model/profile-update-payload";
+} from "@/pages/register/model/onboarding-profile-update-payload";
 import type { RegisterFormData } from "@/pages/register/model/use-register-form";
 
 interface FinishOnboardingVars {

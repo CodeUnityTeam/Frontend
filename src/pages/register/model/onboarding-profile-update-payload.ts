@@ -50,20 +50,37 @@ export function buildProfileUpdatePayload(
   data: RegisterFormData,
   catalogs: OnboardingCatalogs,
 ): ProfileUpdateRequest {
-  return {
-    first_name: data.name.trim(),
-    last_name: data.surname.trim(),
+  const payload: ProfileUpdateRequest = {
     projects_relation: data.employmentRole,
-    country: data.country?.trim() ?? "",
-    city: data.city?.trim() ?? "",
-    soft_skills: (data.qualities ?? [])
-      .map((quality) => quality.trim())
-      .filter(Boolean)
-      .join(", "),
-    about_me: data.about.trim(),
-    skills: resolveSkillIds(data.skills ?? [], catalogs.skills),
-
-    specializations: [],
     workformats: resolveWorkformatIds(data.format, catalogs.formats),
   };
+
+  const skills = resolveSkillIds(data.skills ?? [], catalogs.skills);
+  if (skills.length > 0) {
+    payload.skills = skills;
+  }
+
+  const country = data.country?.trim() ?? "";
+  if (country) {
+    payload.country = country;
+  }
+
+  const city = data.city?.trim() ?? "";
+  if (city) {
+    payload.city = city;
+  }
+
+  const softSkills = (data.qualities ?? [])
+    .map((quality) => quality.trim())
+    .filter(Boolean);
+  if (softSkills.length > 0) {
+    payload.soft_skills = softSkills.join(", ");
+  }
+
+  const about = data.about.trim();
+  if (about) {
+    payload.about_me = about;
+  }
+
+  return payload;
 }
