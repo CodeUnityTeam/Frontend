@@ -155,9 +155,10 @@ export function RegistrationModal({
     }
   };
 
-  const privacyPolicy = documents?.find(doc => doc.slug === "personal_data_processing");
-  const platformRules = documents?.find(doc => doc.slug === "platform_rules");
-  const privacyPolicyFull = documents?.find(doc => doc.slug === "privacy_policy");
+  const documentsArray = Array.isArray(documents) ? documents : [];
+const privacyPolicy = documentsArray.find(doc => doc.slug === "personal_data_processing");
+const platformRules = documentsArray.find(doc => doc.slug === "platform_rules");
+const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_policy");
 
   const renderContent = () => (
     <>
