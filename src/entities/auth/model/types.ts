@@ -19,10 +19,11 @@ export interface AuthSession {
 
 export interface UserDetailsDto {
   pk: string;
+  onboarding_completed: boolean;
   email: string;
   first_name: string;
   last_name: string;
-  role: ProjectsRelation; 
+  role: ProjectsRelation;
   rating: number;
   projects_relation: ProjectsRelation;
   phone_number: string;
