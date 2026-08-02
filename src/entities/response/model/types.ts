@@ -1,5 +1,8 @@
 export type ResponseStatus = "pending" | "approved" | "rejected" | "withdrawn";
 export type SortOrder = "asc" | "desc";
+export type ResponseInitiatorType =
+  | "author"
+  | "applicant";
 
 // ============ API ТИПЫ (то что приходит с бэкенда) ============
 
@@ -12,6 +15,7 @@ export interface ApiSkill {
 export interface ResponseItem {
   response_id: string;
   response_status: ResponseStatus;
+  initiator_type: "applicant" | "author";
   response_created_at: string;
   project_id: string;
   title: string;
@@ -67,6 +71,7 @@ export interface ResponseSkill {
 export interface ProjectResponse {
   responseId: string;
   status: ResponseStatus;
+  initiatorType: "applicant" | "author";
   createdAt: string;
   projectId: string;
   title: string;
@@ -98,6 +103,7 @@ export function mapResponseItemToProjectResponse(item: ResponseItem): ProjectRes
   return {
     responseId: item.response_id,
     status: item.response_status,
+    initiatorType: item.initiator_type,
     createdAt: item.response_created_at,
     projectId: item.project_id,
     title: item.title,

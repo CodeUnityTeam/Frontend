@@ -18,6 +18,7 @@ type ProjectCardProps = {
   location: string;
   isFavoriteByMe: boolean;
   isOwner?: boolean;
+  showResponseButton?: boolean;
   participantsCount?: number;
   onEdit?: (projectId: string) => void;
   onDelete?: (projectId: string) => void;
@@ -32,6 +33,7 @@ export function ProjectCard({
   location,
   isFavoriteByMe,
   isOwner,
+  showResponseButton = true,
   participantsCount,
   onEdit,
   onDelete,
@@ -57,7 +59,7 @@ export function ProjectCard({
       e.preventDefault();
       respond();
     },
-    [respond, projectId],
+    [respond],
   );
 
   const handleEdit = useCallback(
@@ -182,7 +184,7 @@ export function ProjectCard({
             </div>
           </div>
 
-          {!isOwner && isAuthed && (
+          {!isOwner && isAuthed && showResponseButton && (
             <Button
               className={cn(
                 "flex w-full items-center justify-center gap-1 rounded-xl border py-2 text-[16px] font-semibold",
@@ -195,11 +197,19 @@ export function ProjectCard({
               type="button"
               disabled={isResponding || hasResponded}
             >
-              <Icon 
-                icon={hasResponded ? "ph:check-circle" : "ph:chats-teardrop-light"} 
-                className="text-xl" 
+              <Icon
+                icon={
+                  hasResponded
+                    ? "ph:check-circle"
+                    : "ph:chats-teardrop-light"
+                }
+                className="text-xl"
               />
-              <span>{hasResponded ? "Отклик отправлен" : "Откликнуться"}</span>
+              <span>
+                {hasResponded
+                  ? "Отклик отправлен"
+                  : "Откликнуться"}
+              </span>
             </Button>
           )}
         </div>

@@ -1,15 +1,82 @@
 import type { ResponseStatus } from "@/entities/response";
 
-export const statusLabels: Record<ResponseStatus, string> = {
-  approved: "Вас приняли",
-  pending: "Отклик отправлен",
-  rejected: "Вам отказали",
-  withdrawn: "Отклик отозван",
+export type StatusConfig = {
+  label: string;
+  className: string;
 };
 
-export const statusBadgeClass: Record<ResponseStatus, string> = {
-  approved: "border-primary text-foreground",
-  rejected: "border-border text-foreground",
-  pending: "border-border text-muted-foreground",
-  withdrawn: "border-border text-muted-foreground",
+export const workerResponseStatusMap: Record<ResponseStatus, StatusConfig> = {
+  pending: {
+    label: "Отклик отправлен",
+    className: "text-muted-foreground",
+  },
+  approved: {
+    label: "Отклик принят",
+    className: "text-foreground",
+  },
+  rejected: {
+    label: "Отклик отклонен",
+    className: "text-foreground",
+  },
+  withdrawn: {
+    label: "Отклик отозван",
+    className: "text-foreground",
+  },
+};
+
+export const workerInviteStatusMap: Record<ResponseStatus, StatusConfig> = {
+  pending: {
+    label: "Приглашение в проект",
+    className: "text-muted-foreground",
+  },
+  approved: {
+    label: "Приглашение принято",
+    className: "text-foreground",
+  },
+  rejected: {
+    label: "Приглашение отклонено",
+    className: "text-foreground",
+  },
+  withdrawn: {
+    label: "Приглашение отменено",
+    className: "text-foreground",
+  },
+};
+
+export const employerResponseStatusMap: Record<ResponseStatus, StatusConfig> = {
+  pending: {
+    label: "Новый отклик",
+    className: "text-muted-foreground",
+  },
+  approved: {
+    label: "Отклик одобрен",
+    className: "text-foreground",
+  },
+  rejected: {
+    label: "Отклик отклонен",
+    className: "text-foreground",
+  },
+  withdrawn: {
+    label: "Отклик отозван",
+    className: "text-foreground",
+  },
+};
+
+export const employerInviteStatusMap: Record<ResponseStatus, StatusConfig> = {
+  pending: {
+    label: "Приглашение отправлено",
+    className: "text-muted-foreground",
+  },
+  approved: {
+    label: "Приглашение принято",
+    className: "text-foreground",
+  },
+  rejected: {
+    label: "Приглашение отклонено",
+    className: "text-foreground",
+  },
+  withdrawn: {
+    label: "Приглашение отозвано",
+    className: "text-foreground",
+  },
 };

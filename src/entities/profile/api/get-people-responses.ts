@@ -7,14 +7,15 @@ import type {
   PersonResponse,
   PersonResponsesPage,
   PersonResponseStatus,
+  PersonResponseInitiator,
 } from "@/entities/profile/model/types";
 
 interface PersonResponseDto {
   response_id: string;
   project_id: string;
   project_title: string;
-  initiator_type: string;
-  status_resp: string;
+  initiator_type: PersonResponseInitiator;
+  status_resp: PersonResponseStatus;
   profile: PersonDto;
 }
 
@@ -32,22 +33,13 @@ interface GetPeopleResponsesParams {
   limit?: number;
 }
 
-const RESPONSE_STATUSES: PersonResponseStatus[] = [
-  "pending",
-  "approved",
-  "rejected",
-  "withdrawn",
-];
-
 function mapPersonResponse(dto: PersonResponseDto): PersonResponse {
   return {
     responseId: dto.response_id,
     projectId: dto.project_id,
     projectTitle: dto.project_title,
-    initiator: dto.initiator_type === "author" ? "author" : "applicant",
-    status: (RESPONSE_STATUSES as string[]).includes(dto.status_resp)
-      ? (dto.status_resp as PersonResponseStatus)
-      : "pending",
+    initiatorType: dto.initiator_type === "author" ? "author" : "applicant",
+    status: dto.status_resp,
     person: mapPerson(dto.profile),
   };
 }

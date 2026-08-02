@@ -57,7 +57,7 @@ export interface PersonResponse {
   responseId: string;
   projectId: string;
   projectTitle: string;
-  initiator: PersonResponseInitiator;
+  initiatorType: PersonResponseInitiator;
   status: PersonResponseStatus;
   person: Person;
 }

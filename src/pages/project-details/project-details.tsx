@@ -11,8 +11,10 @@ import { Tag } from "@/shared/ui/tag";
 import { cn } from "@/shared/lib/utils";
 import { formatLastSeen } from "@/shared/lib/format-last-seen";
 import { useIsAuthed } from "@/shared/lib/auth";
+import { useRole } from "@/entities/profile";
 
 function ProjectDetails() {
+  const { role } = useRole();
   const navigate = useNavigate();
   const isAuthed = useIsAuthed();
 
@@ -107,7 +109,7 @@ function ProjectDetails() {
               </div>
             </div>
 
-            {isAuthed && (
+            {isAuthed && role === "worker" && (
               <Button
                 className={cn(
                   "mt-6 h-10 w-full",

@@ -46,7 +46,7 @@ export async function getProjects(
       ...(myProject && { my_project: "true" }),
       ...(search?.trim() && { search: search.trim() }),
       ...(loadMore !== undefined && { load_more: loadMore }),
-      ...(status && status?.length > 0 && { status: status.join(",") }),
+      ...(status && { status }),
     },
   });
 
