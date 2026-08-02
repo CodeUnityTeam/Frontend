@@ -44,6 +44,6 @@ export function useProjects(
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) =>
       lastPage.hasMore ? allPages.length + 1 : undefined,
-    enabled: options?.enabled,
+    enabled: options?.enabled ?? true,
   });
 }
