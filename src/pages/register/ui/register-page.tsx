@@ -14,19 +14,22 @@ import { OnboardingStep1 } from "./step-meet-me";
 import { OnboardingStep2 } from "./step-skills";
 import { OnboardingStep3 } from "./step-experience";
 import { OnboardingStep4 } from "./step-about";
+import type { OnboardingPrefill } from "@/shared/api/profile";
 
 type RegisterLocationState = {
-  prefill?: Pick<RegisterFormData, "name" | "surname" | "email">;
+  prefill?: OnboardingPrefill;
 };
 
 function RegisterPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const stateData = (location.state as RegisterLocationState | null | undefined)?.prefill;
+  const stateData = (location.state as RegisterLocationState | null | undefined)
+    ?.prefill;
   const { state, next, back, patch } = useRegisterForm({
     name: stateData?.name ?? "",
     surname: stateData?.surname ?? "",
     email: stateData?.email ?? "",
+    photoUrl: stateData?.avatarUrl ?? "",
   });
 
   const skillsQuery = useSkills();

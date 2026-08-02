@@ -28,6 +28,7 @@ export type ProfileExperienceItem = {
 
 export type CurrentUserProfile = {
   pk: string;
+  onboarding_completed: boolean;
   email: string;
   first_name: string;
   last_name: string;
@@ -52,6 +53,7 @@ export type OnboardingPrefill = {
   name: string;
   surname: string;
   email: string;
+  avatarUrl?: string;
 };
 
 export type ProfileUpdateRequest = {
@@ -91,12 +93,16 @@ export async function getCurrentUserProfile(): Promise<CurrentUserProfile> {
 }
 
 export function buildOnboardingPrefill(
-  profile: Pick<CurrentUserProfile, "first_name" | "last_name" | "email">,
+  profile: Pick<
+    CurrentUserProfile,
+    "first_name" | "last_name" | "email" | "avatar_url"
+  >,
 ): OnboardingPrefill {
   return {
     name: profile.first_name,
     surname: profile.last_name,
     email: profile.email,
+    avatarUrl: profile.avatar_url,
   };
 }
 

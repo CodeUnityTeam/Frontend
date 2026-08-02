@@ -3,6 +3,7 @@ import { lazy } from "react";
 import { App } from "@/app/app";
 import { ProtectedRoute } from "@/shared/ui/protected-route/protected-route";
 import { ROUTES } from "@/shared/model/routes";
+import { RouteErrorPage } from "@/pages/error-pages/route-error-page";
 
 const RegisterPage = lazy(() =>
   import("@/pages/register/ui/register-page").then((m) => ({
@@ -72,6 +73,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <RouteErrorPage />,
     children: [
       {
         index: true,
