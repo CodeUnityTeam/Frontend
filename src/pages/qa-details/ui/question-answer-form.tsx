@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/ui/card";
-import { MarkdownEditor } from "@/shared/ui/markdown-editor";
+import { MarkdownAttachmentComposer } from "@/shared/ui/markdown-attachment-composer";
 
 type QuestionAnswerFormProps = {
   title: string;
@@ -64,7 +64,7 @@ export function QuestionAnswerForm({
       </CardHeader>
       <CardContent className="!p-6">
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
-          <MarkdownEditor
+          <MarkdownAttachmentComposer
             ref={editorRef}
             label={label}
             description={description}

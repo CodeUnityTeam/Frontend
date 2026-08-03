@@ -75,6 +75,9 @@ export type MarkdownImageFieldProps = Omit<
   maxFilesPerBatch?: number;
   collapsible?: boolean;
   onAttachmentsChange?: (attachments: MarkdownAttachment[]) => void;
+  hideTextarea?: boolean;
+  onInsertAttachment?: (attachment: MarkdownAttachment) => void;
+  onInsertAllAttachments?: (attachments: MarkdownAttachment[]) => void;
 };
 
 type MarkdownImageUploadSummary = {
@@ -241,6 +244,9 @@ export const MarkdownImageField = forwardRef<
     maxFilesPerBatch = 5,
     collapsible = false,
     onAttachmentsChange,
+    hideTextarea = false,
+    onInsertAttachment: onExternalInsertAttachment,
+    onInsertAllAttachments: onExternalInsertAllAttachments,
     placeholder = "Начните вводить Markdown...",
     disabled = false,
     spellCheck = true,
@@ -293,7 +299,28 @@ export const MarkdownImageField = forwardRef<
       (item) => item.status === "success" && item.response?.url,
     );
 
-    if (attachments.length === 0 || !textareaRef.current) {
+    if (attachments.length === 0) {
+      return;
+    }
+
+    const mappedAttachments = attachments.map(
+      (item) =>
+        ({
+          id: item.id,
+          url: item.response?.url,
+          originalName: item.response?.originalName ?? item.file.name,
+          fileSize: item.response?.fileSize ?? item.file.size,
+          mimeType: item.response?.mimeType ?? item.file.type,
+          status: item.status,
+        }) satisfies MarkdownAttachment,
+    );
+
+    if (onExternalInsertAllAttachments) {
+      onExternalInsertAllAttachments(mappedAttachments);
+      return;
+    }
+
+    if (!textareaRef.current) {
       return;
     }
 
@@ -629,7 +656,24 @@ export const MarkdownImageField = forwardRef<
                               className="shrink-0 px-2.5 text-xs"
                               title="Вставить в редактор"
                               aria-label="Вставить в редактор"
-                              onClick={() => insertAttachment(item)}
+                              onClick={() => {
+                                const response = item.response;
+                                if (!response) return;
+                                const attachment = {
+                                  id: item.id,
+                                  url: response.url,
+                                  originalName:
+                                    response.originalName ?? item.file.name,
+                                  fileSize: response.fileSize ?? item.file.size,
+                                  mimeType: response.mimeType ?? item.file.type,
+                                  status: item.status,
+                                } satisfies MarkdownAttachment;
+                                if (onExternalInsertAttachment) {
+                                  onExternalInsertAttachment(attachment);
+                                } else {
+                                  insertAttachment(item);
+                                }
+                              }}
                             >
                               Вставить
                             </Button>
@@ -680,26 +724,28 @@ export const MarkdownImageField = forwardRef<
           </>
         )}
 
-        <TextareaBasic
-          id={generatedId}
-          value={markdown}
-          ref={textareaRef}
-          onChange={(event) => {
-            markdownRef.current = event.target.value;
-            onChange(event.target.value);
-          }}
-          onPaste={handlePaste}
-          placeholder={placeholder}
-          disabled={disabled}
-          spellCheck={spellCheck}
-          autoFocus={autoFocus}
-          rows={rows}
-          className={cn(
-            "min-h-55 rounded-2xl border border-input bg-background px-4 py-4 text-base leading-7 text-foreground shadow-sm transition-shadow focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0",
-            textareaClassName,
-          )}
-          {...textareaProps}
-        />
+        {!hideTextarea ? (
+          <TextareaBasic
+            id={generatedId}
+            value={markdown}
+            ref={textareaRef}
+            onChange={(event) => {
+              markdownRef.current = event.target.value;
+              onChange(event.target.value);
+            }}
+            onPaste={handlePaste}
+            placeholder={placeholder}
+            disabled={disabled}
+            spellCheck={spellCheck}
+            autoFocus={autoFocus}
+            rows={rows}
+            className={cn(
+              "min-h-55 rounded-2xl border border-input bg-background px-4 py-4 text-base leading-7 text-foreground shadow-sm transition-shadow focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0",
+              textareaClassName,
+            )}
+            {...textareaProps}
+          />
+        ) : null}
 
         <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
           <span>
