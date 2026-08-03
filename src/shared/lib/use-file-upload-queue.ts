@@ -78,42 +78,45 @@ export function useFileUploadQueue<TResponse>({
         const response = await uploadFile(item.file);
         const finishedAt = Date.now();
 
-        let uploadedItem: FileUploadQueueItem<TResponse> | undefined;
+        const uploadedItem: FileUploadQueueItem<TResponse> = {
+          ...item,
+          status: "success",
+          response,
+          errorMessage: undefined,
+          completedAt: finishedAt,
+        };
         updateItem(item.id, (current) => {
-          uploadedItem = {
+          return {
             ...current,
             status: "success",
             response,
             errorMessage: undefined,
             completedAt: finishedAt,
           };
-
-          return uploadedItem;
         });
 
-        if (uploadedItem) {
-          onSuccess?.(uploadedItem, response);
-        }
+        onSuccess?.(uploadedItem, response);
 
         return;
       } catch (error) {
         const errorMessage = normalizeError(error);
 
-        let failedItem: FileUploadQueueItem<TResponse> | undefined;
+        const failedItem: FileUploadQueueItem<TResponse> = {
+          ...item,
+          status: "failed",
+          errorMessage,
+          completedAt: Date.now(),
+        };
         updateItem(item.id, (current) => {
-          failedItem = {
+          return {
             ...current,
             status: "failed",
             errorMessage,
-            completedAt: Date.now(),
+            completedAt: failedItem.completedAt,
           };
-
-          return failedItem;
         });
 
-        if (failedItem) {
-          onFailure?.(failedItem, errorMessage);
-        }
+        onFailure?.(failedItem, errorMessage);
       }
     },
     [onFailure, onSuccess, updateItem, uploadFile],
