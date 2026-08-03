@@ -18,6 +18,7 @@ export interface RegisterFormData {
   surname: string;
   position: string;
   photo: File | null;
+  photoUrl?: string;
   email: string;
   employmentRole: "worker" | "employer";
   // Step 1 other additions
@@ -45,7 +46,6 @@ export interface RegisterFormData {
 export type Step = 1 | 2 | 3 | 4;
 
 export const TOTAL_STEPS = 4;
-
 
 // ---------------------------------------------------------------------------
 // Reducer
@@ -84,9 +84,7 @@ const initialData: RegisterFormData = {
   about: "",
 };
 
-function createInitialState(
-  patch: Partial<RegisterFormData> = {},
-): State {
+function createInitialState(patch: Partial<RegisterFormData> = {}): State {
   return {
     step: 1,
     data: { ...initialData, ...patch },
@@ -113,7 +111,9 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-export function useRegisterForm(initialDataPatch: Partial<RegisterFormData> = {}) {
+export function useRegisterForm(
+  initialDataPatch: Partial<RegisterFormData> = {},
+) {
   const [state, dispatch] = useReducer(
     reducer,
     initialDataPatch,

@@ -24,7 +24,7 @@ export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
   const [position, setposition] = useState(data.position);
   const [photo, setPhoto] = useState<File | null>(data.photo);
   const [photoPreview, setPhotoPreview] = useState<string | null>(
-    data.photo ? URL.createObjectURL(data.photo) : null,
+    data.photo ? URL.createObjectURL(data.photo) : data.photoUrl || null,
   );
   const [employmentRole, setEmploymentRole] = useState<"worker" | "employer">(
     (data.employmentRole as "worker" | "employer") ?? "worker",
@@ -37,7 +37,9 @@ export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
 
   useEffect(() => {
     return () => {
-      if (photoPreview) URL.revokeObjectURL(photoPreview);
+      if (photoPreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(photoPreview);
+      }
     };
   }, [photoPreview]);
 
@@ -51,7 +53,7 @@ export function OnboardingStep1({ data, onNext, onPatch }: StepMeetMeProps) {
       return next;
     });
 
-    onPatch?.({ photo: file });
+    onPatch?.({ photo: file, photoUrl: "" });
   };
 
   const validate = (): boolean => {
