@@ -288,6 +288,39 @@ export const MarkdownImageField = forwardRef<
     });
   };
 
+  const insertAllAttachments = () => {
+    const attachments = uploadQueue.items.filter(
+      (item) => item.status === "success" && item.response?.url,
+    );
+
+    if (attachments.length === 0 || !textareaRef.current) {
+      return;
+    }
+
+    const textarea = textareaRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const imagesMarkdown = attachments
+      .map((item) => `![${getAltText(item.file)}](${item.response?.url})`)
+      .join("\n\n");
+    const nextMarkdown = `${markdown.slice(0, start)}${imagesMarkdown}${markdown.slice(end)}`;
+    const nextCursor = start + imagesMarkdown.length;
+
+    markdownRef.current = nextMarkdown;
+    onChange(nextMarkdown);
+    requestAnimationFrame(() => {
+      textarea.focus();
+      textarea.setSelectionRange(nextCursor, nextCursor);
+    });
+  };
+
+  const clearUploads = () => {
+    uploadQueue.clearQueue();
+    setTopError(null);
+    setShouldAutoHide(false);
+    setIsUploaderOpen(false);
+  };
+
   const uploadQueue = useFileUploadQueue({
     uploadFile: (file) =>
       normalizeImageUploadResult(imageUploadHandler(file), file),
@@ -532,22 +565,25 @@ export const MarkdownImageField = forwardRef<
               className="flex flex-wrap items-center gap-2 text-sm"
               aria-live="polite"
             >
-              <span
-                className={cn(
-                  "rounded-full border px-3 py-1.5",
-                  statusBadgeClassName(
-                    uploadSummary.total === 0
-                      ? "idle"
-                      : uploadSummary.uploading > 0
-                        ? "uploading"
-                        : uploadSummary.failed > 0
-                          ? "failed"
-                          : "success",
-                  ),
-                )}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={uploadSummary.success === 0}
+                onClick={insertAllAttachments}
               >
-                {stateSummary}
-              </span>
+                Вставить все
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label="Закрыть загрузку файлов"
+                title="Закрыть и очистить"
+                onClick={clearUploads}
+              >
+                <Icon icon="ph:x" className="size-4" />
+              </Button>
             </div>
 
             {uploadQueue.items.length > 0 && (
