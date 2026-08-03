@@ -37,7 +37,7 @@ export function App() {
       navigate(redirectPath, { replace: true });
       clearRedirectPath();
     }
-  }, [isAuthed, redirectPath, navigate, clearRedirectPath]); 
+  }, [isAuthed, isOpen, redirectPath, navigate, clearRedirectPath]); 
 
   const handleModalClose = (open: boolean) => {
     if (!open) {

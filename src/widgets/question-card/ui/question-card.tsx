@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { Link, generatePath } from "react-router";
+import { generatePath, useNavigate } from "react-router";
 
 import AvatarPlaceholder from "@/shared/assets/images/avatar-placeholder.svg";
 import { formatRelativeDate } from "@/shared/lib/pluralize";
@@ -13,7 +13,13 @@ import { useQuestionCommentCount } from "@/shared/store/question-comments-store"
 import { QuestionLikeButton } from "@/entities/question";
 import type { QuestionCardProps } from "../model/types";
 
+import { useIsAuthed } from "@/shared/lib/auth";
+import { useAuthModalStore } from "@/shared/store/auth-modal-store";
+
 export function QuestionCard({ question }: QuestionCardProps) {
+  const navigate = useNavigate();
+  const isAuthed = useIsAuthed();
+  const { openModal, setRedirectPath } = useAuthModalStore();
   const pendingCommentCount = useQuestionCommentCount(question.id);
   const detailHref = generatePath(ROUTES.QA_DETAILS, {
     id: question.id,
@@ -21,6 +27,16 @@ export function QuestionCard({ question }: QuestionCardProps) {
   const answerHref = `${detailHref}#question-answer-form`;
   const visibleCommentCount = question.comments + pendingCommentCount;
   const avatarSrc = question.user.avatarUrl || undefined;
+
+  const openQuestion = (href: string) => {
+    if (!isAuthed) {
+      setRedirectPath(href);
+      openModal();
+      return;
+    }
+
+    navigate(href);
+  };
 
   return (
     <Card className="h-fit border-muted-foreground">
@@ -89,15 +105,21 @@ export function QuestionCard({ question }: QuestionCardProps) {
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <Button asChild variant="ghost" className="font-semibold">
-            <Link to={answerHref}>
+          <Button
+            variant="ghost" 
+            onClick={() => openQuestion(answerHref)}
+            className="font-semibold"
+          >
               <Icon icon="ph:arrow-bend-down-right" className="size-5" />
               <span>Ответить</span>
-            </Link>
           </Button>
 
-          <Button asChild variant="ghost" className="font-semibold">
-            <Link to={detailHref}>Подробнее</Link>
+          <Button
+            variant="ghost"
+            onClick={() => openQuestion(detailHref)}
+            className="font-semibold"
+          >
+            Подробнее
           </Button>
         </div>
       </CardFooter>
