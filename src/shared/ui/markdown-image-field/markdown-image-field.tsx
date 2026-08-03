@@ -1,4 +1,12 @@
-import { forwardRef, useEffect, useId, useMemo, useRef, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useId,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Icon } from "@iconify/react";
 import type {
   ChangeEvent,
@@ -134,21 +142,6 @@ function validateImageFile(
   return null;
 }
 
-function appendMarkdownImage(
-  markdown: string,
-  imageUrl: string,
-  altText: string,
-) {
-  const imageMarkdown = `![${altText}](${imageUrl})`;
-  const trimmed = markdown.trimEnd();
-
-  if (!trimmed) {
-    return imageMarkdown;
-  }
-
-  return `${trimmed}\n\n${imageMarkdown}`;
-}
-
 function getAltText(file: File) {
   const baseName = file.name.replace(/\.[^.]+$/, "").trim();
   return baseName.length > 0 ? baseName : "image";
@@ -259,6 +252,7 @@ export const MarkdownImageField = forwardRef<
 ) {
   const generatedId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const markdownRef = useRef(markdown);
   const dragDepthRef = useRef(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -270,19 +264,34 @@ export const MarkdownImageField = forwardRef<
     markdownRef.current = markdown;
   }, [markdown]);
 
+  useImperativeHandle(ref, () => textareaRef.current as HTMLTextAreaElement);
+
+  const insertAttachment = (
+    item: FileUploadQueueItem<NormalizedMarkdownImageUploadResult>,
+  ) => {
+    if (!item.response?.url || !textareaRef.current) {
+      return;
+    }
+
+    const textarea = textareaRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const imageMarkdown = `![${getAltText(item.file)}](${item.response.url})`;
+    const nextMarkdown = `${markdown.slice(0, start)}${imageMarkdown}${markdown.slice(end)}`;
+    const nextCursor = start + imageMarkdown.length;
+
+    markdownRef.current = nextMarkdown;
+    onChange(nextMarkdown);
+    requestAnimationFrame(() => {
+      textarea.focus();
+      textarea.setSelectionRange(nextCursor, nextCursor);
+    });
+  };
+
   const uploadQueue = useFileUploadQueue({
     uploadFile: (file) =>
       normalizeImageUploadResult(imageUploadHandler(file), file),
     validateFile: (file) => validateImageFile(file, maxFileSizeBytes),
-    onSuccess: (item, imageUrl) => {
-      const nextMarkdown = appendMarkdownImage(
-        markdownRef.current,
-        imageUrl.url,
-        getAltText(item.file),
-      );
-      markdownRef.current = nextMarkdown;
-      onChange(nextMarkdown);
-    },
     onFailure: (_item, errorMessage) => {
       setTopError(errorMessage);
     },
@@ -576,14 +585,28 @@ export const MarkdownImageField = forwardRef<
                             </div>
                           </div>
 
-                          <span
-                            className={cn(
-                              "shrink-0 rounded-full border px-2.5 py-1 text-xs font-medium",
-                              statusBadgeClassName(item.status),
-                            )}
-                          >
-                            {statusLabel(item.status)}
-                          </span>
+                          {item.status === "success" && item.response?.url ? (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="shrink-0 px-2.5 text-xs"
+                              title="Вставить в редактор"
+                              aria-label="Вставить в редактор"
+                              onClick={() => insertAttachment(item)}
+                            >
+                              Вставить
+                            </Button>
+                          ) : (
+                            <span
+                              className={cn(
+                                "shrink-0 rounded-full border px-2.5 py-1 text-xs font-medium",
+                                statusBadgeClassName(item.status),
+                              )}
+                            >
+                              {statusLabel(item.status)}
+                            </span>
+                          )}
                         </div>
 
                         {item.errorMessage && (
@@ -624,7 +647,7 @@ export const MarkdownImageField = forwardRef<
         <TextareaBasic
           id={generatedId}
           value={markdown}
-          ref={ref}
+          ref={textareaRef}
           onChange={(event) => {
             markdownRef.current = event.target.value;
             onChange(event.target.value);

@@ -1,6 +1,5 @@
 import {
   useCallback,
-  useEffect,
   useId,
   useMemo,
   useRef,
@@ -12,6 +11,7 @@ import {
   type FormEvent,
 } from "react";
 import { Icon } from "@iconify/react";
+import type { MDXEditorMethods } from "@mdxeditor/editor";
 import { uploadQuestionFile } from "@/entities/question";
 import { useSafeGoBack } from "@/shared/lib/hooks";
 import { ROUTES } from "@/shared/model/routes";
@@ -47,7 +47,10 @@ function formatFileSize(bytes: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-function validateImageFile(file: File, maxFileSizeBytes: number): string | null {
+function validateImageFile(
+  file: File,
+  maxFileSizeBytes: number,
+): string | null {
   if (file.size <= 0) {
     return `Файл «${file.name}» пустой.`;
   }
@@ -61,17 +64,6 @@ function validateImageFile(file: File, maxFileSizeBytes: number): string | null 
   }
 
   return null;
-}
-
-function appendMarkdownImage(markdown: string, imageUrl: string, altText: string) {
-  const imageMarkdown = `![${altText}](${imageUrl})`;
-  const trimmed = markdown.trimEnd();
-
-  if (!trimmed) {
-    return imageMarkdown;
-  }
-
-  return `${trimmed}\n\n${imageMarkdown}`;
 }
 
 function getAltText(file: File) {
@@ -99,7 +91,9 @@ function collectFilesFromClipboard(clipboardData: DataTransfer | null) {
     .filter((file): file is File => file !== null);
 }
 
-function getStatusStyle(status: "idle" | "uploading" | "success" | "failed"): CSSProperties {
+function getStatusStyle(
+  status: "idle" | "uploading" | "success" | "failed",
+): CSSProperties {
   switch (status) {
     case "uploading":
       return {
@@ -130,37 +124,22 @@ function getStatusStyle(status: "idle" | "uploading" | "success" | "failed"): CS
 }
 
 function MarkdownUploadDropZone({
-  markdown,
-  onChange,
+  onInsertAttachment,
   disabled = false,
 }: {
-  markdown: string;
-  onChange: (nextMarkdown: string) => void;
+  onInsertAttachment: (imageUrl: string, altText: string) => void;
   disabled?: boolean;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const markdownRef = useRef(markdown);
   const dragDepthRef = useRef(0);
   const [isDragging, setIsDragging] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
   const maxFileSizeBytes = 16 * 1024 * 1024;
 
-  useEffect(() => {
-    markdownRef.current = markdown;
-  }, [markdown]);
-
   const uploadQueue = useFileUploadQueue({
     uploadFile: (file) => normalizeImageUploadResult(uploadQuestionFile(file)),
     validateFile: (file) => validateImageFile(file, maxFileSizeBytes),
-    onSuccess: (item, imageUrl) => {
-      const nextMarkdown = appendMarkdownImage(
-        markdownRef.current,
-        imageUrl,
-        getAltText(item.file),
-      );
-      markdownRef.current = nextMarkdown;
-      onChange(nextMarkdown);
-    },
+    onSuccess: () => undefined,
     onFailure: (_item, errorMessage) => {
       setLocalError(errorMessage);
     },
@@ -169,9 +148,12 @@ function MarkdownUploadDropZone({
   const summary = useMemo(
     () => ({
       total: uploadQueue.items.length,
-      uploading: uploadQueue.items.filter((item) => item.status === "uploading").length,
-      success: uploadQueue.items.filter((item) => item.status === "success").length,
-      failed: uploadQueue.items.filter((item) => item.status === "failed").length,
+      uploading: uploadQueue.items.filter((item) => item.status === "uploading")
+        .length,
+      success: uploadQueue.items.filter((item) => item.status === "success")
+        .length,
+      failed: uploadQueue.items.filter((item) => item.status === "failed")
+        .length,
     }),
     [uploadQueue.items],
   );
@@ -296,7 +278,7 @@ function MarkdownUploadDropZone({
       <button
         type="button"
         className={cn(
-          "relative flex min-h-55 w-full flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed border-border bg-background px-6 py-7 text-center shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "relative flex min-h-55 w-full flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed border-border bg-background px-6 py-7 text-center shadow-sm transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
           disabled && "cursor-not-allowed opacity-60",
         )}
         aria-disabled={disabled}
@@ -311,7 +293,9 @@ function MarkdownUploadDropZone({
         <div
           className="pointer-events-none absolute inset-0 rounded-2xl transition-opacity"
           style={{
-            backgroundColor: isDragging ? "rgba(59, 130, 246, 0.05)" : "transparent",
+            backgroundColor: isDragging
+              ? "rgba(59, 130, 246, 0.05)"
+              : "transparent",
             opacity: isDragging ? 1 : 0,
           }}
           aria-hidden="true"
@@ -322,7 +306,11 @@ function MarkdownUploadDropZone({
             "relative flex size-14 items-center justify-center rounded-full border border-dashed border-border bg-muted transition-colors",
             isDragging && "border-primary",
           )}
-          style={{ color: isDragging ? "hsl(var(--primary))" : "hsl(var(--foreground))" }}
+          style={{
+            color: isDragging
+              ? "hsl(var(--primary))"
+              : "hsl(var(--foreground))",
+          }}
           aria-hidden="true"
         >
           <Icon icon="ph:upload-simple" className="size-7" />
@@ -333,14 +321,21 @@ function MarkdownUploadDropZone({
             Перетащите изображения сюда или нажмите, чтобы выбрать файлы
           </div>
           <p className="text-sm leading-6 text-muted-foreground sm:text-base">
-            Поддерживаются изображения до {formatFileSize(maxFileSizeBytes)}. Можно вставлять скриншоты из буфера обмена и загружать несколько файлов сразу.
+            Поддерживаются изображения до {formatFileSize(maxFileSizeBytes)}.
+            Можно вставлять скриншоты из буфера обмена и загружать несколько
+            файлов сразу.
           </p>
         </div>
       </button>
 
-      <div className="flex flex-wrap items-center gap-2 text-sm" aria-live="polite">
+      <div
+        className="flex flex-wrap items-center gap-2 text-sm"
+        aria-live="polite"
+      >
         <span className="rounded-full border border-input bg-background px-3 py-1.5 text-foreground">
-          {summary.total === 0 ? "0 файлов" : `${summary.success} из ${summary.total} файлов загружено`}
+          {summary.total === 0
+            ? "0 файлов"
+            : `${summary.success} из ${summary.total} файлов загружено`}
         </span>
         <span className="rounded-full border border-input bg-background px-3 py-1.5 text-muted-foreground">
           {summary.total === 0
@@ -370,7 +365,10 @@ function MarkdownUploadDropZone({
                           ? "ph:spinner-gap"
                           : "ph:image-square"
                     }
-                    className={cn("size-6", item.status === "uploading" && "animate-spin")}
+                    className={cn(
+                      "size-6",
+                      item.status === "uploading" && "animate-spin",
+                    )}
                   />
                 </div>
 
@@ -385,18 +383,35 @@ function MarkdownUploadDropZone({
                       </div>
                     </div>
 
-                    <span
-                      className="shrink-0 rounded-full border px-2.5 py-1 text-xs font-medium"
-                      style={getStatusStyle(item.status)}
-                    >
-                      {item.status === "uploading"
-                        ? "Загрузка"
-                        : item.status === "success"
-                          ? "Готово"
+                    {item.status === "success" && item.response ? (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="shrink-0 px-2.5 text-xs"
+                        title="Вставить в редактор"
+                        aria-label="Вставить в редактор"
+                        onClick={() =>
+                          onInsertAttachment(
+                            item.response,
+                            getAltText(item.file),
+                          )
+                        }
+                      >
+                        Вставить
+                      </Button>
+                    ) : (
+                      <span
+                        className="shrink-0 rounded-full border px-2.5 py-1 text-xs font-medium"
+                        style={getStatusStyle(item.status)}
+                      >
+                        {item.status === "uploading"
+                          ? "Загрузка"
                           : item.status === "failed"
                             ? "Ошибка"
                             : "Ожидание"}
-                    </span>
+                      </span>
+                    )}
                   </div>
 
                   {item.errorMessage && (
@@ -409,7 +424,8 @@ function MarkdownUploadDropZone({
                     <div
                       className={cn(
                         "h-full rounded-full transition-all",
-                        item.status === "uploading" && "w-2/3 animate-pulse bg-primary",
+                        item.status === "uploading" &&
+                          "w-2/3 animate-pulse bg-primary",
                         item.status === "success" && "w-full bg-emerald-500",
                         item.status === "failed" && "w-full bg-destructive",
                       )}
@@ -434,7 +450,9 @@ function MarkdownUploadDropZone({
         </div>
       )}
 
-      {(localError) && <div className="text-sm text-destructive">{localError}</div>}
+      {localError && (
+        <div className="text-sm text-destructive">{localError}</div>
+      )}
     </div>
   );
 }
@@ -468,6 +486,7 @@ export function CreateQuestionForm({
     setAnonymous,
     getValues,
   } = useCreateQuestion();
+  const editorRef = useRef<MDXEditorMethods>(null);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -491,9 +510,14 @@ export function CreateQuestionForm({
           className="rounded-lg [&>textarea]:min-h-28.25 [&>textarea]:min-w-0 [&>textarea]:overflow-hidden md:[&>textarea]:min-h-21.5"
         />
 
-        <MarkdownUploadDropZone markdown={details} onChange={setDetails} />
+        <MarkdownUploadDropZone
+          onInsertAttachment={(imageUrl, altText) =>
+            editorRef.current?.insertMarkdown(`![${altText}](${imageUrl})`)
+          }
+        />
 
         <MarkdownEditor
+          ref={editorRef}
           label="Раскройте суть вопроса"
           description="Поддерживаются списки, таблицы, цитаты, код и изображения."
           markdown={details}
@@ -531,7 +555,11 @@ export function CreateQuestionForm({
         >
           Отменить
         </Button>
-        <Button type="submit" className="min-w-0 flex-1" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          className="min-w-0 flex-1"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? "Публикация..." : "Опубликовать"}
         </Button>
       </div>

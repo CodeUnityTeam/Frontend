@@ -77,9 +77,10 @@ export const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
     ref,
   ) => {
     const editorRef = useRef<MDXEditorMethods>(null);
-    const [editorModule, setEditorModule] = useState<MarkdownEditorModule | null>(null);
+    const [editorModule, setEditorModule] =
+      useState<MarkdownEditorModule | null>(null);
 
-    useImperativeHandle(ref, () => editorRef.current as MDXEditorMethods, []);
+    useImperativeHandle(ref, () => editorRef.current as MDXEditorMethods);
 
     useEffect(() => {
       let cancelled = false;
@@ -207,7 +208,8 @@ export const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
                 markdownShortcutPlugin(),
                 imagePlugin({
                   imageUploadHandler: imageUploadHandler
-                    ? (image) => normalizeImageUploadResult(imageUploadHandler(image))
+                    ? (image) =>
+                        normalizeImageUploadResult(imageUploadHandler(image))
                     : undefined,
                 }),
               ]}
