@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import type { MDXEditorMethods } from "@mdxeditor/editor";
 
 import {
@@ -44,16 +44,47 @@ export const MarkdownAttachmentComposer = forwardRef<
   ref,
 ) {
   const editorRef = useRef<MDXEditorMethods>(null);
+  const pendingInsertionsRef = useRef<string[]>([]);
   useImperativeHandle(ref, () => editorRef.current as MDXEditorMethods);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      const editor = editorRef.current;
+      if (!editor || pendingInsertionsRef.current.length === 0) {
+        return;
+      }
+
+      const insertions = pendingInsertionsRef.current.splice(0);
+      insertions.forEach((value) => {
+        editor.focus(() => editor.insertMarkdown(value), {
+          defaultSelection: "rootEnd",
+        });
+      });
+    }, 50);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  const insertMarkdown = (value: string) => {
+    const editor = editorRef.current;
+    if (!editor) {
+      pendingInsertionsRef.current.push(value);
+      return;
+    }
+
+    editor.focus(() => editor.insertMarkdown(value), {
+      defaultSelection: "rootEnd",
+    });
+  };
 
   const insert = (attachment: MarkdownAttachment) => {
     if (attachment.url) {
-      editorRef.current?.insertMarkdown(imageMarkdown(attachment));
+      insertMarkdown(imageMarkdown(attachment));
     }
   };
 
   const insertAll = (attachments: MarkdownAttachment[]) => {
-    editorRef.current?.insertMarkdown(
+    insertMarkdown(
       attachments
         .filter((attachment) => attachment.url)
         .map(imageMarkdown)
