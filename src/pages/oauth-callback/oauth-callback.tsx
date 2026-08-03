@@ -1,9 +1,13 @@
 import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router";
-import { setTokens } from "@/shared/lib/auth/token-storage";
+import {
+  buildOnboardingPrefill,
+  getCurrentUserProfile,
+} from "@/shared/api/profile";
+import { clearOAuthState } from "@/shared/lib/cookies";
+import { clearTokens, setTokens } from "@/shared/lib/auth";
 import { ROUTES } from "@/shared/model/routes";
-
-const USER_ID_KEY = "ku_user_id";
+import { toast } from "sonner";
 
 export function OAuthCallback() {
   const [searchParams] = useSearchParams();
@@ -11,32 +15,68 @@ export function OAuthCallback() {
 
   const access = searchParams.get("access");
   const refresh = searchParams.get("refresh");
-  const userId = searchParams.get("user_id");
+  const error = searchParams.get("error");
+  const errorCode = searchParams.get("error_code");
 
   useEffect(() => {
-    if (!access || !refresh) {
-      console.warn("OAuth callback: missing access or refresh token");
-      navigate(ROUTES.HOME);
-      return;
-    }
+    let cancelled = false;
 
-    // Сохраняем токены через существующий API
-    setTokens({ access, refresh });
-
-    // Отдельно сохраняем user_id (если есть)
-    try {
-      if (userId) {
-        localStorage.setItem(USER_ID_KEY, userId);
-      } else {
-        localStorage.removeItem(USER_ID_KEY);
+    const handleCallback = async () => {
+      if (error || errorCode) {
+        clearOAuthState();
+        toast.error("Не удалось завершить авторизацию. Попробуйте еще раз.");
+        navigate(ROUTES.HOME, { replace: true });
+        return;
       }
-    } catch {
-      // localStorage недоступен (приватный режим)
-    }
 
-    // Редирект на onboarding. replace: true — чтобы нельзя было вернуться назад
-    navigate(ROUTES.ONBOARDING, { replace: true });
-  }, [access, refresh, userId, navigate]);
+      if (!access || !refresh) {
+        clearOAuthState();
+        toast.error("Не удалось завершить авторизацию. Попробуйте еще раз.");
+        navigate(ROUTES.HOME, { replace: true });
+        return;
+      }
+
+      setTokens({ access, refresh });
+
+      try {
+        const profile = await getCurrentUserProfile();
+
+        if (cancelled) {
+          return;
+        }
+
+        if (typeof profile.onboarding_completed !== "boolean") {
+          throw new Error("Missing onboarding status");
+        }
+
+        clearOAuthState();
+        navigate(
+          profile.onboarding_completed ? ROUTES.HOME : ROUTES.ONBOARDING,
+          {
+            replace: true,
+            state: profile.onboarding_completed
+              ? undefined
+              : { prefill: buildOnboardingPrefill(profile) },
+          },
+        );
+      } catch {
+        if (cancelled) {
+          return;
+        }
+
+        clearOAuthState();
+        clearTokens();
+        toast.error("Не удалось загрузить профиль. Попробуйте еще раз.");
+        navigate(ROUTES.HOME, { replace: true });
+      }
+    };
+
+    void handleCallback();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [access, error, errorCode, navigate, refresh]);
 
   return (
     <div className="flex min-h-screen items-center justify-center">
