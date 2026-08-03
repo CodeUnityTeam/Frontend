@@ -69,6 +69,8 @@ export function QuestionAnswerForm({
             markdown={value}
             onChange={onChange}
             imageUploadHandler={uploadFile}
+            collapsible
+            maxFilesPerBatch={5}
             textareaClassName={textareaClassName}
           />
 

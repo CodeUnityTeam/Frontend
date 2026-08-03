@@ -63,6 +63,8 @@ export function QuestionForm({
           markdown={details}
           onChange={setDetails}
           imageUploadHandler={uploadQuestionFile}
+          collapsible
+          maxFilesPerBatch={5}
           textareaClassName="min-h-[320px] rounded-2xl md:min-h-[420px]"
         />
 
