@@ -1,5 +1,6 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { PROFILE_QUERY_KEY } from "@/entities/profile";
 import {
   createExperience,
   updateCurrentUserProfile,
@@ -55,5 +56,12 @@ async function finishOnboarding({ data, catalogs }: FinishOnboardingVars) {
 }
 
 export function useFinishOnboarding() {
-  return useMutation({ mutationFn: finishOnboarding });
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: finishOnboarding,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [PROFILE_QUERY_KEY] });
+    },
+  });
 }

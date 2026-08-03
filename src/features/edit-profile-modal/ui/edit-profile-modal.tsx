@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Icon } from "@/shared/ui/icon";
@@ -19,7 +20,7 @@ import {
   roleRules,
   formatRules,
 } from "../model/validation";
-import { useProfile, useUpdateProfile } from "../model/use-edit-profile";
+import { useCurrentProfile, useUpdateProfile } from "@/entities/profile";
 
 interface EditProfileModalProps {
   open: boolean;
@@ -30,7 +31,7 @@ export function EditProfileModal({
   open,
   onOpenChange,
 }: EditProfileModalProps) {
-  const { data: userData, isLoading } = useProfile();
+  const { data: userData, isLoading } = useCurrentProfile();
   const { mutate: updateProfile, isPending } = useUpdateProfile();
 
   const {
@@ -87,12 +88,8 @@ export function EditProfileModal({
 
     updateProfile(payload, {
       onSuccess: () => {
-        alert("Профиль успешно обновлен!");
+        toast.success("Профиль обновлён");
         onOpenChange(false);
-      },
-      onError: (error) => {
-        console.error("Error updating profile:", error);
-        alert("Произошла ошибка при обновлении профиля");
       },
     });
   });
@@ -112,7 +109,7 @@ export function EditProfileModal({
         "w-[365px] sm:w-[694px]",
         "h-auto sm:h-[770px]",
         "rounded-xl sm:rounded-xl",
-        "max-h-[90vh] overflow-y-auto"
+        "max-h-[90vh] overflow-y-auto",
       )}
     >
       <div className="flex justify-end">
@@ -124,8 +121,11 @@ export function EditProfileModal({
         </DialogClose>
       </div>
 
-      <form onSubmit={submit} noValidate className="-mt-px flex h-full flex-col">
-       
+      <form
+        onSubmit={submit}
+        noValidate
+        className="-mt-px flex h-full flex-col"
+      >
         <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
           <div className="flex justify-center sm:block sm:shrink-0">
             <img
@@ -183,7 +183,6 @@ export function EditProfileModal({
           </div>
         </div>
 
-       
         <div className="flex flex-col gap-2">
           <Label className="-mt-0.5 text-[20px] font-medium max-sm:text-base">
             Роль
@@ -223,7 +222,6 @@ export function EditProfileModal({
           />
         </div>
 
-      
         <div className="mt-4 max-sm:mt-3">
           <Controller
             name="country"
@@ -241,7 +239,6 @@ export function EditProfileModal({
           />
         </div>
 
-      
         <div className="mt-4 max-sm:mt-3">
           <Controller
             name="city"
@@ -259,7 +256,6 @@ export function EditProfileModal({
           />
         </div>
 
-        
         <div className="mt-3 flex flex-col gap-3 max-sm:gap-2">
           <Label className="text-[20px] font-medium max-sm:text-base">
             Формат
