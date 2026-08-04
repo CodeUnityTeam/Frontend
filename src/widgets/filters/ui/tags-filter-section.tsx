@@ -21,6 +21,7 @@ export function TagsFilterSection({
     <ReferenceFilterSection
       title="Теги"
       sectionId="tags"
+      searchSectionId="tags" 
       items={items}
       isPending={isPending}
       isError={isError}

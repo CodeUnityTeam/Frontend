@@ -9,6 +9,7 @@ export function PositionFilterSection() {
     <ReferenceFilterSection
       title="Позиция"
       sectionId="position"
+      searchSectionId="position"
       items={data}
       isPending={isPending}
       isError={isError}

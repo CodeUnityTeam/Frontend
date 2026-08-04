@@ -19,7 +19,7 @@ export function ResponseActions({
   onAction,
 }: ResponseActionsProps) {
   const queryClient = useQueryClient();
-  const { mutate: updateStatus, isPending } = useUpdateResponseStatus(responseId);
+  const { mutate: updateStatus, isPending } = useUpdateResponseStatus();
 
   if (currentStatus !== "pending") {
     return null;
@@ -29,7 +29,9 @@ export function ResponseActions({
   const approveLabel = userRole === "worker" ? "Принять приглашение" : "Одобрить";
  
   const handleApprove = () => {
-    updateStatus("approved", {
+    updateStatus(
+      { responseId, status: "approved" }, 
+      {
       onSuccess: () => {
         // Обновляем кеш запроса "people-responses" (чтобы список обновился)
         queryClient.invalidateQueries({ queryKey: ["people-responses"] });
@@ -40,7 +42,9 @@ export function ResponseActions({
   };
 
   const handleReject = () => {
-    updateStatus("rejected", {
+    updateStatus(
+      { responseId, status: "rejected" }, 
+      {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["people-responses"] });
         onAction?.();
