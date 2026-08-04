@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
+import type { MDXEditorMethods } from "@mdxeditor/editor";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -26,7 +27,7 @@ import { QUESTION_ANSWER_FORM_ID } from "./constants";
 export function useQaDetailsPage(questionId: string) {
   const navigate = useNavigate();
   const location = useLocation();
-  const answerEditorRef = useRef<HTMLTextAreaElement>(null);
+  const answerEditorRef = useRef<MDXEditorMethods>(null);
   const [answerContent, setAnswerContent] = useState("");
   const [replyAnswerContent, setReplyAnswerContent] = useState("");
   const [replyToAnswerId, setReplyToAnswerId] = useState<string | null>(null);
@@ -68,7 +69,8 @@ export function useQaDetailsPage(questionId: string) {
     () => buildAnswerTree(question?.answers ?? [], answerSortMode),
     [answerSortMode, question?.answers],
   );
-  const visibleAnswerCount = (question?.answers.length ?? 0) + pendingAnswerCount;
+  const visibleAnswerCount =
+    (question?.answers.length ?? 0) + pendingAnswerCount;
 
   useEffect(() => {
     if (!question || location.hash !== `#${QUESTION_ANSWER_FORM_ID}`) {

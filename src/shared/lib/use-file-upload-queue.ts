@@ -14,8 +14,14 @@ export type FileUploadQueueItem<TResponse = unknown> = {
 export type UseFileUploadQueueOptions<TResponse> = {
   uploadFile: (file: File) => Promise<TResponse>;
   validateFile?: (file: File) => string | null;
-  onSuccess?: (item: FileUploadQueueItem<TResponse>, response: TResponse) => void;
-  onFailure?: (item: FileUploadQueueItem<TResponse>, errorMessage: string) => void;
+  onSuccess?: (
+    item: FileUploadQueueItem<TResponse>,
+    response: TResponse,
+  ) => void;
+  onFailure?: (
+    item: FileUploadQueueItem<TResponse>,
+    errorMessage: string,
+  ) => void;
 };
 
 function createUploadId() {
@@ -46,6 +52,7 @@ export function useFileUploadQueue<TResponse>({
 }: UseFileUploadQueueOptions<TResponse>) {
   const [items, setItems] = useState<Array<FileUploadQueueItem<TResponse>>>([]);
   const itemsRef = useRef(items);
+  const sessionRef = useRef(0);
 
   useEffect(() => {
     itemsRef.current = items;
@@ -67,6 +74,7 @@ export function useFileUploadQueue<TResponse>({
 
   const runUpload = useCallback(
     async (item: FileUploadQueueItem<TResponse>) => {
+      const session = sessionRef.current;
       updateItem(item.id, (current) => ({
         ...current,
         status: "uploading",
@@ -76,44 +84,53 @@ export function useFileUploadQueue<TResponse>({
 
       try {
         const response = await uploadFile(item.file);
+        if (session !== sessionRef.current) {
+          return;
+        }
         const finishedAt = Date.now();
 
-        let uploadedItem: FileUploadQueueItem<TResponse> | undefined;
+        const uploadedItem: FileUploadQueueItem<TResponse> = {
+          ...item,
+          status: "success",
+          response,
+          errorMessage: undefined,
+          completedAt: finishedAt,
+        };
         updateItem(item.id, (current) => {
-          uploadedItem = {
+          return {
             ...current,
             status: "success",
             response,
             errorMessage: undefined,
             completedAt: finishedAt,
           };
-
-          return uploadedItem;
         });
 
-        if (uploadedItem) {
-          onSuccess?.(uploadedItem, response);
-        }
+        onSuccess?.(uploadedItem, response);
 
         return;
       } catch (error) {
+        if (session !== sessionRef.current) {
+          return;
+        }
         const errorMessage = normalizeError(error);
 
-        let failedItem: FileUploadQueueItem<TResponse> | undefined;
+        const failedItem: FileUploadQueueItem<TResponse> = {
+          ...item,
+          status: "failed",
+          errorMessage,
+          completedAt: Date.now(),
+        };
         updateItem(item.id, (current) => {
-          failedItem = {
+          return {
             ...current,
             status: "failed",
             errorMessage,
-            completedAt: Date.now(),
+            completedAt: failedItem.completedAt,
           };
-
-          return failedItem;
         });
 
-        if (failedItem) {
-          onFailure?.(failedItem, errorMessage);
-        }
+        onFailure?.(failedItem, errorMessage);
       }
     },
     [onFailure, onSuccess, updateItem, uploadFile],
@@ -142,7 +159,9 @@ export function useFileUploadQueue<TResponse>({
 
   const retryItem = useCallback(
     (itemId: string) => {
-      const item = itemsRef.current.find((currentItem) => currentItem.id === itemId);
+      const item = itemsRef.current.find(
+        (currentItem) => currentItem.id === itemId,
+      );
 
       if (!item) {
         return;
@@ -163,6 +182,11 @@ export function useFileUploadQueue<TResponse>({
     },
     [runUpload, updateItem, validateFile],
   );
+
+  const clearQueue = useCallback(() => {
+    sessionRef.current += 1;
+    setItems([]);
+  }, []);
 
   const uploadState = useMemo<FileUploadStatus>(() => {
     if (items.length === 0) {
@@ -185,5 +209,6 @@ export function useFileUploadQueue<TResponse>({
     uploadState,
     enqueueFiles,
     retryItem,
+    clearQueue,
   };
 }

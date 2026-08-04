@@ -1,4 +1,5 @@
 import type { FormEvent, Ref } from "react";
+import type { MDXEditorMethods } from "@mdxeditor/editor";
 
 import { useUploadQuestionFile } from "@/entities/question";
 import { cn } from "@/shared/lib/utils";
@@ -10,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/ui/card";
-import { MarkdownImageField } from "@/shared/ui/markdown-image-field";
+import { MarkdownAttachmentComposer } from "@/shared/ui/markdown-attachment-composer";
 
 type QuestionAnswerFormProps = {
   title: string;
@@ -25,8 +26,7 @@ type QuestionAnswerFormProps = {
   cancelLabel?: string;
   className?: string;
   id?: string;
-  editorRef?: Ref<HTMLTextAreaElement>;
-  textareaClassName?: string;
+  editorRef?: Ref<MDXEditorMethods>;
 };
 
 export function QuestionAnswerForm({
@@ -43,14 +43,16 @@ export function QuestionAnswerForm({
   className,
   id,
   editorRef,
-  textareaClassName = "min-h-[200px] rounded-2xl",
 }: QuestionAnswerFormProps) {
   const { mutateAsync: uploadFile } = useUploadQuestionFile();
 
   return (
     <Card
       id={id}
-      className={cn("rounded-2xl border-none bg-transparent shadow-none", className)}
+      className={cn(
+        "rounded-2xl border-none bg-transparent shadow-none",
+        className,
+      )}
     >
       <CardHeader className="gap-2 p-6 pb-0">
         <CardTitle className="text-[24px] leading-[1.2] font-semibold">
@@ -62,14 +64,15 @@ export function QuestionAnswerForm({
       </CardHeader>
       <CardContent className="!p-6">
         <form onSubmit={onSubmit} className="flex flex-col gap-4">
-          <MarkdownImageField
+          <MarkdownAttachmentComposer
             ref={editorRef}
             label={label}
             description={description}
             markdown={value}
             onChange={onChange}
             imageUploadHandler={uploadFile}
-            textareaClassName={textareaClassName}
+            placeholder="Вы можете использовать изображения, ссылки, списки, Ctrl-V/Ctrl-C для вставки текста и изображений."
+            contentEditableClassName="min-h-[200px]"
           />
 
           <div className="flex flex-wrap justify-end gap-3">

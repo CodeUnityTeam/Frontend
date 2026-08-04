@@ -65,7 +65,7 @@ export const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
       label,
       description,
       error,
-      placeholder = "Начните вводить Markdown...",
+      placeholder = "Вы можете использовать изображения, ссылки, списки, Ctrl-V/Ctrl-C для вставки текста и изображений.",
       className,
       editorClassName,
       contentEditableClassName,
@@ -77,9 +77,10 @@ export const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
     ref,
   ) => {
     const editorRef = useRef<MDXEditorMethods>(null);
-    const [editorModule, setEditorModule] = useState<MarkdownEditorModule | null>(null);
+    const [editorModule, setEditorModule] =
+      useState<MarkdownEditorModule | null>(null);
 
-    useImperativeHandle(ref, () => editorRef.current as MDXEditorMethods, []);
+    useImperativeHandle(ref, () => editorRef.current as MDXEditorMethods);
 
     useEffect(() => {
       let cancelled = false;
@@ -138,13 +139,10 @@ export const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
       BlockTypeSelect,
       BoldItalicUnderlineToggles,
       CodeToggle,
-      InsertCodeBlock,
-      InsertImage,
       MDXEditor,
       ListsToggle,
       Separator,
       UndoRedo,
-      codeBlockPlugin,
       headingsPlugin,
       imagePlugin,
       linkPlugin,
@@ -193,21 +191,21 @@ export const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
                       <ListsToggle />
                       <Separator />
                       <CodeToggle />
-                      <InsertCodeBlock />
+                     
                       <Separator />
-                      <InsertImage />
+                      
                     </div>
                   ),
                 }),
                 headingsPlugin(),
-                codeBlockPlugin(),
                 listsPlugin(),
                 quotePlugin(),
                 linkPlugin(),
                 markdownShortcutPlugin(),
                 imagePlugin({
                   imageUploadHandler: imageUploadHandler
-                    ? (image) => normalizeImageUploadResult(imageUploadHandler(image))
+                    ? (image) =>
+                        normalizeImageUploadResult(imageUploadHandler(image))
                     : undefined,
                 }),
               ]}
