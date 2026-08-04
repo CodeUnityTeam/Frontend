@@ -65,7 +65,7 @@ export const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
       label,
       description,
       error,
-      placeholder = "Начните вводить Markdown...",
+      placeholder = "Вы можете использовать изображения, ссылки, списки, Ctrl-V/Ctrl-C для вставки текста и изображений.",
       className,
       editorClassName,
       contentEditableClassName,
@@ -139,13 +139,10 @@ export const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
       BlockTypeSelect,
       BoldItalicUnderlineToggles,
       CodeToggle,
-      InsertCodeBlock,
-      InsertImage,
       MDXEditor,
       ListsToggle,
       Separator,
       UndoRedo,
-      codeBlockPlugin,
       headingsPlugin,
       imagePlugin,
       linkPlugin,
@@ -194,14 +191,13 @@ export const MarkdownEditor = forwardRef<MDXEditorMethods, MarkdownEditorProps>(
                       <ListsToggle />
                       <Separator />
                       <CodeToggle />
-                      <InsertCodeBlock />
+                     
                       <Separator />
-                      <InsertImage />
+                      
                     </div>
                   ),
                 }),
                 headingsPlugin(),
-                codeBlockPlugin(),
                 listsPlugin(),
                 quotePlugin(),
                 linkPlugin(),

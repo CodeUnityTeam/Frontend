@@ -71,7 +71,7 @@ export function QuestionAnswerForm({
             markdown={value}
             onChange={onChange}
             imageUploadHandler={uploadFile}
-            placeholder="Начните вводить Markdown..."
+            placeholder="Вы можете использовать изображения, ссылки, списки, Ctrl-V/Ctrl-C для вставки текста и изображений."
             contentEditableClassName="min-h-[200px]"
           />
 

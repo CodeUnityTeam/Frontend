@@ -73,7 +73,7 @@ export function CreateQuestionForm({
           markdown={details}
           onChange={setDetails}
           imageUploadHandler={uploadQuestionFile}
-          placeholder="Опишите детали вашего вопроса"
+          placeholder="Опишите детали вашего вопроса, Вы можете использовать изображения, ссылки, списки, Ctrl-V/Ctrl-C для вставки текста и изображений."
           editorClassName="rounded-lg"
           contentEditableClassName="min-h-[180px]"
         />

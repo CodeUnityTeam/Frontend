@@ -247,7 +247,7 @@ export const MarkdownImageField = forwardRef<
     hideTextarea = false,
     onInsertAttachment: onExternalInsertAttachment,
     onInsertAllAttachments: onExternalInsertAllAttachments,
-    placeholder = "Начните вводить Markdown...",
+    placeholder = "Вы можете использовать изображения, ссылки, списки, Ctrl-V/Ctrl-C для вставки текста и изображений.",
     disabled = false,
     spellCheck = true,
     autoFocus,
@@ -502,12 +502,12 @@ export const MarkdownImageField = forwardRef<
 
   const stateSummary =
     uploadSummary.total === 0
-      ? "idle"
+      ? "откройте загрузку файлов, чтобы добавить изображения, или вставьте их из буфера обмена прямо в редакторе."
       : uploadSummary.uploading > 0
         ? `${uploadSummary.uploading} в процессе`
         : uploadSummary.failed > 0
           ? `${uploadSummary.failed} с ошибкой`
-          : `${uploadSummary.success} завершено`;
+          : ``;
 
   return (
     <Field className={cn("gap-2", className)} data-disabled={disabled}>
@@ -524,7 +524,7 @@ export const MarkdownImageField = forwardRef<
           >
             <span>Добавить изображения</span>
             <span className="text-xs text-muted-foreground">
-              {isUploaderOpen ? "Скрыть" : "Показать"}
+              {isUploaderOpen ? "Скрыть" : "Открыть"}
             </span>
           </button>
         )}
@@ -748,11 +748,7 @@ export const MarkdownImageField = forwardRef<
         ) : null}
 
         <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
-          <span>
-            Подсказка: нажмите Ctrl+V, чтобы вставить изображение из буфера
-            обмена.
-          </span>
-          <span>Состояние: {stateSummary}</span>
+          <span>{stateSummary}</span>
         </div>
 
         {(topError || error) && <FieldError>{topError || error}</FieldError>}
