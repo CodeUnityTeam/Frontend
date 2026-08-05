@@ -30,7 +30,7 @@ export function mapProject(dto: ProjectDto): Project {
     title: dto.title,
     shortDesc: dto.short_desc,
     location: dto.location,
-    status: dto.status_project,
+    status: dto.status_project as ProjectStatus,
     publishedAt: dto.published_at,
     participantsCount: dto.participants_count,
     isLikedByMe: dto.is_liked_by_me,

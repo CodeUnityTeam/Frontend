@@ -39,7 +39,7 @@ export function InviteUserModal({
   } = useProjects(
     {
       myProject: true,
-      status: "published",
+      status: ["published"],
       pageSize: 100,
     },
     {
