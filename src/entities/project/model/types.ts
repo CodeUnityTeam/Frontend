@@ -59,7 +59,7 @@ export interface GetProjectsParams {
   favourites?: boolean;
   myProject?: boolean;
   loadMore?: boolean;
-  status?: "draft" | "published" | "recruiting_closed"
+  status?: Array<Extract<ProjectStatus, "draft" | "published" | "recruiting_closed">>;
 }
 
 export interface GetRecommendationsParams {

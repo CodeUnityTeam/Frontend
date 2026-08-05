@@ -107,11 +107,11 @@ export function ResponseCard({
         </Button>
       </div>
 
-      <h2 className="leading-1.3 text-[18px] font-semibold">
+      <h2 className="leading-1.3 line-clamp-2 text-[18px] font-semibold wrap-anywhere">
         {title}
       </h2>
 
-      <p className="leading-1.4 mt-1 text-[14px] font-normal">
+      <p className="leading-1.4 mt-1 line-clamp-6 text-[14px] font-normal wrap-anywhere">
         {shortDesc}
       </p>
 

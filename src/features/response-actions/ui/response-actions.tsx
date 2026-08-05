@@ -29,9 +29,10 @@ export function ResponseActions({
   const approveLabel = userRole === "worker" ? "Принять приглашение" : "Одобрить";
  
   const handleApprove = () => {
-    updateStatus(
-      { responseId, status: "approved" }, 
-      {
+    updateStatus({
+      responseId,
+      status: "approved",
+    }, {
       onSuccess: () => {
         // Обновляем кеш запроса "people-responses" (чтобы список обновился)
         queryClient.invalidateQueries({ queryKey: ["people-responses"] });
@@ -42,9 +43,10 @@ export function ResponseActions({
   };
 
   const handleReject = () => {
-    updateStatus(
-      { responseId, status: "rejected" }, 
-      {
+    updateStatus({
+      responseId,
+      status: "rejected",
+    }, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["people-responses"] });
         onAction?.();

@@ -1,18 +1,13 @@
-import { type GetProjectsParams } from "@/entities/project";
+import type { GetProjectsParams } from "@/entities/project";
 
-export function useProjectStatus(
-  tab: string, 
-  isEmployer: boolean
-): GetProjectsParams["status"] {
+export function useProjectStatus(tab: string, isEmployer: boolean): GetProjectsParams["status"] {
   if (tab === "my-projects" && isEmployer) {
-    return undefined; // показываем все проекты
+    return ["draft", "published", "recruiting_closed"];
   }
 
-  // Избранное — только опубликованные проекты
   if (tab === "favorites") {
-    return "published";
+    return ["published", "recruiting_closed"];
   }
 
-  // Каталог — только опубликованные
-  return "published";
+  return ["published"];
 }
