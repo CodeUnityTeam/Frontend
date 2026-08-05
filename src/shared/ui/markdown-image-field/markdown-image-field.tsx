@@ -123,7 +123,11 @@ function formatFileSize(bytes: number) {
 }
 
 function isImageFile(file: File) {
-  return file.type.startsWith("image/");
+  const extension = file.name.split(".").pop()?.toLowerCase();
+  return (
+    (file.type === "image/jpeg" || file.type === "image/png") &&
+    (extension === "jpg" || extension === "jpeg" || extension === "png")
+  );
 }
 
 function validateImageFile(
@@ -135,7 +139,7 @@ function validateImageFile(
   }
 
   if (!isImageFile(file)) {
-    return `Файл «${file.name}» не является изображением.`;
+    return `Файл «${file.name}» не поддерживается. Допустимые форматы: JPG, PNG.`;
   }
 
   if (file.size > maxFileSizeBytes) {
@@ -534,7 +538,7 @@ export const MarkdownImageField = forwardRef<
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept="image/jpeg,image/png,.jpg,.jpeg,.png"
               multiple
               className="sr-only"
               aria-hidden="true"
@@ -578,7 +582,7 @@ export const MarkdownImageField = forwardRef<
 
               <div className="mt-5 max-w-xl space-y-2">
                 <div className="text-[18px] leading-[1.35] font-semibold text-foreground sm:text-[20px]">
-                  Перетащите изображения сюда или нажмите, чтобы выбрать файлы
+                  Нажмите, чтобы выбрать файлы
                 </div>
                 <p className="text-sm leading-6 text-muted-foreground sm:text-base">
                   Поддерживаются изображения до{" "}
