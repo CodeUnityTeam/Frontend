@@ -68,7 +68,7 @@ export function PersonResponseCard({
         </span>
       }
       subtitle={
-        <p className="text-[14px] text-muted-foreground">
+        <p className="line-clamp-3 text-[14px] text-muted-foreground wrap-anywhere">
           {response.initiatorType === "author"
             ? `Приглашение в проект «${response.projectTitle}»`
             : `Отклик на проект «${response.projectTitle}»`}
