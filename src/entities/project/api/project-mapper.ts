@@ -10,7 +10,7 @@ export interface ProjectDto {
   title: string;
   short_desc: string;
   location: string;
-  status_project: string;
+  status_project: ProjectStatus;
   published_at: string | null;
   participants_count: number;
   is_liked_by_me: boolean;

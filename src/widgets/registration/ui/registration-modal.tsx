@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import { Icon } from "@iconify/react";
 
 import { Modal } from "@/shared/ui/modal/modal";
-import { Icon as AppIcon } from "@/shared/ui/icon";
+import { Icon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
@@ -156,24 +155,24 @@ export function RegistrationModal({
   };
 
   const documentsArray = Array.isArray(documents) ? documents : [];
-const privacyPolicy = documentsArray.find(doc => doc.slug === "personal_data_processing");
-const platformRules = documentsArray.find(doc => doc.slug === "platform_rules");
-const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_policy");
+  const privacyPolicy = documentsArray.find(doc => doc.slug === "personal_data_processing");
+  const platformRules = documentsArray.find(doc => doc.slug === "platform_rules");
+  const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_policy");
 
   const renderContent = () => (
     <>
-      <div className="flex flex-col items-center gap-2 pb-6 text-center">
-        <DialogTitle className="text-3xl font-semibold tracking-normal text-foreground sm:text-4xl">
+      <div className="flex flex-col items-center gap-1 text-center">
+        <DialogTitle className="text-2xl font-semibold tracking-normal text-foreground sm:text-3xl">
           Регистрация
         </DialogTitle>
-        <DialogDescription className="text-[18px] text-foreground">
+        <DialogDescription className="text-[16px] text-foreground">
           Регистрация профиля
         </DialogDescription>
       </div>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid w-full max-w-[480px] grid-cols-1 gap-5 md:grid-cols-2"
+        className="grid w-full max-w-[480px] grid-cols-1 gap-3 md:grid-cols-2"
       >
         <div>
           <Input
@@ -181,7 +180,7 @@ const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_polic
             placeholder="Введите имя"
             {...register("firstName")}
             error={errors.firstName?.message}
-            className="h-[60px] rounded-lg border-[#C9CBD8]"
+            className="h-[52px] rounded-lg border-[#C9CBD8]"
           />
         </div>
 
@@ -191,7 +190,7 @@ const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_polic
             placeholder="Введите фамилию"
             {...register("lastName")}
             error={errors.lastName?.message}
-            className="h-[60px] rounded-lg border-[#C9CBD8]"
+            className="h-[52px] rounded-lg border-[#C9CBD8]"
           />
         </div>
 
@@ -202,7 +201,7 @@ const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_polic
             type="email"
             {...register("email")}
             error={errors.email?.message}
-            className="h-[60px] rounded-lg border-[#C9CBD8]"
+            className="h-[52px] rounded-lg border-[#C9CBD8]"
           />
         </div>
 
@@ -213,7 +212,7 @@ const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_polic
             type={showPassword ? "text" : "password"}
             {...register("password")}
             error={errors.password?.message}
-            className="h-[60px] rounded-lg border-[#C9CBD8]"
+            className="h-[52px] rounded-lg border-[#C9CBD8]"
             rightElement={
               <Button
                 type="button"
@@ -222,7 +221,7 @@ const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_polic
                 aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
                 onClick={() => setShowPassword((s) => !s)}
               >
-                <Icon icon={showPassword ? "ph:eye-slash" : "ph:eye"} />
+                <Icon name={showPassword ? "ph:eye-slash" : "ph:eye"} />
               </Button>
             }
           />
@@ -233,8 +232,8 @@ const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_polic
             name="consent"
             control={control}
             render={({ field, fieldState }) => (
-              <div className="flex flex-col gap-2">
-                <div className="flex items-start gap-3">
+              <div className="flex flex-col gap-1">
+                <div className="flex items-start gap-2">
                   <Checkbox
                     id="consent"
                     checked={field.value}
@@ -243,7 +242,7 @@ const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_polic
                   />
                   <label
                     htmlFor="consent"
-                    className="mt-1 cursor-pointer text-sm leading-relaxed text-muted-foreground"
+                    className="mt-0.5 cursor-pointer text-sm leading-relaxed text-muted-foreground"
                   >
                     Соглашаюсь на{" "}
                     <a
@@ -287,7 +286,7 @@ const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_polic
                   </label>
                 </div>
                 {fieldState.error && (
-                  <p className="text-sm text-destructive">
+                  <p className="text-xs text-destructive">
                     {fieldState.error.message}
                   </p>
                 )}
@@ -307,7 +306,7 @@ const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_polic
           >
             {mutation.status === "pending" || isSubmitting ? (
               <>
-                <Icon icon="ph:spinner" className="mr-2 animate-spin" />
+                <Icon name="ph:spinner" className="mr-1.5 animate-spin" />
                 Регистрация...
               </>
             ) : (
@@ -317,13 +316,10 @@ const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_polic
         </div>
       </form>
 
-      <p className="mt-8 text-[18px] text-foreground">
-        Зарегистрироваться через
-      </p>
-      <div className="flex w-full flex-col items-center gap-5">
+      <div className="mt-6 flex w-full flex-col items-center gap-4">
         <div className="h-px w-full bg-primary/70" />
 
-        <div className="flex items-center justify-center gap-4">
+        <div className="flex items-center justify-center gap-3">
           <Button
             type="button"
             variant="ghost"
@@ -333,7 +329,7 @@ const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_polic
             disabled={providerLoading}
             className="p-0 transition-opacity hover:opacity-80 [&_svg]:size-8"
           >
-            <AppIcon name="yandex" size={32} />
+            <Icon name="yandex" />
           </Button>
 
           <Button
@@ -345,7 +341,7 @@ const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_polic
             disabled={providerLoading}
             className="p-0 transition-opacity hover:opacity-80 [&_svg]:size-8"
           >
-            <AppIcon name="mail-ru" size={32} />
+            <Icon name="mail-ru" />
           </Button>
         </div>
 
@@ -353,7 +349,7 @@ const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_polic
           type="button"
           variant="ghost"
           size="sm"
-          className="font-normal text-foreground"
+          className="font-normal text-foreground hover:text-primary"
           onClick={() => {
             onOpenChange(false);
             onOpenLogin?.();
@@ -369,17 +365,19 @@ const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_polic
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent side="bottom" showClose className="h-full">
-          <div className="flex h-full flex-col overflow-y-auto px-[5%] pt-6 pb-6">
+          <div className="flex flex-col h-full max-h-[90vh] overflow-y-auto px-[4%] pt-4 pb-4">
             <SheetHeader>
-              <SheetTitle className="text-3xl font-semibold tracking-normal text-foreground">
+              <SheetTitle className="text-2xl font-semibold tracking-normal text-foreground">
                 Регистрация
               </SheetTitle>
-              <SheetDescription className="text-[18px] text-foreground">
+              <SheetDescription className="text-[16px] text-foreground">
                 Регистрация профиля
               </SheetDescription>
             </SheetHeader>
 
-            <div className="mt-2 flex-1">{renderContent()}</div>
+            <div className="w-full mt-1">
+              {renderContent()}
+            </div>
           </div>
         </SheetContent>
       </Sheet>
@@ -390,15 +388,15 @@ const privacyPolicyFull = documentsArray.find(doc => doc.slug === "privacy_polic
     <Modal
       open={open}
       onOpenChange={onOpenChange}
-      className="max-w-145 gap-0 p-5 sm:px-15 sm:py-12"
+      className="max-w-145 gap-0 p-4 sm:px-12 sm:py-8 h-auto"
     >
-      <div className="flex w-full flex-col items-center gap-3">
+      <div className="flex w-full flex-col items-center gap-2 max-h-[90vh] overflow-y-auto">
         <div className="flex w-full justify-end">
           <DialogClose
             aria-label="Закрыть"
             className="flex cursor-pointer text-foreground transition-opacity hover:opacity-70"
           >
-            <AppIcon name="ph:x" size={24} />
+            <Icon name="ph:x" size={20} />
           </DialogClose>
         </div>
 
