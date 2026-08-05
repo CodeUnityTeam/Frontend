@@ -15,4 +15,6 @@ export type FiltersController = {
   setSort: (value: string) => void;
   reset: () => void;
   selectedCount: number;
+  search: Record<string, string>;
+  setSearch: (sectionId: string, value: string) => void;
 };

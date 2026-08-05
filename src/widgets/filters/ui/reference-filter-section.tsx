@@ -18,6 +18,7 @@ type ReferenceFilterSectionProps = {
   searchable?: boolean;
   searchPlaceholder?: string;
   scrollable?: boolean;
+  searchSectionId?: string;
 };
 
 export function ReferenceFilterSection({
@@ -30,21 +31,23 @@ export function ReferenceFilterSection({
   searchable = false,
   searchPlaceholder = "Поиск",
   scrollable = false,
+  searchSectionId,
 }: ReferenceFilterSectionProps) {
-  const { isChecked, toggle } = useFilters();
+  const { isChecked, toggle, search, setSearch } = useFilters();
   const [open, setOpen] = useState(true);
-  const [search, setSearch] = useState("");
+  const searchKey = searchSectionId || sectionId;
+  const searchValue = search[searchKey] || "";
 
   const visibleItems = useMemo(() => {
     if (!items) {
       return [];
     }
-    const query = search.trim().toLowerCase();
+    const query = searchValue.trim().toLowerCase();
     if (!query) {
       return items;
     }
     return items.filter((item) => item.name.toLowerCase().includes(query));
-  }, [items, search]);
+  }, [items, searchValue]);
 
   return (
     <section
@@ -86,8 +89,8 @@ export function ReferenceFilterSection({
               />
               <input
                 type="text"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                value={searchValue}
+                onChange={(event) => setSearch(searchKey, event.target.value)}
                 placeholder={searchPlaceholder}
                 className="w-full rounded-md border border-input bg-background py-1.5 pr-3 pl-10 text-[16px] text-foreground outline-none focus-visible:border-primary"
               />
