@@ -63,6 +63,7 @@ export function ProjectCard({
   const handleFavorite = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
+      e.stopPropagation();
       toggleFavorite({ projectId, favorited: !isFavoriteByMe });
     },
     [toggleFavorite, projectId, isFavoriteByMe],
@@ -71,6 +72,7 @@ export function ProjectCard({
   const handleApply = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
+      e.stopPropagation();
       respond();
     },
     [respond],
@@ -79,6 +81,7 @@ export function ProjectCard({
   const handleEdit = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
+      e.stopPropagation();
       onEdit?.(projectId);
     },
     [onEdit, projectId],
