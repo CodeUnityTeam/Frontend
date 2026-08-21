@@ -102,7 +102,7 @@ export function RegistrationModal({
     register,
     handleSubmit,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useForm<RegistrationFormValues>({
     resolver: zodResolver(registrationSchema),
     mode: "onTouched",
@@ -301,7 +301,7 @@ export function RegistrationModal({
             size="lg"
             className="w-full"
             disabled={
-              !consentValue || mutation.status === "pending" || isSubmitting
+              !consentValue || mutation.status === "pending" || isSubmitting || !isValid
             }
           >
             {mutation.status === "pending" || isSubmitting ? (
