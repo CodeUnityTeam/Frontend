@@ -190,6 +190,10 @@ export const router = createBrowserRouter([
         lazy: () => import("@/pages/oauth-callback/oauth-callback"),
       },
       {
+        path: "/auth/social-login",
+        lazy: () => import("@/pages/social-login/social-login"),
+      },
+      {
         path: "*",
         lazy: () => import("@/pages/error-pages/page-404"),
       },

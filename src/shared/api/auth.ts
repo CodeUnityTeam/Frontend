@@ -53,7 +53,7 @@ export async function getProviderUrl(provider: string): Promise<string | null> {
   const { data } = await apiClient.get<{
     authorization_url?: string;
   }>(`/user/auth/${provider}/url/`);
- 
+
   return (
     (data && (data.authorization_url)) || null
   );
@@ -75,7 +75,7 @@ export async function getMailRuAuthUrl(): Promise<string> {
 
 export async function yandexAuth(code: string, state?: string): Promise<SocialAuthResponse> {
   const { data } = await apiClient.post<SocialAuthResponse>(
-    "/user/auth/yandex/",
+    "/user/auth/yandex/callback",
     { code, state }
   );
   return data;
@@ -83,7 +83,7 @@ export async function yandexAuth(code: string, state?: string): Promise<SocialAu
 
 export async function mailRuAuth(code: string, state?: string): Promise<SocialAuthResponse> {
   const { data } = await apiClient.post<SocialAuthResponse>(
-    "/user/auth/mailru/",
+    "/user/auth/mailru/callback",
     { code, state }
   );
   return data;
