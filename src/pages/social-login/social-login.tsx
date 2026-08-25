@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useSocialAuth } from "@/entities/auth";
 import { ROUTES } from "@/shared/model/routes";
+import { toast } from "sonner";
 
 export function SocialLogin() {
   const [searchParams] = useSearchParams();
@@ -26,6 +27,7 @@ export function SocialLogin() {
         mailRuAuth(code)
         break;
       default:
+        toast.error("Не удалось закончить авторизацию. Попробуйте позже.");
         navigate(ROUTES.HOME);
     }
     
