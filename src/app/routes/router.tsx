@@ -174,6 +174,10 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "/social-login",
+        lazy: () => import("@/pages/social-login/social-login"),
+      },
+      {
         path: ROUTES.FORBIDDEN,
         lazy: () => import("@/pages/error-pages/page-403"),
       },
@@ -189,10 +193,7 @@ export const router = createBrowserRouter([
         path: "/auth/callback",
         lazy: () => import("@/pages/oauth-callback/oauth-callback"),
       },
-      {
-        path: "/auth/social-login",
-        lazy: () => import("@/pages/social-login/social-login"),
-      },
+      
       {
         path: "*",
         lazy: () => import("@/pages/error-pages/page-404"),
