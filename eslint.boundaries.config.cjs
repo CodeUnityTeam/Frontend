@@ -122,12 +122,10 @@ const rules = {
   "check-file/filename-naming-convention": [
     "error",
     {
-      "src/app/**/*.{ts,tsx,css}": "KEBAB_CASE",
-      "src/pages/**/*.{ts,tsx,css}": "KEBAB_CASE",
-      "src/widgets/**/*.{ts,tsx,css}": "KEBAB_CASE",
-      "src/features/**/*.{ts,tsx,css}": "KEBAB_CASE",
-      "src/entities/**/*.{ts,tsx,css}": "KEBAB_CASE",
-      "src/shared/**/*.{ts,tsx,css}": "KEBAB_CASE",
+      "src/**/*.{ts,tsx,css}": "KEBAB_CASE",
+    },
+    {
+      ignoreMiddleExtensions: true,
     },
   ],
 };
