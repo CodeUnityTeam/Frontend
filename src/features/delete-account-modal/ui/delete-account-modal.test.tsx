@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -35,7 +35,9 @@ describe("DeleteAccountModal", () => {
     const options = mutate.mock.calls[0]?.[1];
 
     // Success callback effects
-    options?.onSuccess?.({ detail: "Аккаунт удален" });
+    await act(async () => {
+      options?.onSuccess?.({ detail: "Аккаунт удален" });
+    });
 
     expect(clearTokens).toHaveBeenCalledOnce();
     expect(toast.success).toHaveBeenCalledWith("Аккаунт удален");

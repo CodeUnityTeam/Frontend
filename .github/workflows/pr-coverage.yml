@@ -1,0 +1,162 @@
+name: Pull request coverage
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (Node 22)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:run
+
+  coverage:
+    name: Coverage (Node 22)
+    needs: test
+    permissions:
+      contents: read
+      pull-requests: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate coverage
+        run: npm run test:coverage
+
+      - name: Create coverage summary
+        if: always()
+        env:
+          SUMMARY_FILE: ${{ runner.temp }}/coverage-summary.md
+        run: |
+          node --input-type=module <<'NODE'
+          import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+
+          const summaryFile = process.env.SUMMARY_FILE;
+          const coverageFile = 'coverage/coverage-final.json';
+          let summary = '_Coverage summary was not generated._';
+
+          if (existsSync(coverageFile)) {
+            const coverage = JSON.parse(readFileSync(coverageFile, 'utf8'));
+            const files = coverage && typeof coverage === 'object' ? Object.values(coverage) : [];
+            const metrics = { Lines: [0, 0], Statements: [0, 0], Functions: [0, 0], Branches: [0, 0] };
+            const values = (entries) => entries && typeof entries === 'object' ? Object.values(entries) : [];
+            const addMetric = (name, entries) => {
+              for (const entry of values(entries)) {
+                metrics[name][0] += 1;
+                if (entry > 0) metrics[name][1] += 1;
+              }
+            };
+
+            for (const file of files) {
+              if (!file || typeof file !== 'object') continue;
+
+              const lineHits = new Map();
+              for (const [id, statement] of Object.entries(file.statementMap ?? {})) {
+                const line = statement?.start?.line;
+                if (Number.isInteger(line)) {
+                  lineHits.set(line, Math.max(lineHits.get(line) ?? 0, file.s?.[id] ?? 0));
+                }
+              }
+              addMetric('Lines', Object.fromEntries(lineHits));
+              addMetric('Statements', file.s);
+              addMetric('Functions', file.f);
+              for (const branch of values(file.b)) {
+                if (!Array.isArray(branch)) continue;
+                metrics.Branches[0] += branch.length;
+                metrics.Branches[1] += branch.filter((hits) => hits > 0).length;
+              }
+            }
+
+            summary = Object.entries(metrics)
+              .map(([name, [total, covered]]) => {
+                const percentage = total === 0 ? '100.00' : ((covered / total) * 100).toFixed(2);
+                return `- **${name}:** ${percentage}% (${covered}/${total})`;
+              })
+              .join('\n');
+          }
+
+          writeFileSync(summaryFile, summary);
+          NODE
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-${{ github.event.pull_request.number }}-coverage
+          path: |
+            coverage/lcov-report/
+            coverage/lcov.info
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Post coverage comment
+        if: always() && github.event.pull_request.head.repo.fork == false
+        uses: actions/github-script@v7
+        env:
+          SUMMARY_FILE: ${{ runner.temp }}/coverage-summary.md
+        with:
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- pr-coverage-report -->';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}#artifacts`;
+            const summary = fs.existsSync(process.env.SUMMARY_FILE)
+              ? fs.readFileSync(process.env.SUMMARY_FILE, 'utf8')
+              : '_Coverage summary was not generated._';
+            const body = `${marker}
+            ## Coverage report
+
+            [Download the HTML and LCOV coverage artifact](${runUrl})
+
+            ${summary}`;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find((comment) => comment.user.type === 'Bot' && comment.body.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
