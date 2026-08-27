@@ -62,4 +62,28 @@ describe("shared Zustand stores", () => {
     act(() => useQuestionCommentsStore.getState().clearPendingAnswers("question-1"));
     expect(result.current).toBe(0);
   });
+
+  it("keeps unrelated pending answers when clearing a selected subset", () => {
+    // Init
+    const { result } = renderHook(() => ({
+      first: useQuestionCommentCount("question-1"),
+      second: useQuestionCommentCount("question-2"),
+    }));
+
+    // Action
+    act(() => {
+      useQuestionCommentsStore.getState().addPendingAnswer("question-1", "answer-1");
+      useQuestionCommentsStore.getState().addPendingAnswer("question-1", "answer-2");
+      useQuestionCommentsStore.getState().addPendingAnswer("question-2", "answer-3");
+      useQuestionCommentsStore.getState().clearPendingAnswers("question-1", ["answer-1"]);
+      useQuestionCommentsStore.getState().clearPendingAnswers("question-1", ["missing-answer"]);
+    });
+
+    // Assert
+    expect(result.current).toEqual({ first: 1, second: 1 });
+    expect(useQuestionCommentsStore.getState().pendingAnswerIdsByQuestion).toEqual({
+      "question-1": ["answer-2"],
+      "question-2": ["answer-3"],
+    });
+  });
 });
