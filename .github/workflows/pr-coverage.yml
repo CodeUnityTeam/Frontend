@@ -66,20 +66,32 @@ jobs:
           let summary = '_Coverage summary was not generated._';
 
           if (existsSync(coverageFile)) {
-            const files = Object.values(JSON.parse(readFileSync(coverageFile, 'utf8')));
+            const coverage = JSON.parse(readFileSync(coverageFile, 'utf8'));
+            const files = coverage && typeof coverage === 'object' ? Object.values(coverage) : [];
             const metrics = { Lines: [0, 0], Statements: [0, 0], Functions: [0, 0], Branches: [0, 0] };
+            const values = (entries) => entries && typeof entries === 'object' ? Object.values(entries) : [];
             const addMetric = (name, entries) => {
-              for (const entry of Object.values(entries)) {
+              for (const entry of values(entries)) {
                 metrics[name][0] += 1;
                 if (entry > 0) metrics[name][1] += 1;
               }
             };
 
             for (const file of files) {
-              addMetric('Lines', Object.values(file.l));
-              addMetric('Statements', Object.values(file.s));
-              addMetric('Functions', Object.values(file.f));
-              for (const branch of Object.values(file.b)) {
+              if (!file || typeof file !== 'object') continue;
+
+              const lineHits = new Map();
+              for (const [id, statement] of Object.entries(file.statementMap ?? {})) {
+                const line = statement?.start?.line;
+                if (Number.isInteger(line)) {
+                  lineHits.set(line, Math.max(lineHits.get(line) ?? 0, file.s?.[id] ?? 0));
+                }
+              }
+              addMetric('Lines', Object.fromEntries(lineHits));
+              addMetric('Statements', file.s);
+              addMetric('Functions', file.f);
+              for (const branch of values(file.b)) {
+                if (!Array.isArray(branch)) continue;
                 metrics.Branches[0] += branch.length;
                 metrics.Branches[1] += branch.filter((hits) => hits > 0).length;
               }
