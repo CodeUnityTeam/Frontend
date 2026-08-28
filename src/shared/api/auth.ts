@@ -75,7 +75,7 @@ export async function getMailRuAuthUrl(): Promise<string> {
 
 export async function yandexAuth(code: string, state?: string): Promise<SocialAuthResponse> {
   const { data } = await apiClient.post<SocialAuthResponse>(
-    "/user/auth/yandex/callback",
+    "/user/auth/yandex/callback/",
     { code, state }
   );
   return data;
@@ -83,7 +83,7 @@ export async function yandexAuth(code: string, state?: string): Promise<SocialAu
 
 export async function mailRuAuth(code: string, state?: string): Promise<SocialAuthResponse> {
   const { data } = await apiClient.post<SocialAuthResponse>(
-    "/user/auth/mailru/callback",
+    "/user/auth/mailru/callback/",
     { code, state }
   );
   return data;
