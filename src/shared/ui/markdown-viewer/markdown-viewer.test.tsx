@@ -30,7 +30,8 @@ describe("MarkdownViewer", () => {
 
     // Assert
     expect(viewer).toHaveClass("markdown-viewer");
-    expect(viewer?.querySelector("p")).toBeInTheDocument();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect((viewer as any)?.querySelector("p")).toBeInTheDocument();
   });
 
   it("extracts Markdown images into compact thumbnails without duplicating image content", () => {
