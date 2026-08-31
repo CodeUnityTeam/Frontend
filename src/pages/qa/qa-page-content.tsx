@@ -103,7 +103,7 @@ export function QAPageContent() {
           <TagsFilterSection scrollable />
         </FiltersSidebar>
 
-        <main className="flex flex-1 flex-col md:gap-8.5">
+        <main className="flex flex-1 flex-col md:gap-8.5 min-w-0">
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
               <FilterTabs
