@@ -85,7 +85,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
       <CardContent className="p-6 pt-0">
         <MarkdownViewer
           markdown={question.description}
-          className="max-h-24 overflow-hidden text-lg text-foreground"
+          className="line-clamp-3 wrap-break-word text-lg leading-7 text-foreground [&_p]:m-0"
           imageVariant="thumbnail"
         />
       </CardContent>
