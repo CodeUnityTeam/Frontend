@@ -11,6 +11,7 @@ import { renderWithProviders } from "@/test/render-with-providers";
 const createMutate = vi.fn();
 const updateMutate = vi.fn();
 
+vi.mock("@iconify/react", () => ({ Icon: () => null }));
 vi.mock("@/entities/reference", () => ({
   useFormats: vi.fn(),
   useSpecializations: vi.fn(),
